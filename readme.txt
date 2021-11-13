@@ -14,3 +14,10 @@ recommend making a Projucer project on your local machine with the source files
 contained in this repo (see src/ directory) and exporting to your build system
 of choice. DO NOT upload an exported Projucer project to this repo -- I'm
 warning you right now, they're massive (upwards of 1 GB)!
+
+CURRENTLY WORKING:
+	- A "Speedometer" widget to display speeds and the like.
+
+NEEDS WORK:
+	- The display layout.
+	- A progress bar widget for lap progress.
