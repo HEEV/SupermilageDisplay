@@ -21,6 +21,7 @@ variables settings in Projucer that the path to your downloaded JUCE library fil
 is accurate! Generate a new project, and delete that which projucer
 generates inside your selected IDE's build folder. Rename your project in Projucer,
 and then save. From there, build in your IDE/build system.
+	***You also need the JUCE GUI extras to build this project***
 
 CURRENTLY WORKING:
 	- A "Speedometer" widget to display speeds and the like.
