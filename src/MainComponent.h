@@ -24,6 +24,15 @@ private:
     // Your private member variables go here...
     juce::String currentSizeAsString;
 
+    juce::Point<int> speedP1;
+    juce::Point<int> speedP2;
+    juce::Point<int> speedP3;
+    juce::Point<int> speedP4;
+    juce::Point<int> speedP5;
+    juce::Point<int> speedP6;
+    juce::Point<int> speedP7;
+    juce::Point<int> speedP8;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 
     float rotate = 0;
