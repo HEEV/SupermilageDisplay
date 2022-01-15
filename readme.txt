@@ -14,6 +14,13 @@ recommend making a Projucer project on your local machine with the source files
 contained in this repo (see src/ directory) and exporting to your build system
 of choice. DO NOT upload an exported Projucer project to this repo -- I'm
 warning you right now, they're massive (upwards of 1 GB)!
+	Download Projucer from the website (https://juce.com/discover/projucer), 
+and select your prefered buildsystem (you could do this in your same repo folder, 
+just make sure to add the build to your gitignore!). Make sure in your global
+variables settings in Projucer that the path to your downloaded JUCE library files
+is accurate! Generate a new project, and delete that which projucer
+generates inside your selected IDE's build folder. Rename your project in Projucer,
+and then save. From there, build in your IDE/build system.
 
 CURRENTLY WORKING:
 	- A "Speedometer" widget to display speeds and the like.
