@@ -14,7 +14,7 @@ class Speedometer
 {
 
 public:
-	Speedometer(juce::Point<int> center, float min, float max);
+	Speedometer(juce::Point<int> center, float min, float max, std::string name);
 	Speedometer(juce::Point<int> center);
 	~Speedometer();
 
@@ -54,6 +54,14 @@ public:
 	 * Speedometer::setData(float)).
 	 */
 	float getData() const;
+
+	/*
+	 * Sets the name of the speedometer.
+	 *
+	 * Params:
+	 * name -> The new name the speedometer.
+	 */
+	void setName(std::string name);
 
 private:
 	// # HELPER METHODS
@@ -96,5 +104,10 @@ private:
 	 * The data displaying on the speedometer.
 	 */
 	float data;
+
+	/*
+	 * The data displaying on the speedometer.
+	 */
+	std::string name;
 
 };
