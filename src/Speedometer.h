@@ -14,6 +14,8 @@ class Speedometer
 {
 
 public:
+	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset);
+	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color);
 	Speedometer(juce::Point<int> center, float min, float max, std::string name);
 	Speedometer(juce::Point<int> center);
 	~Speedometer();
@@ -109,5 +111,15 @@ private:
 	 * The data displaying on the speedometer.
 	 */
 	std::string name;
+
+	/*
+	 * The color displaying on the speedometer.
+	 */
+	juce::Colour color;
+
+	/*
+	 * The offset of the data displayed
+	 */
+	int readoutOffset;
 
 };

@@ -1,5 +1,6 @@
 #include "MainComponent.h"
 #include "Speedometer.h"
+#include "ColorLight.h"
 
 //==============================================================================
 MainComponent::MainComponent()
@@ -44,19 +45,21 @@ void MainComponent::paint (juce::Graphics& g)
     Speedometer speed6(speedP6, 0, 30, "Speedometer");
     speed6.setData(rotate);
     speed6.draw(g);
-    Speedometer speed7(speedP7, 0, 30, "Speedometer");
+    Speedometer speed7(speedP7, 0, 30, "| Vehicle         |", juce::Colours::yellow, -40);
     speed7.setData(rotate);
     speed7.draw(g);
-    Speedometer speed8(speedP8, 0, 30, "Speedometer");
-    speed8.setData(rotate);
+    Speedometer speed8(speedP7, 0, 30, "|            Wind |", juce::Colours::turquoise, 50);
+    speed8.setData(rotate / 2);
     speed8.draw(g);
+    ColorLight color1(speedP8, juce::Colours::lightblue, "Break Light");
 
-    if(rotate < 30) rotate += 0.5;
-
-    juce::Font mainComponentFont("Consolas", 20.0f, juce::Font::bold);
-    g.setFont(mainComponentFont);
-    g.setColour(juce::Colours::white);
-    g.drawText(currentSizeAsString, getLocalBounds(), juce::Justification::centred, true);
+    if (rotate < 30) {
+        rotate += 0.1;
+    }
+    else {
+        color1.setColor(juce::Colours::palevioletred);
+    }
+    color1.draw(g);
 }
 
 void MainComponent::resized()
