@@ -13,7 +13,7 @@
 class ColorLight {
 public:
 
-	ColorLight(juce::Point<int> center, juce::Colour colorStart);
+	ColorLight(juce::Point<int> center, juce::Colour colorStart, std::string name);
 	ColorLight(juce::Point<int> center);
 	~ColorLight();
 
