@@ -22,6 +22,14 @@ is accurate! Generate a new project, and delete that which projucer
 generates inside your selected IDE's build folder. Rename your project in Projucer,
 and then save. From there, build in your IDE/build system.
 	***You also need the JUCE GUI extras to build this project***
+	
+These additional modules are needed to add to your projucer project to build:
+	1. juce core
+	2. juce data structures
+	3. juce events
+	4. juce graphics
+	5. juce gui basics
+	6. juce gui extras
 
 CURRENTLY WORKING:
 	- A "Speedometer" widget to display speeds and the like.
