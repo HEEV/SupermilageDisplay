@@ -3,14 +3,25 @@
 #include "Constants.h"
 #include <stdexcept>
 
-Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name) {
+
+Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset) {
 	this->center = center;
+	this->color = color;
+	this->readoutOffset = readoutOffset;
 	setDataRange(min, max);
 	setName(name);
 }
 
+Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color) :
+	Speedometer(center, min, max, name, color, 0) {
+}
+
+Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name):
+	Speedometer(center, min, max, name, juce::Colours::yellow, 0) {
+}
+
 Speedometer::Speedometer(juce::Point<int> center):
-       Speedometer(center, 0, 100, "Name")	{
+    Speedometer(center, 0, 100, "Name", juce::Colours::yellow, 0)	{
 }
 
 /**
@@ -28,23 +39,23 @@ Speedometer::~Speedometer() {
 void Speedometer::draw(juce::Graphics& g) {
 	g.setColour(juce::Colours::yellow);
 	g.drawRect(center.x - 100, center.y - 80, 200, 130);
+	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
+	g.setFont(theFont);
+	g.drawText(name, center.x - 100, center.y + 10, 200, 20, juce::Justification::centred, false);
 
+	g.setColour(color);
 	juce::Rectangle<float> house(center.x - 10, center.y - 10, 20, 20);
 	g.fillEllipse(house);
 
 	juce::Path path;
 	path.startNewSubPath(juce::Point<float>(center.x + 10 * std::cos(rotation + 1.57075), center.y + 10 * std::sin(rotation + 1.57075)));
-	path.lineTo(juce::Point<float>(center.x + 60 * std::cos(rotation), center.y + 60 * std::sin(rotation)));
-	path.lineTo(juce::Point<float>(center.x - 10 * std::cos(rotation + 1.57075), center.y - 10 * std::sin(rotation + 1.57075)));
+	path.lineTo(juce::Point<float>(			center.x + 60 * std::cos(rotation),			  center.y + 60 * std::sin(rotation)));
+	path.lineTo(juce::Point<float>(			center.x - 10 * std::cos(rotation + 1.57075), center.y - 10 * std::sin(rotation + 1.57075)));
 	path.closeSubPath();
 	g.fillPath(path);
 
-	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
-	g.setFont(theFont);
-	g.setColour(juce::Colours::yellow);
-	g.drawText(name, center.x - 100, center.y + 10, 200, 20, juce::Justification::centred, false);
 	g.setColour(juce::Colours::white);
-	g.drawText(std::to_string(data), center.x - 100, center.y + 30, 200, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(data),	  center.x - 25 + readoutOffset, center.y + 30, 50, 20, juce::Justification::centred, false);
 	g.drawText(std::to_string(dataMin),					  center.x - 80, center.y - 10, 20, 20, juce::Justification::centred, false);
 	g.drawText(std::to_string(dataMin + (dataMax * .25)), center.x - 60, center.y - 60, 20, 20, juce::Justification::centred, false);
 	g.drawText(std::to_string(dataMin + (dataMax * .5)),  center.x - 10, center.y - 80, 20, 20, juce::Justification::centred, false);
