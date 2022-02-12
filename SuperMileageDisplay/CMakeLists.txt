@@ -1,9 +1,14 @@
-﻿# CMakeList.txt : CMake project for SuperMileageDisplay, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.15)
 
-# Add source to this project's executable.
-add_executable (SuperMileageDisplay "SuperMileageDisplay.cpp" "SuperMileageDisplay.h")
-
-# TODO: Add tests and install targets if needed.
+target_compile_features(SuperMileageDisplay PRIVATE cxx_std_20)
+target_sources(SuperMileageDisplay
+    PRIVATE
+        Main.cpp
+        MainComponent.cpp
+        MainComponent.h
+        Speedometer.cpp
+        Speedometer.h
+        ColorLight.cpp
+        ColorLight.h
+        Constants.h
+)
