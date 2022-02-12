@@ -1,9 +1,9 @@
 # SuperMileageDisplay
 
-##Recommended Environements:
+## Recommended Environements:
 - Windows: Visual Studio 2019 or newer with the Linux Developemnt plugin
 
-##Downloading
+## Downloading
 Navigate into the location you would like your dev environment to be in and run the following commands to download the code and all libraries. 
 ```
 git clone https://github.com/Jaynard2/SuperMileageDisplay.git
