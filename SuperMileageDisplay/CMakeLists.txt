@@ -13,4 +13,5 @@ target_sources(SuperMileageDisplay
         Constants.h
         Sizer.h
         Sizer.cpp
+        ISizeable.h
 )
