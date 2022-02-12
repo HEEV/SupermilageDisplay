@@ -110,6 +110,20 @@ public:
 		_on_size_update = callback;
 	}
 
+	/// <summary>
+	/// Gets the height of the object.
+	/// </summary>
+	void getHeight() const {
+		return _v_radius * 2;
+	}
+
+	/// <summary>
+	/// Gets the width of the object.
+	/// </summary>
+	void getWidth() const {
+		return _h_radius * 2;
+	}
+
 private:
 	juce::Point<PointType> _center;
 	PointType _h_radius;
