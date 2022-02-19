@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Stopwatch.h"
 
 //==============================================================================
 /*
@@ -24,6 +25,7 @@ private:
     // Your private member variables go here...
     juce::String currentSizeAsString;
 
+    Stopwatch speed6;
     juce::Point<int> speedP1;
     juce::Point<int> speedP2;
     juce::Point<int> speedP3;

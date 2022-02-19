@@ -15,6 +15,7 @@ MainComponent::MainComponent()
     speedP6.setXY(300, 210);
     speedP7.setXY(500, 210);
     speedP8.setXY(700, 210);
+    speed6 = Stopwatch(speedP6, "Clock");
 }
 
 MainComponent::~MainComponent()
@@ -42,8 +43,7 @@ void MainComponent::paint (juce::Graphics& g)
     Speedometer speed5(speedP5, 0, 30, "Speedometer");
     speed5.setData(rotate);
     speed5.draw(g);
-    Speedometer speed6(speedP6, 0, 30, "Speedometer");
-    speed6.setData(rotate);
+    speed6.updateTimeSinceStartup();
     speed6.draw(g);
     Speedometer speed7(speedP7, 0, 30, "| Vehicle         |", juce::Colours::yellow, -40);
     speed7.setData(rotate);
