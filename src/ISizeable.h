@@ -9,3 +9,7 @@
 class ISizeable {
 	virtual std::vector<juce::Point<int>*> exposeVertices() = 0;
 };
+
+/// <summary>
+/// A 
+/// <
