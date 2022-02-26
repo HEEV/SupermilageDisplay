@@ -3,7 +3,6 @@
 project(SuperMileageDisplay VERSION 0.0.1)
 add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 
-
 # If your app depends the VST2 SDK, perhaps to host VST2 plugins, CMake needs to be told where
 # to find the SDK on your system. This setup should be done before calling `juce_add_gui_app`.
 
@@ -35,7 +34,16 @@ juce_generate_juce_header(SuperMileageDisplay)
 # Finally, we supply a list of source files that will be built into the target. This is a standard
 # CMake command.
 
+set(WITH_TLS no)
+set(WITH_DOCS no)
+
+if(WIN32)
+    find_package(pthreads REQUIRED)
+endif(WIN32)
+
 add_subdirectory(SuperMileageDisplay)
+add_subdirectory(MQTTComunication)
+add_subdirectory(mosquitto)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
