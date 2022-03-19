@@ -20,7 +20,7 @@ git submodule update --init
 
 ## The ptheads library:
 pthreads is an exteranl dependancy, the easyest way is through the tool "vcpackage"
-Link to repos is found here 
+Link to repos is found here https://github.com/Microsoft/vcpkg?msclkid=4263e668a79411ec8c22e54abcc67492&adlt=strict&toWww=1&redig=049C95C4D5C342F6BE12D46767C03E61
 Walk through repos install directions
 
 To Install pthreads open cmd terminal with Administrator privilages then run
