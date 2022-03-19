@@ -8,20 +8,18 @@
 // Date:	November 13, 2021
 //
 
+#include "ISizeable.h"
 #include <JuceHeader.h>
 
-class Speedometer : public FlexItem
+class SizeableSpeedometer : public ISizeable
 {
 
 public:
-	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset);
-	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color);
-	Speedometer(juce::Point<int> center, float min, float max, std::string name);
-	Speedometer(juce::Point<int> center);
-	~Speedometer();
+	SizeableSpeedometer(Vertices vertices, float min, float max, std::string name, juce::Colour color, int readoutOffset);
+	~SizeableSpeedometer();
 
 	// # JUCE METHODS
-	
+
 	void draw(juce::Graphics& g);
 
 	// # SPEEDOMETER INTERFACING
@@ -33,7 +31,7 @@ public:
 	 * Params:
 	 * min -> The minimum display value.
 	 * max -> The maximum display value.
-	 */	
+	 */
 	void setDataRange(float min, float max);
 
 	/*
@@ -47,7 +45,7 @@ public:
 	 * set by Speedometer::setDataRange(float, float).
 	 */
 	void setData(float value); // throws std::out_of_range
-	
+
 	/*
 	 * Gets the data currently displaying on the speedometer.
 	 *
@@ -81,45 +79,45 @@ private:
 	// # DISPLAY DATA
 
 	/*
-	 * The positioning on the screen of the speedometer.
+	 * The dimensional data of the speedometer.
 	 */
-	juce::Point<int> center;
+	Vertices _vertices;
 
 	/*
 	 * The rotation value of the speedometer, in radians.
 	 */
-	float rotation;
+	float _rotation;
 
 	// # SPEEDOMETER DATA
 
 	/*
 	 * The minimum of the data range of the speedometer.
 	 */
-	float dataMin;
+	float _dataMin;
 
 	/*
 	 * The maximum of the data range of the speedometer.
 	 */
-	float dataMax;
+	float _dataMax;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	float data;
+	float _data;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	std::string name;
+	std::string _name;
 
 	/*
 	 * The color displaying on the speedometer.
 	 */
-	juce::Colour color;
+	juce::Colour _color;
 
 	/*
 	 * The offset of the data displayed
 	 */
-	int readoutOffset;
+	int _readoutOffset;
 
 };
