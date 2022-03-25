@@ -15,7 +15,7 @@ git clone https://github.com/HEEV/SupermilageDisplay.git
 This installs the linked repos. These commands must be exicuted in the directory containing this Readme file 
 ```
 git submodule init
-git submodule update --init
+git submodule update --init --recursive
 ```
 
 ## The ptheads library:
