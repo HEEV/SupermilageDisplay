@@ -6,7 +6,7 @@
 
 #include <string>
 #include "Delegate.h"
-#include "../mosquitto/include/mosquitto.h"
+#include "mosquitto.h"
 
 //Static Connection Paramaters
 #define keepalive 60

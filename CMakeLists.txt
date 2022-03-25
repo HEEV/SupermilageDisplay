@@ -36,14 +36,19 @@ juce_generate_juce_header(SuperMileageDisplay)
 
 set(WITH_TLS no)
 set(WITH_DOCS no)
+set(WITH_SHARED_LIBRARIES no)
+set(WITH_STATIC_LIBRARIES on)
 
 if(WIN32)
     find_package(pthreads REQUIRED)
 endif(WIN32)
 
+include_directories("mosquitto/include")
+add_subdirectory(mosquitto)
 add_subdirectory(SuperMileageDisplay)
 add_subdirectory(MQTTComunication)
-add_subdirectory(mosquitto)
+
+target_link_libraries(SuperMileageDisplay PUBLIC libmosquitto_static)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
