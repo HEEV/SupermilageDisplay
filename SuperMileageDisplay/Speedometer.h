@@ -9,16 +9,20 @@
 //
 
 #include <JuceHeader.h>
+#include "../MQTTComunication/ComCenter.h"
+#include "../MQTTComunication/Delegate.h"
 
-class Speedometer
+class Speedometer : public Delegate
 {
-
 public:
 	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset);
 	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color);
 	Speedometer(juce::Point<int> center, float min, float max, std::string name);
 	Speedometer(juce::Point<int> center);
 	~Speedometer();
+
+	//Handles the incomming Data from the Communcation Manager
+	void updateHandler(std::string msg) override;
 
 	// # JUCE METHODS
 	
@@ -121,5 +125,8 @@ private:
 	 * The offset of the data displayed
 	 */
 	int readoutOffset;
+
+	//Communcation Manager Class
+	ComCenter ComManager;
 
 };

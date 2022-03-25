@@ -22,6 +22,7 @@ MainComponent::~MainComponent()
 }
 
 //==============================================================================
+//Function exicuts every frame
 void MainComponent::paint (juce::Graphics& g)
 {
     g.fillAll(juce::Colours::darkgrey);

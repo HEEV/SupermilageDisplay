@@ -1,15 +1,16 @@
-#include "Speedometer.h"
 
+#include "Speedometer.h"
 #include "Constants.h"
 #include <stdexcept>
 
 
-Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset) {
+Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset) : ComManager(ComCenter((Delegate*)this)) {
 	this->center = center;
 	this->color = color;
 	this->readoutOffset = readoutOffset;
 	setDataRange(min, max);
 	setName(name);
+	//ComManager = ComCenter((Delegate*)this);
 }
 
 Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color) :
@@ -124,4 +125,9 @@ float Speedometer::getData() const {
  */
 void Speedometer::setName(std::string name) {
 	this->name = name;
+}
+
+//Handles the incomming Data from the Communcation Manager
+void Speedometer::updateHandler(std::string msg) {
+
 }
