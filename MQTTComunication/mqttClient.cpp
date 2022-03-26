@@ -17,17 +17,19 @@ mqttClient::mqttClient() {
 }
 
 mqttClient::mqttClient(Delegate* inst, std::string BrokerAddress) {
-	_BrokerAddress = BrokerAddress.substr(0, BrokerAddress.find(':') + 1);
+	_BrokerAddress = BrokerAddress.substr(0, BrokerAddress.find(':'));
 	_Port = stoi(BrokerAddress.substr(BrokerAddress.find(':') + 1));
 	mosq = nullptr;
 	p_Instance = inst;
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] == nullptr) {
 			Global_Connection[i] = this;
+			break;
 		}
 	}
 }
 mqttClient::~mqttClient() {
+	mosquitto_loop_stop(mosq, true);
 	mosquitto_destroy(mosq);
 	mosquitto_lib_cleanup();
 }
@@ -40,9 +42,9 @@ bool mqttClient::initalize() {
 	mosquitto_lib_init();
 	mosq = mosquitto_new(NULL, clean_session, NULL);
 	mosquitto_log_callback_set(mosq, Logevent);
-	//mosquitto_connect_callback_set(mosq, Onconnect);
-	//mosquitto_message_callback_set(mosq, Global_Message);
-	//mosquitto_subscribe_callback_set(mosq, Subscribe);
+	mosquitto_connect_callback_set(mosq, Onconnect);
+	mosquitto_message_callback_set(mosq, Global_Message);
+	mosquitto_subscribe_callback_set(mosq, Subscribe);
 
 	return Connect();
 }
@@ -50,12 +52,12 @@ bool mqttClient::Connect() {
 	if (_State == "Uninitalized") {
 		return false;
 	}
-	if (mosquitto_connect(mosq, _BrokerAddress.c_str(), _Port, keepalive)) {
+	if (mosquitto_connect_async(mosq, _BrokerAddress.c_str(), _Port, keepalive)) {
 		_State = "Unable to connect";
 		return false;
 	}
 
-	mosquitto_loop_forever(mosq, -1, 1);
+	mosquitto_loop_start(mosq);
 	return true;
 }
 void mqttClient::publish(std::string topic, std::string msg) {
@@ -74,7 +76,7 @@ void mqttClient::OnLogEvent(struct mosquitto* mosq, void* userdata, int level, c
 void mqttClient::OnConnected(struct mosquitto* mosq, void* userdata, int result) {
 	if (!result) {
 		//Successful Connect
-		_State = "Connected";
+		_State = "0:Connected";
 		//Subscribe in incomming topics
 		mosquitto_subscribe(mosq, NULL, "#", 2);
 	}
@@ -107,8 +109,18 @@ void Onconnect(struct mosquitto* mosq, void* userdata, int level) {
 void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquitto_message* message) {
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
-			std::string temp = std::string(message->topic);
-			Global_Connection[i]->p_Instance->updateHandler(temp);
+			//Filltering for incomming message
+			std::string topic = std::string(message->topic);
+			std::string msg = "null";
+			//payload is a void* so it must be copied into c-string buffer
+			if (message->payloadlen > 0) {
+				char* msgTemp = new char[message->payloadlen + 1];
+				memcpy(msgTemp, message->payload, message->payloadlen);
+				msgTemp[message->payloadlen] = '\0';
+				msg = std::string(msgTemp);
+			}
+
+			Global_Connection[i]->p_Instance->updateHandler(topic, msg);
 			break;
 		}
 	}

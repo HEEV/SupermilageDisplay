@@ -20,7 +20,7 @@ public:
 		//Test mqtt network connection
 		p_cellClient.publish("Test2", "I am Alive");
 		//Test Aysc Callback pointer if availible
-		updateHandler("Hello Application Starting up");
+		updateHandler("Hello Application Starting up", "");
 		return true;
 	}
 
@@ -29,14 +29,15 @@ public:
 	std::string getState() { 
 		return p_cellClient.getState(); 
 	}
-	void updateHandler(std::string msg) {
+	void updateHandler(std::string topic, std::string msg) {
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
 
-		p_Instance->updateHandler(msg);
+		p_Instance->updateHandler(topic, msg);
 	}
 	
 private:
+	std::string _Error;
 	Delegate* p_Instance;
 	mqttClient p_cellClient;
 };
