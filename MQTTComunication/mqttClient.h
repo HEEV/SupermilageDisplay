@@ -11,11 +11,19 @@
 //Static Connection Paramaters
 #define keepalive 60
 #define clean_session true
+#define DEFAULT_ADRESS "127.0.0.1"
+
+//State Codes:
+#define STATE0 "0:Connected"
+#define STATE1 "1:Uninitalized"
+#define STATE2 "2:Unable to connect"
+#define STATE3 "3:Connection Failed"
+
 
 class mqttClient {
 public:
 	mqttClient();
-	mqttClient(Delegate* inst, std::string BrokerAddress);
+	mqttClient(Delegate* inst, std::string BrokerAddress, std::string Username = "", std::string Password = "");
 	~mqttClient();
 
 	bool initalize();
@@ -35,5 +43,8 @@ public:
 private:
 	std::string _State;
 	std::string _BrokerAddress;
+	std::string _Username;
+	std::string _Password;
+	bool _Secure = false;
 	int _Port;
 };
