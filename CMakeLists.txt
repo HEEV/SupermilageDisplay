@@ -35,7 +35,8 @@ juce_generate_juce_header(SuperMileageDisplay)
 # CMake command.
 
 set(WITH_TLS no)
-set(WITH_DOCS no)
+set(DOCUMENTATION no)
+set(WITH_CJSON no)
 set(WITH_SHARED_LIBRARIES no)
 set(WITH_STATIC_LIBRARIES on)
 
