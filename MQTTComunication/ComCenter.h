@@ -18,9 +18,8 @@ public:
 
 		while (p_cellClient.getState() != "0:Connected");
 		//Test mqtt network connection
-		p_cellClient.publish("Test2", "I am Alive");
-		//Test Aysc Callback pointer if availible
-		updateHandler("Hello Application Starting up");
+		p_cellClient.publish("ComCenter", "Client Ready");
+
 		return true;
 	}
 
@@ -29,14 +28,21 @@ public:
 	std::string getState() { 
 		return p_cellClient.getState(); 
 	}
-	void updateHandler(std::string msg) {
+
+	//Sends topic and message out all connected channels
+	void Publish(std::string topic, std::string message) {
+		p_cellClient.publish(topic, message);
+	}
+
+	void updateHandler(std::string topic, std::string msg) {
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
 
-		p_Instance->updateHandler(msg);
+		p_Instance->updateHandler(topic, msg);
 	}
 	
 private:
+	std::string _Error;
 	Delegate* p_Instance;
 	mqttClient p_cellClient;
 };
