@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DataValues.h"
 
 //==============================================================================
 /*
@@ -18,6 +19,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void update() override;
+    
+    DataValues Storage;
 
 private:
     //==============================================================================

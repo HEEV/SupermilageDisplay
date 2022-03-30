@@ -11,4 +11,6 @@ target_sources(SuperMileageDisplay
         ColorLight.cpp
         ColorLight.h
         Constants.h
+        DataValues.h
+        DataValues.cpp
 )

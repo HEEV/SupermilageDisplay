@@ -3,7 +3,7 @@
 #include "ColorLight.h"
 
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent() : Storage()
 {
     setSize (800, 260);
     setFramesPerSecond(60);
@@ -22,12 +22,13 @@ MainComponent::~MainComponent()
 }
 
 //==============================================================================
+//Function exicuts every frame
 void MainComponent::paint (juce::Graphics& g)
 {
     g.fillAll(juce::Colours::darkgrey);
     g.setColour(juce::Colours::royalblue);
 
-    Speedometer speed1(speedP1, 0, 30, "Speedometer");
+    Speedometer speed1(speedP1, 0, 30, Storage.Test);
     speed1.setData(rotate);
     speed1.draw(g);
     Speedometer speed2(speedP2, 0, 30, "Speedometer");
