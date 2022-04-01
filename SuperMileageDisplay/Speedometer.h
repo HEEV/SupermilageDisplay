@@ -9,11 +9,12 @@
 //
 
 #include <JuceHeader.h>
+#include <atomic>
 
 class Speedometer : public Component
 {
 public:
-	Speedometer(std::string_view name, float minData, float maxData, juce::Colour color);
+	Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions = 8, int lineWidth = 5);
 	~Speedometer();
 
 	// # JUCE METHODS
@@ -64,11 +65,13 @@ public:
 
 private:
 	// # DISPLAY DATA
+	int _lineWidth = 5;
+	int _subdivisions = 8;
 
 	/*
 	 * The rotation value of the speedometer, in radians.
 	 */
-	float _rotation;
+	std::atomic<float> _rotation;
 
 	// # SPEEDOMETER DATA
 

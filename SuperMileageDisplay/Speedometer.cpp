@@ -2,9 +2,12 @@
 #include "Speedometer.h"
 #include "Constants.h"
 #include <stdexcept>
+#include <sstream>
 
-Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color) : _name(name), _dataMin(minData), _dataMax(maxData), _color(color)
+Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
+	_name(name), _dataMin(minData), _dataMax(maxData), _color(color), _lineWidth(lineWidth), _subdivisions(subdivisions)
 {
+	setData(_dataMin);
 }
 
 /**
@@ -16,37 +19,72 @@ Speedometer::~Speedometer() {
 
 /**
  * Draws the speedometer within the graphics context.
+ * Do NOT call - called by JUCE
  *
  * @param g The JUCE graphics context.
  */
 void Speedometer::paint(juce::Graphics& g) 
 {
+	//setPaintingIsUnclipped(true);
 	auto bounds = getLocalBounds();
+	Font f("Consolas", 20.0f, Font::bold);
+	g.setFont(f);
 
-	g.setColour(juce::Colours::yellow);
-	g.drawRect(bounds.getCentreX() - 100, bounds.getCentreY() - 80, 200, 130);
-	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
-	g.setFont(theFont);
-	g.drawText(_name, bounds.getCentreX() - 100, bounds.getCentreY() + 10, 200, 20, juce::Justification::centred, false);
+	g.setColour(Colours::black);
+
+	//Create semicircle for speedomoter
+	Path arc;
+	float radius = bounds.getWidth() / 2.0f - 2 * _lineWidth;
+	arc.addCentredArc(bounds.getCentreX(), bounds.getBottom() - 2 * f.getHeight(), radius, radius, 0.0f, -PI / 2, PI / 2, true);
+
+	//Add tickmarks to arc
+	for (int i = 0; i < _subdivisions + 1; i++)
+	{
+		float x1 = (radius + 1.5 * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
+		float y1 = (radius + 1.5 * _lineWidth) * sin(-i * PI / _subdivisions) + bounds.getBottom() - 2 * f.getHeight();
+		float x2 = (radius - 1.5 * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
+		float y2 = (radius - 1.5 * _lineWidth) * sin(-i * PI / _subdivisions) + bounds.getBottom() - 2 * f.getHeight();
+
+		std::stringstream label;
+		label.precision(0);
+		label << std::fixed << _dataMax - i * (_dataMax - _dataMin) / _subdivisions;
+
+		float textX = (radius - _lineWidth * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
+		float textY = (radius - _lineWidth * _lineWidth) * sin(-i * PI / _subdivisions) + bounds.getBottom() - 2 * f.getHeight();
+		Rectangle<int> textPos;
+		textPos.setWidth(f.getStringWidthFloat(label.str()));
+		textPos.setHeight(f.getHeight());
+		textPos.setCentre(textX, textY);
+
+		g.drawFittedText(label.str(), textPos, Justification::centred, 1);
+
+		arc.startNewSubPath(x1, y1);
+		arc.lineTo(x2, y2);
+	}
 
 	g.setColour(_color);
-	juce::Rectangle<float> house(bounds.getCentreX() - 10, bounds.getCentreY() - 10, 20, 20);
-	g.fillEllipse(house);
+	g.strokePath(arc, PathStrokeType(_lineWidth));
 
-	juce::Path path;
-	path.startNewSubPath(juce::Point<float>(bounds.getCentreX() + 10 * std::cos(_rotation + 1.57075), bounds.getCentreY() + 10 * std::sin(_rotation + 1.57075)));
-	path.lineTo(juce::Point<float>(			bounds.getCentreX() + 60 * std::cos(_rotation),			  bounds.getCentreY() + 60 * std::sin(_rotation)));
-	path.lineTo(juce::Point<float>(			bounds.getCentreX() - 10 * std::cos(_rotation + 1.57075), bounds.getCentreY() - 10 * std::sin(_rotation + 1.57075)));
-	path.closeSubPath();
-	g.fillPath(path);
+	Path needle;
+	float needleEndX = (radius + 3 * _lineWidth) * cos(_rotation) + bounds.getCentreX();
+	float needleEndY = (radius + 3 * _lineWidth) * sin(_rotation) + bounds.getBottom() - 2 * f.getHeight();
 
-	g.setColour(juce::Colours::white);
-	g.drawText(std::to_string(_data),	  bounds.getCentreX() - 25, bounds.getCentreY() + 30, 50, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(_dataMin),					  bounds.getCentreX() - 80, bounds.getCentreY() - 10, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(_dataMin + (_dataMax * .25)), bounds.getCentreX() - 60, bounds.getCentreY() - 60, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(_dataMin + (_dataMax * .5)),  bounds.getCentreX() - 10, bounds.getCentreY() - 80, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(_dataMin + (_dataMax * .75)), bounds.getCentreX() + 40, bounds.getCentreY() - 60, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(_dataMax),					  bounds.getCentreX() + 60, bounds.getCentreY() - 10, 20, 20, juce::Justification::centred, false);
+	needle.startNewSubPath(bounds.getCentreX(), bounds.getBottom() - 2 * f.getHeight());
+	needle.lineTo(needleEndX, needleEndY);
+
+	g.setColour(Colours::red);
+	g.strokePath(needle, PathStrokeType(_lineWidth / 2.0f, PathStrokeType::JointStyle::mitered, PathStrokeType::EndCapStyle::rounded));
+
+	//Make the meter take up space before drawing the labels
+	bounds.removeFromTop(bounds.getHeight() - 2 * f.getHeight());
+	
+	g.setColour(Colours::black);
+	g.drawFittedText(std::to_string(_data), bounds.removeFromTop(bounds.getHeight() / 2), Justification::centred, 1);
+	g.drawFittedText(_name, bounds, Justification::centred, 1);
+
+
+
+
 }
 
 
@@ -55,10 +93,13 @@ void Speedometer::paint(juce::Graphics& g)
  *
  * @param min The minimum speedometer value.
  * @param max The maximum speedometer value.
+ * @throws std::out_of_range
  */
 void Speedometer::setDataRange(float min, float max) {
-	this->_dataMin = min;
-	this->_dataMax = max;
+	_dataMin = min;
+	_dataMax = max;
+	//Recalculate the new rotation for the data point
+	setData(_data);
 }
 
 /**
@@ -80,6 +121,7 @@ void Speedometer::setData(float value) {
 
 	// Set the rotation
 	_rotation = PI * (weight + value) / weight;
+	repaint();
 	
 }
 
@@ -99,5 +141,6 @@ float Speedometer::getData() const {
  * name -> The new name the speedometer.
  */
 void Speedometer::setName(std::string name) {
-	this->_name = name;
+	_name = name;
+	repaint();
 }

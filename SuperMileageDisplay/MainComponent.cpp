@@ -19,5 +19,5 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    _speed.setBounds(10, 10, 100, 100);
+    _speed.setBounds(10, 10, 200, 160);
 }
