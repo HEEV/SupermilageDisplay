@@ -2,18 +2,6 @@
 
 #include <stdexcept>
 
-ColorLight::ColorLight(juce::Point<int> center, juce::Colour colorStart, std::string name) {
-	this->center = center;
-	this->color = colorStart;
-	this->name = name;
-}
-
-ColorLight::ColorLight(juce::Point<int> center) {
-	this->center = center;
-	this->color = juce::Colours::white;
-	this->name = "ColorLight";
-}
-
 ColorLight::~ColorLight() {
 
 }
@@ -23,18 +11,21 @@ ColorLight::~ColorLight() {
  *
  * @param g The JUCE graphics context.
  */
-void ColorLight::draw(juce::Graphics& g) {
+void ColorLight::paint(juce::Graphics& g) 
+{
+	auto bounds = getLocalBounds();
+
 	g.setColour(juce::Colours::yellow);
-	g.drawRect(center.x - 100, center.y - 80, 200, 130);
+	g.drawRect(bounds.getCentreX() - 100, bounds.getCentreY() - 80, 200, 130);
 
 	g.setColour(color);
-	juce::Rectangle<float> house(center.x - 40, center.y - 70, 80, 80);
+	juce::Rectangle<float> house(bounds.getCentreX() - 40, bounds.getCentreY() - 70, 80, 80);
 	g.fillEllipse(house);
 
 	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
 	g.setFont(theFont);
 	g.setColour(juce::Colours::yellow);
-	g.drawText(name, center.x - 100, center.y + 10, 200, 20, juce::Justification::centred, false);
+	g.drawText(name, bounds.getCentreX() - 100, bounds.getCentreY() + 10, 200, 20, juce::Justification::centred, false);
 }
 
 void ColorLight::setColor(juce::Colour color) {

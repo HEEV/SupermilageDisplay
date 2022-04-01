@@ -10,16 +10,16 @@
 
 #include <JuceHeader.h>
 
-class ColorLight {
+class ColorLight : Component
+{
 public:
 
-	ColorLight(juce::Point<int> center, juce::Colour colorStart, std::string name);
-	ColorLight(juce::Point<int> center);
+	ColorLight() {};
 	~ColorLight();
 
 	// # JUCE METHODS
 
-	void draw(juce::Graphics& g);
+	void paint(juce::Graphics& g) override;
 
 	// # SPEEDOMETER INTERFACING
 
@@ -50,11 +50,6 @@ public:
 private:
 
 	// # DISPLAY DATA
-
-	/*
-	 * The positioning on the screen of the light.
-	 */
-	juce::Point<int> center;
 
 	/*
 	 * The light's color

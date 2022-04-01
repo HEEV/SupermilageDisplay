@@ -10,18 +10,16 @@
 
 #include <JuceHeader.h>
 
-class Speedometer
+class Speedometer : public Component
 {
 public:
-	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset);
-	Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color);
-	Speedometer(juce::Point<int> center, float min, float max, std::string name);
-	Speedometer(juce::Point<int> center);
+	Speedometer(std::string_view name, float minData, float maxData, juce::Colour color);
 	~Speedometer();
 
 	// # JUCE METHODS
 	
-	void draw(juce::Graphics& g);
+	void paint(juce::Graphics& g) override;
+	void resized() override { /*do nothing*/ }
 
 	// # SPEEDOMETER INTERFACING
 
@@ -65,60 +63,39 @@ public:
 	void setName(std::string name);
 
 private:
-	// # HELPER METHODS
-
-	/*
-	 * Helper method to set the rotation of the speedometer needle.
-	 *
-	 * Params:
-	 * newRotation -> the rotation of the needle, in radians.
-	 */
-	void setRotation(float newRotation);
-
-
-
 	// # DISPLAY DATA
-
-	/*
-	 * The positioning on the screen of the speedometer.
-	 */
-	juce::Point<int> center;
 
 	/*
 	 * The rotation value of the speedometer, in radians.
 	 */
-	float rotation;
+	float _rotation;
 
 	// # SPEEDOMETER DATA
 
 	/*
 	 * The minimum of the data range of the speedometer.
 	 */
-	float dataMin;
+	float _dataMin;
 
 	/*
 	 * The maximum of the data range of the speedometer.
 	 */
-	float dataMax;
+	float _dataMax;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	float data;
+	float _data;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	std::string name;
+	std::string _name;
 
 	/*
 	 * The color displaying on the speedometer.
 	 */
-	juce::Colour color;
+	juce::Colour _color;
 
-	/*
-	 * The offset of the data displayed
-	 */
-	int readoutOffset;
 
 };

@@ -3,25 +3,8 @@
 #include "Constants.h"
 #include <stdexcept>
 
-
-Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color, int readoutOffset) {
-	this->center = center;
-	this->color = color;
-	this->readoutOffset = readoutOffset;
-	setDataRange(min, max);
-	setName(name);
-}
-
-Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name, juce::Colour color) :
-	Speedometer(center, min, max, name, color, 0) {
-}
-
-Speedometer::Speedometer(juce::Point<int> center, float min, float max, std::string name):
-	Speedometer(center, min, max, name, juce::Colours::yellow, 0) {
-}
-
-Speedometer::Speedometer(juce::Point<int> center):
-    Speedometer(center, 0, 100, "Name", juce::Colours::yellow, 0)	{
+Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color) : _name(name), _dataMin(minData), _dataMax(maxData), _color(color)
+{
 }
 
 /**
@@ -36,43 +19,36 @@ Speedometer::~Speedometer() {
  *
  * @param g The JUCE graphics context.
  */
-void Speedometer::draw(juce::Graphics& g) {
+void Speedometer::paint(juce::Graphics& g) 
+{
+	auto bounds = getLocalBounds();
+
 	g.setColour(juce::Colours::yellow);
-	g.drawRect(center.x - 100, center.y - 80, 200, 130);
+	g.drawRect(bounds.getCentreX() - 100, bounds.getCentreY() - 80, 200, 130);
 	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
 	g.setFont(theFont);
-	g.drawText(name, center.x - 100, center.y + 10, 200, 20, juce::Justification::centred, false);
+	g.drawText(_name, bounds.getCentreX() - 100, bounds.getCentreY() + 10, 200, 20, juce::Justification::centred, false);
 
-	g.setColour(color);
-	juce::Rectangle<float> house(center.x - 10, center.y - 10, 20, 20);
+	g.setColour(_color);
+	juce::Rectangle<float> house(bounds.getCentreX() - 10, bounds.getCentreY() - 10, 20, 20);
 	g.fillEllipse(house);
 
 	juce::Path path;
-	path.startNewSubPath(juce::Point<float>(center.x + 10 * std::cos(rotation + 1.57075), center.y + 10 * std::sin(rotation + 1.57075)));
-	path.lineTo(juce::Point<float>(			center.x + 60 * std::cos(rotation),			  center.y + 60 * std::sin(rotation)));
-	path.lineTo(juce::Point<float>(			center.x - 10 * std::cos(rotation + 1.57075), center.y - 10 * std::sin(rotation + 1.57075)));
+	path.startNewSubPath(juce::Point<float>(bounds.getCentreX() + 10 * std::cos(_rotation + 1.57075), bounds.getCentreY() + 10 * std::sin(_rotation + 1.57075)));
+	path.lineTo(juce::Point<float>(			bounds.getCentreX() + 60 * std::cos(_rotation),			  bounds.getCentreY() + 60 * std::sin(_rotation)));
+	path.lineTo(juce::Point<float>(			bounds.getCentreX() - 10 * std::cos(_rotation + 1.57075), bounds.getCentreY() - 10 * std::sin(_rotation + 1.57075)));
 	path.closeSubPath();
 	g.fillPath(path);
 
 	g.setColour(juce::Colours::white);
-	g.drawText(std::to_string(data),	  center.x - 25 + readoutOffset, center.y + 30, 50, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(dataMin),					  center.x - 80, center.y - 10, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(dataMin + (dataMax * .25)), center.x - 60, center.y - 60, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(dataMin + (dataMax * .5)),  center.x - 10, center.y - 80, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(dataMin + (dataMax * .75)), center.x + 40, center.y - 60, 20, 20, juce::Justification::centred, false);
-	g.drawText(std::to_string(dataMax),					  center.x + 60, center.y - 10, 20, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_data),	  bounds.getCentreX() - 25, bounds.getCentreY() + 30, 50, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_dataMin),					  bounds.getCentreX() - 80, bounds.getCentreY() - 10, 20, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_dataMin + (_dataMax * .25)), bounds.getCentreX() - 60, bounds.getCentreY() - 60, 20, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_dataMin + (_dataMax * .5)),  bounds.getCentreX() - 10, bounds.getCentreY() - 80, 20, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_dataMin + (_dataMax * .75)), bounds.getCentreX() + 40, bounds.getCentreY() - 60, 20, 20, juce::Justification::centred, false);
+	g.drawText(std::to_string(_dataMax),					  bounds.getCentreX() + 60, bounds.getCentreY() - 10, 20, 20, juce::Justification::centred, false);
 }
 
-/**
- * Sets the rotation of the speedometer pin, from a range of
- * 0 radians to 2pi radians.
- *
- * @param newRotation the radian value.
- *
- **/
-void Speedometer::setRotation(float newRotation) {
-	this->rotation = newRotation;
-}
 
 /**
  * Sets the range of data points in the speedometer.
@@ -81,8 +57,8 @@ void Speedometer::setRotation(float newRotation) {
  * @param max The maximum speedometer value.
  */
 void Speedometer::setDataRange(float min, float max) {
-	this->dataMin = min;
-	this->dataMax = max;
+	this->_dataMin = min;
+	this->_dataMax = max;
 }
 
 /**
@@ -92,18 +68,18 @@ void Speedometer::setDataRange(float min, float max) {
  * @throws std::out_of_range
  */
 void Speedometer::setData(float value) {
-	if ((int)value < dataMin || (int)value > dataMax) {
+	if (value < _dataMin || value > _dataMax) {
 		throw std::out_of_range("value must be within the provided data range.");
 	}
 
-	data = value;
+	_data = value;
 
 	// Range the data around 0
-	float weight = dataMax - dataMin;
-	value = value - dataMin;
+	float weight = _dataMax - _dataMin;
+	value = value - _dataMin;
 
 	// Set the rotation
-	setRotation(PI * (weight + value) / weight);
+	_rotation = PI * (weight + value) / weight;
 	
 }
 
@@ -113,7 +89,7 @@ void Speedometer::setData(float value) {
  * @return The speedometer data.
  */
 float Speedometer::getData() const {
-	return data;
+	return _data;
 }
 
 /*
@@ -123,5 +99,5 @@ float Speedometer::getData() const {
  * name -> The new name the speedometer.
  */
 void Speedometer::setName(std::string name) {
-	this->name = name;
+	this->_name = name;
 }
