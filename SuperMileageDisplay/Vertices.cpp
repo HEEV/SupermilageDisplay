@@ -10,7 +10,7 @@
 
 #include "Vertices.h"
 
-Vertices::Vertices(juce::Point<float> center, float verticalRadius, float horizontalRadius) :
+Vertices::Vertices(juce::Point<Vertices::PointType> center, PointType hRadius, PointType vRadius) :
     _center(center), _v_radius(verticalRadius), _h_radius(horizontalRadius) {
 
 }
