@@ -43,7 +43,7 @@ endif(WIN32)
 
 add_subdirectory(SuperMileageDisplay)
 add_subdirectory(MQTTComunication)
-add_subdirectory(mosquitto)
+#add_subdirectory(mosquitto)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

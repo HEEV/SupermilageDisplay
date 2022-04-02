@@ -8,7 +8,11 @@ target_sources(SuperMileageDisplay
         MainComponent.h
         Speedometer.cpp
         Speedometer.h
+        SizeableSpeedometer.cpp
+        SizeableSpeedometer.h
         ColorLight.cpp
         ColorLight.h
         Constants.h
+        ProgressBar.h
+        ProgressBar.cpp
 )
