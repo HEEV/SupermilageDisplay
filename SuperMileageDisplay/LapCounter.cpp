@@ -27,3 +27,21 @@ void LapCounter::resized()
 	bounds.removeFromBottom(margin);
 	_lapProgress.setBounds(bounds);
 }
+
+void LapCounter::incrementLapCount() {
+	if (_lapCount < 0.68) {
+		_lapCount += (0.3333333);
+		_lapCounter.setTextToDisplay("Lap " + std::to_string((int)(_lapCount * 3) + 2));
+		if (_lapCount >= 0.68) {
+			_lapCounter.setTextToDisplay("Laps Complete");
+		}
+	}
+}
+
+void LapCounter::setLapDist(double lapDist) {
+	_lapDist = lapDist;
+	if (_lapDist >= 1.0) {
+		_lapDist = 0;
+		incrementLapCount();
+	}
+}

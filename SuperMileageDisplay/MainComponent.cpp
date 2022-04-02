@@ -7,7 +7,7 @@ MainComponent::MainComponent() :
     _wind("Wind MPH", 0.0f, 50.0f, Colours::green, 10),
     _engTemp("Eng. Temp.", 100, 200, Colours::purple, 5),
     _volts("Bat. Volt.", 0, 12, Colours::blue, 4),
-    _counter(10.0)
+    _counter(0.01)
 {
     addAndMakeVisible(_burn);
     addAndMakeVisible(_speed);
@@ -16,6 +16,7 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_volts);
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
+    testLapCounter = 0.01;
 
     setSize(getParentWidth(), getParentHeight());
 }
@@ -28,6 +29,7 @@ MainComponent::~MainComponent()
 //Function exicuts every frame
 void MainComponent::paint (juce::Graphics& g)
 {
+
 }
 
 void MainComponent::resized()
@@ -54,6 +56,7 @@ void MainComponent::resized()
     row.removeFromLeft(marginSmall);
     _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
     _timer.setBounds(bounds.removeFromTop(bounds.getHeight() / 2));
-
+    
+    _counter.setLapDist(0.5);
     _counter.setBounds(bounds);
 }

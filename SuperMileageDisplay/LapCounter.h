@@ -8,6 +8,8 @@ public:
 
 	void paint(Graphics& g) override;
 	void resized() override;
+	void incrementLapCount();
+	void setLapDist(double lapDist);
 
 private:
 	ProgressBar _lapCounter;
