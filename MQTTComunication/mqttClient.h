@@ -28,7 +28,7 @@ public:
 
 	bool initalize();
 	bool Connect();
-	void publish(std::string topic, std::string msg);
+	void publish(std::string topic, SensorData msg);
 	std::string getState();
 
 	void OnLogEvent(struct mosquitto* mosq, void* userdata, int level, const char* str);

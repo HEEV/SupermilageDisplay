@@ -78,9 +78,10 @@ bool mqttClient::Connect() {
 	mosquitto_loop_start(mosq);
 	return true;
 }
-void mqttClient::publish(std::string topic, std::string msg) {
-	//function definition: int mosquitto_publish(mosq, mid, topic, payloadlen, payload, qos, retain);
-	mosquitto_publish(mosq, 0, topic.c_str(), msg.size(), msg.c_str(), 1, false);
+void mqttClient::publish(std::string topic, SensorData msg) {
+	//function definition: int mosquitto_publish(mosq, mid, topic, payloadlen, payload, qos, retain);	
+	std::string temp = msg.id + std::to_string(msg.data);
+	mosquitto_publish(mosq, 0, topic.c_str(), temp.length(), temp.c_str(), 1, false);
 }
 
 std::string mqttClient::getState() { 
@@ -96,7 +97,12 @@ void mqttClient::OnConnected(struct mosquitto* mosq, void* userdata, int result)
 		//Successful Connect
 		_State = STATE0;
 		//Subscribe in incomming topics
+#if defined (_WIN32) || defined( _WIN64)
 		mosquitto_subscribe(mosq, NULL, "#", 2);
+#endif
+#if defined (__linux__)
+		mosquitto_subscribe(mosq, NULL, "Car", 1);
+#endif
 	}
 	else {
 		_State = STATE3;
@@ -129,20 +135,31 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
 			//Filltering for incomming message
 			std::string topic = std::string(message->topic);
-			std::string msg = "null";
+			char stringLoad[50];
+			memcpy(stringLoad, message->payload, message->payloadlen);
+			stringLoad[message->payloadlen] = '\0';
+			std::string temp = std::string(stringLoad);
+			SensorData msg = SensorData(stringLoad[0], std::stof(temp.substr(1)));
+
+			//Unnessiarily complicated COPYING and casting attemp that did not work
+			/*SensorData msg;
+			msg.id = 'J';
+			msg.data = 23.234;
 			//payload is a void* so it must be copied into c-string buffer
 			if (message->payloadlen > 0) {
-				char* msgTemp = new char[message->payloadlen + 1];
-				memcpy(msgTemp, message->payload, message->payloadlen);
-				msgTemp[message->payloadlen] = '\0';
-				msg = std::string(msgTemp);
-			}
+				char* byteArray = (char*)&msg;
+				for (unsigned i = 0; i < message->payloadlen; i++)
+				{
+					byteArray[i] = ((char*)message->payload)[i];
+				}
+			}*/
 
 			Global_Connection[i]->p_Instance->updateHandler(topic, msg);
 			break;
 		}
 	}
 }
+
 void Subscribe(struct mosquitto* mosq, void* userdata, int mid, int qos_count, const int* granted_qos) {
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {

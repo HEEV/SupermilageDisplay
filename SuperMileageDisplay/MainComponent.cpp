@@ -29,7 +29,7 @@ void MainComponent::paint (juce::Graphics& g)
     g.setColour(juce::Colours::royalblue);
 
     Speedometer speed1(speedP1, 0, 30, Storage.Test);
-    speed1.setData(rotate);
+    speed1.setData(Storage.Value);
     speed1.draw(g);
     Speedometer speed2(speedP2, 0, 30, "Speedometer");
     speed2.setData(rotate);
