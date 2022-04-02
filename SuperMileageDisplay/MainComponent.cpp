@@ -3,10 +3,10 @@
 //==============================================================================
 MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
-    _speed("Vehicle MPH", 0.0f, 40.0f, juce::Colour(255, 255, 0)),
-    _wind("Wind MPH", 0.0f, 50.0f, Colours::green, 10),
-    _engTemp("Eng. Temp.", 100, 200, Colours::purple, 5),
-    _volts("Bat. Volt.", 0, 12, Colours::blue, 4),
+    _speed("Vehicle MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
+    _wind("Wind MPH", 0.0f, 50.0f, Colour(253, 185, 19), 10),
+    _engTemp("Eng. Temp.", 100, 200, Colour(253, 185, 19), 4),
+    _volts("Bat. Volt.", 0, 12, Colour(253, 185, 19), 4),
     _counter(10.0)
 {
     addAndMakeVisible(_burn);

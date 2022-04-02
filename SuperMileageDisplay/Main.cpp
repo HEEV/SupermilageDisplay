@@ -53,12 +53,16 @@ public:
     public:
         MainWindow (juce::String name)
             : DocumentWindow (name,
-                              juce::Colours::darkgrey,
+                              Colour(0, 82, 136),
                               DocumentWindow::closeButton)
         {
             
             setUsingNativeTitleBar (false);
             setContentOwned (new MainComponent(), true);
+
+            auto& llf = getLookAndFeel();
+            llf.setColour(DocumentWindow::backgroundColourId, getBackgroundColour());
+            llf.setColour(ColourIds::textColourId, Colour(241, 229, 199));
 
             //Forces GUI to be fullscreen in the car, but remain windowed for development
 #ifdef WIN32

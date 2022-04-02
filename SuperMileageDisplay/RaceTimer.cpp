@@ -11,11 +11,11 @@ RaceTimer::RaceTimer()
 void RaceTimer::paint(Graphics& g)
 {
 	auto bounds = getLocalBounds();
-	g.fillAll(Colours::darkgrey);
+	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 
-	Font f("Consolas", 40.0f, Font::bold);
+	Font f("Consolas", 60.0f, Font::bold);
 	g.setFont(f);
-	g.setColour(Colours::red);
+	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
 
 	short min = (_timeElapsed / 1000) / 60;
 	short sec = (_timeElapsed / 1000) % 60;

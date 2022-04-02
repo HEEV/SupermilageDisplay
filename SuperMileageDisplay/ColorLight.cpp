@@ -28,7 +28,7 @@ void ColorLight::paint(juce::Graphics& g)
 	circle.setCentre(bounds.getCentreX(), circle.getCentreY());
 	g.fillEllipse(circle.toFloat());
 	
-	g.setColour(juce::Colours::yellow);
+	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
 	g.drawText(_name, bounds, juce::Justification::centred, false);
 }
 
