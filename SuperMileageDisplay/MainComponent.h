@@ -5,6 +5,8 @@
 
 #include "Speedometer.h"
 #include "ColorLight.h"
+#include "RaceTimer.h"
+#include "LapCounter.h"
 
 //==============================================================================
 /*
@@ -29,10 +31,13 @@ private:
     ColorLight _burn;
 
     Speedometer _speed;
-    //Speedometer _wind;
-    //Speedometer _engTemp;
-    //Speedometer _volts;
+    Speedometer _wind;
+    Speedometer _engTemp;
+    Speedometer _volts;
 
+    RaceTimer _timer;
+
+    LapCounter _counter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 

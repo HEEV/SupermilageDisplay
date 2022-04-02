@@ -121,6 +121,8 @@ void Speedometer::setData(float value) {
 
 	// Set the rotation
 	_rotation = PI * (weight + value) / weight;
+
+	const MessageManagerLock lck;
 	repaint();
 	
 }

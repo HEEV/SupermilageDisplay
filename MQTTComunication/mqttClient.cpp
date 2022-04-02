@@ -1,5 +1,6 @@
 
 #include "mqttClient.h"
+#include <cstring>
 
 mqttClient* Global_Connection[5] = { 0 };
 
@@ -133,7 +134,7 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 			//payload is a void* so it must be copied into c-string buffer
 			if (message->payloadlen > 0) {
 				char* msgTemp = new char[message->payloadlen + 1];
-				memcpy(msgTemp, message->payload, message->payloadlen);
+				std::memcpy(msgTemp, message->payload, message->payloadlen);
 				msgTemp[message->payloadlen] = '\0';
 				msg = std::string(msgTemp);
 			}

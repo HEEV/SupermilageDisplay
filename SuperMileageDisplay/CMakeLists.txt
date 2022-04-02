@@ -13,4 +13,8 @@ target_sources(SuperMileageDisplay
         Constants.h
         DataValues.h
         DataValues.cpp
+        RaceTimer.h
+        RaceTimer.cpp
+        LapCounter.h
+        LapCounter.cpp
 )

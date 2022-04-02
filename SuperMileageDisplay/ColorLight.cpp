@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 
+ColorLight::ColorLight(std::string name, Colour color) : _name(name), _color(color)
+{
+}
+
 ColorLight::~ColorLight() {
 
 }
@@ -15,27 +19,29 @@ void ColorLight::paint(juce::Graphics& g)
 {
 	auto bounds = getLocalBounds();
 
-	g.setColour(juce::Colours::yellow);
-	g.drawRect(bounds.getCentreX() - 100, bounds.getCentreY() - 80, 200, 130);
+	juce::Font f("Consolas", 20.0f, juce::Font::bold);
+	g.setFont(f);
 
-	g.setColour(color);
-	juce::Rectangle<float> house(bounds.getCentreX() - 40, bounds.getCentreY() - 70, 80, 80);
-	g.fillEllipse(house);
-
-	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
-	g.setFont(theFont);
+	g.setColour(_color);
+	auto circle = bounds.removeFromTop(bounds.getHeight() - f.getHeight());
+	circle.setWidth(circle.getHeight());
+	circle.setCentre(bounds.getCentreX(), circle.getCentreY());
+	g.fillEllipse(circle.toFloat());
+	
 	g.setColour(juce::Colours::yellow);
-	g.drawText(name, bounds.getCentreX() - 100, bounds.getCentreY() + 10, 200, 20, juce::Justification::centred, false);
+	g.drawText(_name, bounds, juce::Justification::centred, false);
 }
 
 void ColorLight::setColor(juce::Colour color) {
-	this->color = color;
+	_color = color;
+	const MessageManagerLock lck;
+	repaint();
 }
 
 juce::Colour ColorLight::getColor() const {
-	return this->color;
+	return _color;
 }
 
 void ColorLight::setName(std::string name) {
-	this->name = name;
+	_name = name;
 }

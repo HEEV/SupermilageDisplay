@@ -53,18 +53,19 @@ public:
     public:
         MainWindow (juce::String name)
             : DocumentWindow (name,
-                              juce::Colours::steelblue,
+                              juce::Colours::darkgrey,
                               DocumentWindow::closeButton)
         {
-            setUsingNativeTitleBar (true);
-            setContentOwned (new MainComponent(), false);
-
-            setResizable (false, false);
+            
+            setUsingNativeTitleBar (false);
+            setContentOwned (new MainComponent(), true);
 
             //Forces GUI to be fullscreen in the car, but remain windowed for development
 #ifdef WIN32
+            setResizable(true, true);
             centreWithSize (WIDTH, HEIGHT);
 #else
+            setResizable(false, false);
             Desktop::getInstance().setKioskModeComponent(this, false);
 #endif
 

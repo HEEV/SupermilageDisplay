@@ -9,12 +9,13 @@
 //
 
 #include <JuceHeader.h>
+#include <atomic>
 
-class ColorLight : Component
+class ColorLight : public Component
 {
 public:
 
-	ColorLight() {};
+	ColorLight(std::string name, Colour color);
 	~ColorLight();
 
 	// # JUCE METHODS
@@ -54,10 +55,12 @@ private:
 	/*
 	 * The light's color
 	 */
-	juce::Colour color;
+	std::atomic<juce::Colour> _color;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	std::string name;
+	std::string _name;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ColorLight)
 };
