@@ -4,12 +4,14 @@
 class LapCounter : public Component
 {
 public:
-	LapCounter(double lapDistance);
+	LapCounter(double lapLength, unsigned lapAmount);
 
 	void paint(Graphics& g) override;
 	void resized() override;
-	void incrementLapCount();
-	void setLapDist(double lapDist);
+
+	void incDistanceTraveled(double dist);
+
+
 
 private:
 	ProgressBar _lapCounter;
@@ -18,7 +20,8 @@ private:
 	double _lapCount;
 	double _lapDist;
 
-	double _totalLapDistance;
+	double _lapLength;
+	unsigned _lapAmount;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LapCounter)
 

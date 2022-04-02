@@ -107,12 +107,9 @@ void Speedometer::setDataRange(float min, float max) {
  * Sets the speedometer value.
  *
  * @param The speedometer value.
- * @throws std::out_of_range
  */
 void Speedometer::setData(float value) {
-	if (value < _dataMin || value > _dataMax) {
-		throw std::out_of_range("value must be within the provided data range.");
-	}
+	value = std::min(_dataMax, std::max(_dataMin, value));
 
 	_data = value;
 

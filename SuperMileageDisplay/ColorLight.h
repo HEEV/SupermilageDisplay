@@ -38,7 +38,7 @@ public:
 	 * Returns:
 	 * The light's current color, which is set using setColor(juce::Colour color)
 	 */
-	juce::Colour getColor() const;
+	const juce::Colour& getColor() const;
 
 	/*
 	 * Sets the name of the light.
@@ -46,7 +46,7 @@ public:
 	 * Params:
 	 * name -> The new name the light.
 	 */
-	void setName(std::string name);
+	void setName(const std::string& name);
 
 private:
 

@@ -38,10 +38,10 @@ void ColorLight::setColor(juce::Colour color) {
 	repaint();
 }
 
-juce::Colour ColorLight::getColor() const {
+const juce::Colour& ColorLight::getColor() const {
 	return _color;
 }
 
-void ColorLight::setName(std::string name) {
+void ColorLight::setName(const std::string& name) {
 	_name = name;
 }

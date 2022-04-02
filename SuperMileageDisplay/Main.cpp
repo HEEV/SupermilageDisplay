@@ -75,6 +75,8 @@ public:
 
             getContentComponent()->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 
+            Desktop::getInstance().setScreenSaverEnabled(false);
+
             setVisible (true);  
         }
 

@@ -1,7 +1,7 @@
 #include "LapCounter.h"
 
-LapCounter::LapCounter(double lapDistance) :
-	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), _lapDist(0), _totalLapDistance(lapDistance)
+LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
+	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), _lapDist(0), _lapLength(lapLength), _lapAmount(lapAmount)
 {
 	_lapCounter.setTextToDisplay("Lap 1");
 
@@ -28,20 +28,16 @@ void LapCounter::resized()
 	_lapProgress.setBounds(bounds);
 }
 
-void LapCounter::incrementLapCount() {
-	if (_lapCount < 0.68) {
-		_lapCount += (0.3333333);
-		_lapCounter.setTextToDisplay("Lap " + std::to_string((int)(_lapCount * 3) + 2));
-		if (_lapCount >= 0.68) {
-			_lapCounter.setTextToDisplay("Laps Complete");
-		}
-	}
-}
+void LapCounter::incDistanceTraveled(double dist)
+{
+	_lapDist += dist / _lapLength;
+	if (_lapDist >= 1.0)
+	{
+		_lapCount += 1.0 / _lapAmount;
 
-void LapCounter::setLapDist(double lapDist) {
-	_lapDist = lapDist;
-	if (_lapDist >= 1.0) {
-		_lapDist = 0;
-		incrementLapCount();
+		_lapDist = 0.0;
+
+		const MessageManagerLock lck;
+		_lapCounter.setTextToDisplay("Lap " + std::to_string((int)_lapCount));
 	}
 }
