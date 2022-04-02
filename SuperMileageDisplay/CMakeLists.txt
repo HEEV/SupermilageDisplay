@@ -16,5 +16,6 @@ target_sources(SuperMileageDisplay
         ProgressBar.h
         ProgressBar.cpp
         ISizeable.h
+        Vertices.cpp
         Vertices.h
 )
