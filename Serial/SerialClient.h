@@ -16,14 +16,14 @@
 class SerialClient {
 public:
 	SerialClient(Delegate* handle);
+	~SerialClient();
 	bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
-
 
 private:
 	void polSerialPort(std::string port, int BaudRate);
 	SensorData ConvertPayload(std::string Temo_Input);
 
 	Delegate* p_updateHandler;
-
+	bool _EndRead = false;
 	std::thread _AsyncSerial;
 };

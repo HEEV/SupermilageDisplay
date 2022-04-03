@@ -11,6 +11,11 @@ bool SerialClient::Initalize(std::string port, int BaudRate) {
 	return true;
 }
 
+SerialClient::~SerialClient() {
+	_EndRead = true;
+	_AsyncSerial.join();
+}
+
 /*void SerialClient::polSerialPort(std::string port, int BaudRate) {
 	serialib SerialPort = serialib();
 	do {
@@ -59,6 +64,10 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 
 	while(RS232_OpenComport(cport_nr, bdrate, mode, 1)) {
 		//Failed to Open
+		if (_EndRead) {
+			return;
+		}
+
 #ifdef _WIN32
 		Sleep(1000);
 #else
@@ -68,7 +77,7 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 
 	bool fullmsg = false;
 	RS232_flushRX(cport_nr);
-	while (1) {
+	while (!_EndRead) {
 		n = RS232_PollComport(cport_nr, buf, 19);
 
 		if (n > 0) {
@@ -102,6 +111,8 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 		RS232_flushRX(cport_nr);
 		fullmsg = false;
 	}
+
+	RS232_CloseComport(cport_nr);
 }
 
 SensorData SerialClient::ConvertPayload(std::string Temp_Input) {
