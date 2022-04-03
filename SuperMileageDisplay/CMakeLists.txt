@@ -11,8 +11,6 @@ target_sources(SuperMileageDisplay
         ColorLight.cpp
         ColorLight.h
         Constants.h
-        DataValues.h
-        DataValues.cpp
         RaceTimer.h
         RaceTimer.cpp
         LapCounter.h

@@ -9,7 +9,7 @@
 	#define PORT "COM4"
 #endif
 #if defined (__linux__)
-	#define PORT  "/dev/ttyUSB0"
+	#define PORT "ttyUSB0" //"/dev/ttyUSB0"
 #endif
 #define BAUDRATE 115200 //9600
 

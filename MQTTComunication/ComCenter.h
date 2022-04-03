@@ -1,6 +1,6 @@
 #pragma once
-#include "mqttClient.h"
 #include <string>
+#include "mqttClient.h"
 #include "Delegate.h"
 #include "SerialClient.h"
 
@@ -9,7 +9,7 @@ constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 o
 class ComCenter : Delegate {
 public:
 	// CONSTRUCTORS
-	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient(this) {
+	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient((Delegate*)this) {
 		p_Instance = inst;
 	}
 
@@ -40,8 +40,17 @@ public:
 	void updateHandler(std::string topic, SensorData msg) {
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
+		if (msg.id == 'E') {
+			return;
+		}
 
 		p_Instance->updateHandler(topic, msg);
+
+#if defined (__linux__)
+		if (topic == "Sensor") {
+			Publish(std::to_string(msg.id), msg);
+		}
+#endif
 	}
 	
 private:

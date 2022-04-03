@@ -7,13 +7,17 @@ SerialClient::SerialClient(Delegate* handle) {
 }
 
 bool SerialClient::Initalize(std::string port, int BaudRate) {
+#if defined (__linux__)
 	_AsyncSerial = std::thread(&SerialClient::polSerialPort, this, port, BaudRate);
+#endif
 	return true;
 }
 
 SerialClient::~SerialClient() {
 	_EndRead = true;
+#if defined (__linux__)
 	_AsyncSerial.join();
+#endif
 }
 
 /*void SerialClient::polSerialPort(std::string port, int BaudRate) {
@@ -53,6 +57,7 @@ SerialClient::~SerialClient() {
 }*/
 
 void SerialClient::polSerialPort(std::string port, int bdrate) {
+#if defined (__linux__)
 	int i = 0;
 	int n = 0;
 	int cport_nr = RS232_GetPortnr(port.c_str());        /* /dev/ttyS0 (COM1 on windows) */
@@ -105,7 +110,7 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 		
 
 		if (Temp_Input != "") {
-			p_updateHandler->updateHandler(Temp_Input, ConvertPayload(Temp_Input));
+			p_updateHandler->updateHandler("Sensor", ConvertPayload(Temp_Input));
 		}
 		Temp_Input.clear();
 		RS232_flushRX(cport_nr);
@@ -113,6 +118,7 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 	}
 
 	RS232_CloseComport(cport_nr);
+#endif
 }
 
 SensorData SerialClient::ConvertPayload(std::string Temp_Input) {

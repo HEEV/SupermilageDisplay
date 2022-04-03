@@ -142,7 +142,7 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 			std::string temp = std::string(stringLoad);
 			SensorData msg = SensorData(stringLoad[0], std::stof(temp.substr(1)));
 
-			//Unnessiarily complicated COPYING and casting attemp that did not work
+			//COPYING and casting attemp that did not work
 			/*SensorData msg;
 			msg.id = 'J';
 			msg.data = 23.234;
