@@ -9,17 +9,18 @@
 //
 
 #include <JuceHeader.h>
+#include <atomic>
 
-class ColorLight {
+class ColorLight : public Component
+{
 public:
 
-	ColorLight(juce::Point<int> center, juce::Colour colorStart, std::string name);
-	ColorLight(juce::Point<int> center);
+	ColorLight(std::string name, Colour color);
 	~ColorLight();
 
 	// # JUCE METHODS
 
-	void draw(juce::Graphics& g);
+	void paint(juce::Graphics& g) override;
 
 	// # SPEEDOMETER INTERFACING
 
@@ -37,7 +38,7 @@ public:
 	 * Returns:
 	 * The light's current color, which is set using setColor(juce::Colour color)
 	 */
-	juce::Colour getColor() const;
+	const juce::Colour& getColor() const;
 
 	/*
 	 * Sets the name of the light.
@@ -45,24 +46,21 @@ public:
 	 * Params:
 	 * name -> The new name the light.
 	 */
-	void setName(std::string name);
+	void setName(const std::string& name);
 
 private:
 
 	// # DISPLAY DATA
 
 	/*
-	 * The positioning on the screen of the light.
-	 */
-	juce::Point<int> center;
-
-	/*
 	 * The light's color
 	 */
-	juce::Colour color;
+	std::atomic<juce::Colour> _color;
 
 	/*
 	 * The data displaying on the speedometer.
 	 */
-	std::string name;
+	std::string _name;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ColorLight)
 };

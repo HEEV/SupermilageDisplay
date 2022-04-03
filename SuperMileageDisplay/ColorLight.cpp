@@ -2,16 +2,8 @@
 
 #include <stdexcept>
 
-ColorLight::ColorLight(juce::Point<int> center, juce::Colour colorStart, std::string name) {
-	this->center = center;
-	this->color = colorStart;
-	this->name = name;
-}
-
-ColorLight::ColorLight(juce::Point<int> center) {
-	this->center = center;
-	this->color = juce::Colours::white;
-	this->name = "ColorLight";
+ColorLight::ColorLight(std::string name, Colour color) : _name(name), _color(color)
+{
 }
 
 ColorLight::~ColorLight() {
@@ -23,28 +15,33 @@ ColorLight::~ColorLight() {
  *
  * @param g The JUCE graphics context.
  */
-void ColorLight::draw(juce::Graphics& g) {
-	g.setColour(juce::Colours::yellow);
-	g.drawRect(center.x - 100, center.y - 80, 200, 130);
+void ColorLight::paint(juce::Graphics& g) 
+{
+	auto bounds = getLocalBounds();
 
-	g.setColour(color);
-	juce::Rectangle<float> house(center.x - 40, center.y - 70, 80, 80);
-	g.fillEllipse(house);
+	juce::Font f("Consolas", 20.0f, juce::Font::bold);
+	g.setFont(f);
 
-	juce::Font theFont("Consolas", 20.0f, juce::Font::bold);
-	g.setFont(theFont);
-	g.setColour(juce::Colours::yellow);
-	g.drawText(name, center.x - 100, center.y + 10, 200, 20, juce::Justification::centred, false);
+	g.setColour(_color);
+	auto circle = bounds.removeFromTop(bounds.getHeight() - f.getHeight());
+	circle.setWidth(circle.getHeight());
+	circle.setCentre(bounds.getCentreX(), circle.getCentreY());
+	g.fillEllipse(circle.toFloat());
+	
+	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
+	g.drawText(_name, bounds, juce::Justification::centred, false);
 }
 
 void ColorLight::setColor(juce::Colour color) {
-	this->color = color;
+	_color = color;
+	const MessageManagerLock lck;
+	repaint();
 }
 
-juce::Colour ColorLight::getColor() const {
-	return this->color;
+const juce::Colour& ColorLight::getColor() const {
+	return _color;
 }
 
-void ColorLight::setName(std::string name) {
-	this->name = name;
+void ColorLight::setName(const std::string& name) {
+	_name = name;
 }
