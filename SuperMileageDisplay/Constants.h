@@ -1,3 +1,3 @@
 #pragma once
 
-#define PI 3.1415
+constexpr float PI = 3.1415;

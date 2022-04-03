@@ -1,20 +1,23 @@
 #include "MainComponent.h"
-#include "Speedometer.h"
-#include "ColorLight.h"
 
 //==============================================================================
-MainComponent::MainComponent() : Storage()
+MainComponent::MainComponent() :
+    _burn("Burn", Colours::red),
+    _speed("Vehicle MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
+    _wind("Wind MPH", 0.0f, 50.0f, Colour(253, 185, 19), 10),
+    _engTemp("Eng. Temp.", 100, 200, Colour(253, 185, 19), 4),
+    _volts("Bat. Volt.", 0, 12, Colour(253, 185, 19), 4),
+    _counter(10.0, 3)
 {
-    setSize (800, 260);
-    setFramesPerSecond(60);
-    speedP1.setXY(100, 80);
-    speedP2.setXY(300, 80);
-    speedP3.setXY(500, 80);
-    speedP4.setXY(700, 80);
-    speedP5.setXY(100, 210);
-    speedP6.setXY(300, 210);
-    speedP7.setXY(500, 210);
-    speedP8.setXY(700, 210);
+    addAndMakeVisible(_burn);
+    addAndMakeVisible(_speed);
+    addAndMakeVisible(_wind);
+    addAndMakeVisible(_engTemp);
+    addAndMakeVisible(_volts);
+    addAndMakeVisible(_timer);
+    addAndMakeVisible(_counter);
+
+    setSize(getParentWidth(), getParentHeight());
 }
 
 MainComponent::~MainComponent()
@@ -25,52 +28,33 @@ MainComponent::~MainComponent()
 //Function exicuts every frame
 void MainComponent::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::darkgrey);
-    g.setColour(juce::Colours::royalblue);
 
-    Speedometer speed1(speedP1, 0, 30, Storage.Test);
-    speed1.setData(Storage.Value);
-    speed1.draw(g);
-    Speedometer speed2(speedP2, 0, 30, "Speedometer");
-    speed2.setData(rotate);
-    speed2.draw(g);
-    Speedometer speed3(speedP3, 0, 30, "Speedometer");
-    speed3.setData(rotate);
-    speed3.draw(g);
-    Speedometer speed4(speedP4, 0, 30, "Speedometer");
-    speed4.setData(rotate);
-    speed4.draw(g);
-    Speedometer speed5(speedP5, 0, 30, "Speedometer");
-    speed5.setData(rotate);
-    speed5.draw(g);
-    Speedometer speed6(speedP6, 0, 30, "Speedometer");
-    speed6.setData(rotate);
-    speed6.draw(g);
-    Speedometer speed7(speedP7, 0, 30, "| Vehicle         |", juce::Colours::yellow, -40);
-    speed7.setData(rotate);
-    speed7.draw(g);
-    Speedometer speed8(speedP7, 0, 30, "|            Wind |", juce::Colours::turquoise, 50);
-    speed8.setData(rotate / 2);
-    speed8.draw(g);
-    ColorLight color1(speedP8, juce::Colours::lightblue, "Break Light");
-
-    if (rotate < 30) {
-        rotate += 0.1;
-    }
-    else {
-        color1.setColor(juce::Colours::palevioletred);
-    }
-    color1.draw(g);
 }
 
 void MainComponent::resized()
 {
-    // This is called when the MainComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
-    currentSizeAsString = juce::String(getWidth()) + " x " + juce::String(getHeight());
-}
+    constexpr int margin = 50;
+    constexpr int marginSmall = 10;
+    constexpr int mainMeterSize = 250;
+    constexpr int rowSize = 200;
 
-void MainComponent::update() {
+    auto bounds = getLocalBounds();
+    bounds.removeFromTop(margin);
 
+    auto row = bounds.removeFromTop(rowSize);
+    row.removeFromLeft(margin);
+    row.removeFromRight(margin);
+
+    _speed.setBounds(row.removeFromLeft(mainMeterSize));
+    _wind.setBounds(row.removeFromRight(mainMeterSize));
+    _burn.setBounds(row.removeFromTop(row.getHeight() / 4));
+
+    row.removeFromLeft(marginSmall);
+
+    _engTemp.setBounds(row.removeFromLeft(row.getWidth() / 2));
+    row.removeFromLeft(marginSmall);
+    _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
+    _timer.setBounds(bounds.removeFromTop(bounds.getHeight() / 2));
+    
+    _counter.setBounds(bounds);
 }

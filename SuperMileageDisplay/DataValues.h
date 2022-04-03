@@ -18,4 +18,5 @@ public:
 private:
 	//Communcation Manager Class
 	ComCenter ComManager;
+
 };

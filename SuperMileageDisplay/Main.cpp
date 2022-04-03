@@ -9,6 +9,9 @@
 #include <JuceHeader.h>
 #include "MainComponent.h"
 
+constexpr int WIDTH = 1024;
+constexpr int HEIGHT = 600;
+
 //==============================================================================
 class JuceFirstApplication  : public juce::JUCEApplication
 {
@@ -17,7 +20,7 @@ public:
     JuceFirstApplication() {}
     const juce::String getApplicationName() override       { return ProjectInfo::projectName; }
     const juce::String getApplicationVersion() override    { return ProjectInfo::versionString; }
-    bool moreThanOneInstanceAllowed() override             { return true; }
+    bool moreThanOneInstanceAllowed() override             { return false; }
 
     //==============================================================================
     void initialise (const juce::String& commandLine) override
@@ -29,25 +32,16 @@ public:
 
     void shutdown() override
     {
-        // Add your application's shutdown code here..
-
-        mainWindow = nullptr; // (deletes our window)
+        mainWindow.reset();
     }
 
     //==============================================================================
     void systemRequestedQuit() override
     {
-        // This is called when the app is being asked to quit: you can ignore this
-        // request and let the app carry on running, or call quit() to allow the app to close.
         quit();
     }
 
-    void anotherInstanceStarted (const juce::String& commandLine) override
-    {
-        // When another instance of the app is launched while this one is running,
-        // this method is invoked, and the commandLine parameter tells you what
-        // the other instance's command-line arguments were.
-    }
+    void anotherInstanceStarted (const juce::String& commandLine) override {  /*Do nothing*/ }
 
     //==============================================================================
     /*
@@ -59,14 +53,29 @@ public:
     public:
         MainWindow (juce::String name)
             : DocumentWindow (name,
-                              juce::Colours::steelblue,
-                              DocumentWindow::allButtons)
+                              Colour(0, 82, 136),
+                              DocumentWindow::closeButton)
         {
-            setUsingNativeTitleBar (true);
+            
+            setUsingNativeTitleBar (false);
             setContentOwned (new MainComponent(), true);
 
-            setResizable (true, true);
-            centreWithSize (getWidth(), getHeight());
+            auto& llf = getLookAndFeel();
+            llf.setColour(DocumentWindow::backgroundColourId, getBackgroundColour());
+            llf.setColour(ColourIds::textColourId, Colour(241, 229, 199));
+
+            //Forces GUI to be fullscreen in the car, but remain windowed for development
+#ifdef WIN32
+            setResizable(true, true);
+            centreWithSize (WIDTH, HEIGHT);
+#else
+            setResizable(false, false);
+            Desktop::getInstance().setKioskModeComponent(this, false);
+#endif
+
+            getContentComponent()->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+
+            Desktop::getInstance().setScreenSaverEnabled(false);
 
             setVisible (true);  
         }

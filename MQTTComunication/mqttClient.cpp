@@ -1,5 +1,6 @@
 
 #include "mqttClient.h"
+#include <cstring>
 
 mqttClient* Global_Connection[5] = { 0 };
 
