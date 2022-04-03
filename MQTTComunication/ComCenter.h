@@ -4,7 +4,7 @@
 #include "Delegate.h"
 #include "SerialClient.h"
 
-#define Address "10.12.12.224:1883" //tcp://10.12.12.224:1883 old
+constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 old
 
 class ComCenter : Delegate {
 public:

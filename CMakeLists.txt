@@ -34,6 +34,24 @@ juce_generate_juce_header(SuperMileageDisplay)
 # Finally, we supply a list of source files that will be built into the target. This is a standard
 # CMake command.
 
+# Create CMake in Serial lib if it does not exist
+
+if(NOT EXISTS "RS-232/CMakeLists.txt")
+    message("RS-232/CMakeLists.txt does not exist. Creating file...")
+    file(WRITE "RS-232/CMakeLists.txt"
+        "
+        cmake_minimum_required(VERSION 3.15)
+
+        target_compile_features(SuperMileageDisplay PRIVATE cxx_std_20)
+        target_sources(SuperMileageDisplay PRIVATE 
+	        rs232.h
+	        rs232.c
+         )
+        "
+    )
+
+endif()
+
 set(WITH_TLS no)
 set(DOCUMENTATION no)
 set(WITH_CJSON no)
@@ -45,9 +63,15 @@ if(WIN32)
 endif(WIN32)
 
 include_directories("mosquitto/include")
+include_directories("RS-232")
+include_directories("Serial")
+include_directories("MQTTComunication")
+include_directories("SuperMileageDisplay")
 add_subdirectory(mosquitto)
 add_subdirectory(SuperMileageDisplay)
 add_subdirectory(MQTTComunication)
+add_subdirectory(RS-232)
+add_subdirectory(Serial)
 
 target_link_libraries(SuperMileageDisplay PUBLIC libmosquitto_static)
 

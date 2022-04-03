@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../MQTTComunication/ComCenter.h"
-#include "../MQTTComunication/Delegate.h"
+#include "ComCenter.h"
+#include "Delegate.h"
 #include <string>
 
 class DataValues : Delegate {

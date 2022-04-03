@@ -1,7 +1,6 @@
 
 #include "SerialClient.h"
-#include "serialib.h"
-#include "rs232.h"
+#include <rs232.h>
 
 SerialClient::SerialClient(Delegate* handle) {
 	p_updateHandler = handle;
