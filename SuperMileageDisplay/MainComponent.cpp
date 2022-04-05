@@ -1,4 +1,5 @@
 #include "MainComponent.h"
+#include <string>
 
 //==============================================================================
 MainComponent::MainComponent() :
@@ -7,7 +8,8 @@ MainComponent::MainComponent() :
     _wind("Wind MPH", 0.0f, 50.0f, Colour(253, 185, 19), 10),
     _engTemp("Eng. Temp.", 100, 200, Colour(253, 185, 19), 4),
     _volts("Bat. Volt.", 0, 12, Colour(253, 185, 19), 4),
-    _counter(10.0, 3)
+    _counter(10.0, 3),
+    _ComManager(ComCenter((Delegate*)this))
 {
     addAndMakeVisible(_burn);
     addAndMakeVisible(_speed);
@@ -18,6 +20,8 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_counter);
 
     setSize(getParentWidth(), getParentHeight());
+
+    _ComManager.initalize();
 }
 
 MainComponent::~MainComponent()
@@ -57,4 +61,24 @@ void MainComponent::resized()
     _timer.setBounds(bounds.removeFromTop(bounds.getHeight() / 2));
     
     _counter.setBounds(bounds);
+}
+
+void MainComponent::updateHandler(std::string topic, SensorData msg) {
+    switch (msg.id) {
+    case(SensorType::Speed):
+        _speed.setData(msg.data);
+        break;
+    case(SensorType::Wind):
+        _wind.setData(msg.data);
+        break;
+    case(SensorType::EngineTemperature):
+        _engTemp.setData(msg.data);
+        break;
+    case(SensorType::BatterVoltage):
+        _volts.setData(msg.data);
+        break;
+    case(SensorType::Burn):
+
+        break;
+    }
 }

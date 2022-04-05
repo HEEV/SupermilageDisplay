@@ -1,14 +1,15 @@
 #pragma once
-#include "mqttClient.h"
 #include <string>
+#include "mqttClient.h"
 #include "Delegate.h"
+#include "SerialClient.h"
 
-#define Address "10.12.12.224:1883" //tcp://10.12.12.224:1883 old
+constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 old
 
 class ComCenter : Delegate {
 public:
 	// CONSTRUCTORS
-	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address) {
+	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient((Delegate*)this) {
 		p_Instance = inst;
 	}
 
@@ -18,7 +19,9 @@ public:
 
 		while (p_cellClient.getState() != "0:Connected");
 		//Test mqtt network connection
-		p_cellClient.publish("ComCenter", "Client Ready");
+		p_cellClient.publish("ComCenter", SensorData());
+
+		_SerialClient.Initalize();
 
 		return true;
 	}
@@ -30,20 +33,30 @@ public:
 	}
 
 	//Sends topic and message out all connected channels
-	void Publish(std::string topic, std::string message) {
+	void Publish(std::string topic, SensorData message) {
 		p_cellClient.publish(topic, message);
 	}
 
-	void updateHandler(std::string topic, std::string msg) {
+	void updateHandler(std::string topic, SensorData msg) {
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
+		if (msg.id == 'E') {
+			return;
+		}
 
 		p_Instance->updateHandler(topic, msg);
+
+#if defined (__linux__)
+		if (topic == "Sensor") {
+			Publish(std::to_string(msg.id), msg);
+		}
+#endif
 	}
 	
 private:
 	std::string _Error;
 	Delegate* p_Instance;
 	mqttClient p_cellClient;
+	SerialClient _SerialClient;
 };
 
