@@ -80,6 +80,8 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 #endif
 	}
 
+	int end = 0;
+	int pos = 0;
 	bool fullmsg = false;
 	RS232_flushRX(cport_nr);
 	while (!_EndRead) {
@@ -93,9 +95,9 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 		}
 		for (int i = 0; i < n; i++) {
 			if (buf[i] == '\r') {
-				buf[i] = '\0';
+				//buf[i] = '\0';
 				fullmsg = true;
-				break;
+				//break;
 			}
 			else if ((char)(buf[i]) < 32) {
 				buf[i] = '0';
@@ -106,11 +108,13 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 		if (!fullmsg) {
 			continue;
 		}
-		Temp_Input.erase(0, Temp_Input.find_first_not_of('0'));
-		
 
-		if (Temp_Input != "") {
-			p_updateHandler->updateHandler("Sensor", ConvertPayload(Temp_Input));
+		while ((end = Temp_Input.find('\r')) != -1) {
+			Temp_Input.erase(0, Temp_Input.find_first_not_of('0'));
+
+			p_updateHandler->updateHandler("Sensor", ConvertPayload(Temp_Input.substr(0, Temp_Input.find_first_of('\r'))));
+
+			Temp_Input.erase(0, end + 1);
 		}
 		Temp_Input.clear();
 		RS232_flushRX(cport_nr);

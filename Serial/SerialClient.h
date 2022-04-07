@@ -6,7 +6,7 @@
 #include "Delegate.h"
 
 #if defined (_WIN32) || defined( _WIN64)
-	#define PORT "COM4"
+	#define PORT "COM6"
 #endif
 #if defined (__linux__)
 	#define PORT "ttyUSB0" //"/dev/ttyUSB0"
