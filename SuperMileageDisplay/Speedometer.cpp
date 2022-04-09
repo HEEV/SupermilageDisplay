@@ -1,12 +1,15 @@
 
-#include "Speedometer.h"
-#include "Constants.h"
 #include <stdexcept>
 #include <sstream>
+
+#include "Profiler.h"
+#include "Speedometer.h"
+#include "Constants.h"
 
 Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
 	_name(name), _dataMin(minData), _dataMax(maxData), _color(color), _lineWidth(lineWidth), _subdivisions(subdivisions)
 {
+	FUNCTION_PROFILE();
 	setData(_dataMin);
 }
 
@@ -14,6 +17,7 @@ Speedometer::Speedometer(std::string_view name, float minData, float maxData, ju
  * Destructor.
  */
 Speedometer::~Speedometer() {
+	FUNCTION_PROFILE();
 
 }
 
@@ -25,6 +29,7 @@ Speedometer::~Speedometer() {
  */
 void Speedometer::paint(juce::Graphics& g) 
 {
+	FUNCTION_PROFILE();
 	//setPaintingIsUnclipped(true);
 	auto bounds = getLocalBounds();
 	Font f("Consolas", 25.0f, Font::bold);
@@ -97,6 +102,7 @@ void Speedometer::paint(juce::Graphics& g)
  * @throws std::out_of_range
  */
 void Speedometer::setDataRange(float min, float max) {
+	FUNCTION_PROFILE();
 	_dataMin = min;
 	_dataMax = max;
 	//Recalculate the new rotation for the data point
@@ -109,6 +115,8 @@ void Speedometer::setDataRange(float min, float max) {
  * @param The speedometer value.
  */
 void Speedometer::setData(float value) {
+	FUNCTION_PROFILE();
+
 	value = std::min(_dataMax, std::max(_dataMin, value));
 
 	_data = value;
@@ -131,6 +139,7 @@ void Speedometer::setData(float value) {
  * @return The speedometer data.
  */
 float Speedometer::getData() const {
+	FUNCTION_PROFILE();
 	return _data;
 }
 
@@ -141,6 +150,7 @@ float Speedometer::getData() const {
  * name -> The new name the speedometer.
  */
 void Speedometer::setName(std::string name) {
+	FUNCTION_PROFILE();
 	_name = name;
 	repaint();
 }

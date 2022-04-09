@@ -1,6 +1,8 @@
 #include "MainComponent.h"
 #include <string>
 
+#include "Profiler.h"
+
 //==============================================================================
 MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
@@ -11,6 +13,7 @@ MainComponent::MainComponent() :
     _counter(10.0, 3),
     _ComManager(ComCenter((Delegate*)this))
 {
+    FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
     addAndMakeVisible(_speed);
     addAndMakeVisible(_wind);
@@ -26,6 +29,7 @@ MainComponent::MainComponent() :
 
 MainComponent::~MainComponent()
 {
+    FUNCTION_PROFILE();
 }
 
 //==============================================================================
@@ -37,6 +41,7 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
+    FUNCTION_PROFILE();
     constexpr int margin = 50;
     constexpr int marginSmall = 10;
     constexpr int mainMeterSize = 250;
@@ -63,7 +68,9 @@ void MainComponent::resized()
     _counter.setBounds(bounds);
 }
 
-void MainComponent::updateHandler(std::string topic, SensorData msg) {
+void MainComponent::updateHandler(std::string topic, SensorData msg) 
+{
+    FUNCTION_PROFILE();
     switch (msg.id) {
     case(SensorType::Speed):
         _speed.setData(msg.data);

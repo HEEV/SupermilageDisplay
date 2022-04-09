@@ -1,8 +1,11 @@
 #include "LapCounter.h"
 
+#include "Profiler.h"
+
 LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
 	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), _lapDist(0), _lapLength(lapLength), _lapAmount(lapAmount)
 {
+	FUNCTION_PROFILE();
 	_lapCounter.setTextToDisplay("Lap 1");
 
 	addAndMakeVisible(_lapCounter);
@@ -11,10 +14,12 @@ LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
 
 void LapCounter::paint(Graphics& g)
 {
+	FUNCTION_PROFILE();
 }
 
 void LapCounter::resized()
 {
+	FUNCTION_PROFILE();
 	auto bounds = getLocalBounds();
 	constexpr int margin = 5;
 
@@ -30,6 +35,7 @@ void LapCounter::resized()
 
 void LapCounter::incDistanceTraveled(double dist)
 {
+	FUNCTION_PROFILE();
 	_lapDist += dist / _lapLength;
 	if (_lapDist >= 1.0)
 	{
