@@ -11,23 +11,23 @@ SerialClient::SerialClient(Delegate* handle) {
 
 bool SerialClient::Initalize(std::string port, int BaudRate) {
 	FUNCTION_PROFILE();
-//#if defined (__linux__)
+#if defined (__linux__)
 	_AsyncSerial = std::thread(&SerialClient::polSerialPort, this, port, BaudRate);
-//#endif
+#endif
 	return true;
 }
 
 SerialClient::~SerialClient() {
 	FUNCTION_PROFILE();
 	_EndRead = true;
-//#if defined (__linux__)
+#if defined (__linux__)
 	_AsyncSerial.join();
-//#endif
+#endif
 }
 
 void SerialClient::polSerialPort(std::string port, int bdrate) {
 	FUNCTION_PROFILE();
-//#if defined (__linux__)
+#if defined (__linux__)
 	int n = 0;
 
 	int cport_nr = RS232_GetPortnr(port.c_str());
@@ -96,7 +96,7 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 	}
 
 	RS232_CloseComport(cport_nr);
-//#endif
+#endif
 }
 
 SensorData SerialClient::ConvertPayload(std::string& Temp_Input) {
