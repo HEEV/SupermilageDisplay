@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+//#include <thread>
+//#include <mutex>
+//#include <queue>
 #include "mqttClient.h"
 #include "Delegate.h"
 #include "SerialClient.h"
@@ -9,7 +12,14 @@ constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 o
 class ComCenter : Delegate {
 public:
 	// CONSTRUCTORS
-	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient((Delegate*)this) {
+	ComCenter(Delegate* inst) : 
+		p_cellClient((Delegate*)this, Address), 
+		_SerialClient((Delegate*)this)//,
+		/*_Mutex(std::mutex()),
+		_Lock1(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
+		_Lock2(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
+		msgAvailable(std::condition_variable())*/
+	{
 		p_Instance = inst;
 	}
 
@@ -17,7 +27,6 @@ public:
 		//setup the connetion with the mqtt module
 		p_cellClient.initalize();
 
-		while (p_cellClient.getState() != "0:Connected");
 		//Test mqtt network connection
 		p_cellClient.publish("ComCenter", SensorData());
 
@@ -34,13 +43,15 @@ public:
 
 	//Sends topic and message out all connected channels
 	void Publish(std::string topic, SensorData message) {
-		p_cellClient.publish(topic, message);
+		if (getState() == "0:Connected") {
+			p_cellClient.publish(topic, message);
+		}
 	}
 
 	void updateHandler(std::string topic, SensorData msg) {
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
-		if (msg.id == 'E') {
+		if (msg.id == 'A') {
 			return;
 		}
 
@@ -58,5 +69,10 @@ private:
 	Delegate* p_Instance;
 	mqttClient p_cellClient;
 	SerialClient _SerialClient;
+	/*std::thread _updateThread;
+	std::mutex _Mutex;
+	std::unique_lock<std::mutex> _Lock1;
+	std::unique_lock<std::mutex> _Lock2;
+	std::condition_variable msgAvailable;*/
 };
 

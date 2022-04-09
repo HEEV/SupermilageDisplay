@@ -6,7 +6,7 @@
 #include "Delegate.h"
 
 #if defined (_WIN32) || defined( _WIN64)
-	#define PORT "COM6"
+	#define PORT "COM4"
 #endif
 #if defined (__linux__)
 	#define PORT "ttyUSB0" //"/dev/ttyUSB0"
@@ -21,7 +21,7 @@ public:
 
 private:
 	void polSerialPort(std::string port, int BaudRate);
-	SensorData ConvertPayload(std::string Temo_Input);
+	SensorData ConvertPayload(std::string& Temp_Input);
 
 	Delegate* p_updateHandler;
 	bool _EndRead = false;
