@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+//#include <thread>
+//#include <mutex>
+//#include <queue>
 #include "mqttClient.h"
 #include "Delegate.h"
 #include "SerialClient.h"
@@ -12,6 +15,14 @@ public:
 	// CONSTRUCTORS
 	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient((Delegate*)this) {
 		FUNCTION_PROFILE();
+	ComCenter(Delegate* inst) : 
+		p_cellClient((Delegate*)this, Address), 
+		_SerialClient((Delegate*)this)//,
+		/*_Mutex(std::mutex()),
+		_Lock1(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
+		_Lock2(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
+		msgAvailable(std::condition_variable())*/
+	{
 		p_Instance = inst;
 	}
 
@@ -20,7 +31,6 @@ public:
 		//setup the connetion with the mqtt module
 		p_cellClient.initalize();
 
-		while (p_cellClient.getState() != "0:Connected");
 		//Test mqtt network connection
 		p_cellClient.publish("ComCenter", SensorData());
 
@@ -41,12 +51,16 @@ public:
 		FUNCTION_PROFILE();
 		p_cellClient.publish(topic, message);
 	}
+		if (getState() == "0:Connected") {
+			p_cellClient.publish(topic, message);
+		}
+	}
 
 	void updateHandler(std::string topic, SensorData msg) {
 		FUNCTION_PROFILE();
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
-		if (msg.id == 'E') {
+		if (msg.id == 'A') {
 			return;
 		}
 
@@ -64,5 +78,10 @@ private:
 	Delegate* p_Instance;
 	mqttClient p_cellClient;
 	SerialClient _SerialClient;
+	/*std::thread _updateThread;
+	std::mutex _Mutex;
+	std::unique_lock<std::mutex> _Lock1;
+	std::unique_lock<std::mutex> _Lock2;
+	std::condition_variable msgAvailable;*/
 };
 

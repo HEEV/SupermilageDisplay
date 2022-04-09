@@ -21,7 +21,7 @@ public:
 
 private:
 	void polSerialPort(std::string port, int BaudRate);
-	SensorData ConvertPayload(std::string Temo_Input);
+	SensorData ConvertPayload(std::string& Temp_Input);
 
 	Delegate* p_updateHandler;
 	bool _EndRead = false;
