@@ -1,5 +1,6 @@
 #include "MainComponent.h"
 #include <string>
+#include <fstream>
 
 #include "Profiler.h"
 
@@ -11,7 +12,8 @@ MainComponent::MainComponent() :
     _engTemp("Eng. Temp.", 100, 200, Colour(253, 185, 19), 4),
     _volts("Bat. Volt.", 0, 12, Colour(253, 185, 19), 4),
     _counter(10.0, 3),
-    _ComManager(ComCenter((Delegate*)this))
+    _ComManager(ComCenter((Delegate*)this)),
+    _DebugStream(std::stringstream())
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
@@ -29,7 +31,10 @@ MainComponent::MainComponent() :
 
 MainComponent::~MainComponent()
 {
-    FUNCTION_PROFILE();
+    std::fstream fout = std::fstream();
+    fout.open("data.txt", std::ios::out || std::ios::trunc);
+    fout << _DebugStream.str();
+    fout.close();
 }
 
 //==============================================================================
@@ -88,4 +93,5 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
 
         break;
     }
+    _DebugStream << msg.id << " " << msg.data << "\n";
 }

@@ -50,6 +50,7 @@ private:
     LapCounter _counter;
 
     ComCenter _ComManager;
+    std::stringstream _DebugStream;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 
