@@ -10,8 +10,9 @@
 
 #include <JuceHeader.h>
 #include <atomic>
+#include <thread>
 
-class Speedometer : public Component
+class Speedometer : public AnimatedAppComponent
 {
 public:
 	Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions = 8, int lineWidth = 5);
@@ -21,6 +22,7 @@ public:
 	
 	void paint(juce::Graphics& g) override;
 	void resized() override { /*do nothing*/ }
+	void update() override { /*Do Nothing*/ }
 
 	// # SPEEDOMETER INTERFACING
 
@@ -65,8 +67,8 @@ public:
 
 private:
 	// # DISPLAY DATA
-	int _lineWidth = 5;
-	int _subdivisions = 8;
+	int _lineWidth;
+	int _subdivisions;
 
 	/*
 	 * The rotation value of the speedometer, in radians.

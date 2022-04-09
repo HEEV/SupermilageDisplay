@@ -6,7 +6,7 @@
 #include "Delegate.h"
 
 #if defined (_WIN32) || defined( _WIN64)
-constexpr char const* PORT = "COM3";
+constexpr char const* PORT = "COM7";
 #endif
 #if defined (__linux__)
 constexpr char const* PORT = "ttyUSB0"; //"/dev/ttyUSB0"

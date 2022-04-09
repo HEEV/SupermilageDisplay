@@ -11,6 +11,7 @@ Speedometer::Speedometer(std::string_view name, float minData, float maxData, ju
 {
 	FUNCTION_PROFILE();
 	setData(_dataMin);
+	setFramesPerSecond(30);
 }
 
 /**
@@ -30,8 +31,10 @@ Speedometer::~Speedometer() {
 void Speedometer::paint(juce::Graphics& g) 
 {
 	FUNCTION_PROFILE();
-	//setPaintingIsUnclipped(true);
 	auto bounds = getLocalBounds();
+
+	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
+
 	Font f("Consolas", 25.0f, Font::bold);
 	g.setFont(f);
 
@@ -127,9 +130,6 @@ void Speedometer::setData(float value) {
 
 	// Set the rotation
 	_rotation = PI * (weight + value) / weight;
-
-	const MessageManagerLock lck;
-	repaint();
 	
 }
 
@@ -152,5 +152,4 @@ float Speedometer::getData() const {
 void Speedometer::setName(std::string name) {
 	FUNCTION_PROFILE();
 	_name = name;
-	repaint();
 }
