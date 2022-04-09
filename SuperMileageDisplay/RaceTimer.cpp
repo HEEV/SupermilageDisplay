@@ -2,14 +2,18 @@
 #include <sstream>
 #include <iomanip>
 
+#include "Profiler.h"
+
 RaceTimer::RaceTimer()
 {
+	FUNCTION_PROFILE();
 	_timeElapsed = 0;
 	setFramesPerSecond(2);
 }
 
 void RaceTimer::paint(Graphics& g)
 {
+	FUNCTION_PROFILE();
 	auto bounds = getLocalBounds();
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 
@@ -27,5 +31,6 @@ void RaceTimer::paint(Graphics& g)
 
 void RaceTimer::update()
 {
+	FUNCTION_PROFILE();
 	_timeElapsed += getMillisecondsSinceLastUpdate();
 }

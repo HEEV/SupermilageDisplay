@@ -6,12 +6,12 @@
 #include "Delegate.h"
 
 #if defined (_WIN32) || defined( _WIN64)
-	#define PORT "COM4"
+constexpr char const* PORT = "COM3";
 #endif
 #if defined (__linux__)
-	#define PORT "ttyUSB0" //"/dev/ttyUSB0"
+constexpr char const* PORT = "ttyUSB0"; //"/dev/ttyUSB0"
 #endif
-#define BAUDRATE 115200 //9600
+constexpr int BAUDRATE = 115200; //9600
 
 class SerialClient {
 public:

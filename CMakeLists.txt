@@ -67,11 +67,13 @@ include_directories("RS-232")
 include_directories("Serial")
 include_directories("MQTTComunication")
 include_directories("SuperMileageDisplay")
+include_directories("Profiler")
 add_subdirectory(mosquitto)
 add_subdirectory(SuperMileageDisplay)
 add_subdirectory(MQTTComunication)
 add_subdirectory(RS-232)
 add_subdirectory(Serial)
+add_subdirectory(Profiler)
 
 target_link_libraries(SuperMileageDisplay PUBLIC libmosquitto_static)
 

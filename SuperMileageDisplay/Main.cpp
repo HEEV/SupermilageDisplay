@@ -8,6 +8,7 @@
 
 #include <JuceHeader.h>
 #include "MainComponent.h"
+#include "Profiler.h"
 
 constexpr int WIDTH = 1024;
 constexpr int HEIGHT = 600;
@@ -26,18 +27,20 @@ public:
     void initialise (const juce::String& commandLine) override
     {
         // This method is where you should put your application's initialisation code..
-
+        FUNCTION_PROFILE();
         mainWindow.reset (new MainWindow (getApplicationName()));
     }
 
     void shutdown() override
     {
-        mainWindow.reset();
+        FUNCTION_PROFILE();
+        mainWindow = nullptr;
     }
 
     //==============================================================================
     void systemRequestedQuit() override
     {
+        FUNCTION_PROFILE();
         quit();
     }
 
@@ -56,7 +59,7 @@ public:
                               Colour(0, 82, 136),
                               DocumentWindow::closeButton)
         {
-            
+            FUNCTION_PROFILE();
             setUsingNativeTitleBar (false);
             setContentOwned (new MainComponent(), true);
 
@@ -82,6 +85,7 @@ public:
 
         void closeButtonPressed() override
         {
+            FUNCTION_PROFILE();
             // This is called when the user tries to close this window. Here, we'll just
             // ask the app to quit when this happens, but you can change this to do
             // whatever you need.

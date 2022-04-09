@@ -2,6 +2,8 @@
 #include "mqttClient.h"
 #include <cstring>
 
+#include "Profiler.h"
+
 mqttClient* Global_Connection[5] = { 0 };
 
 void Logevent(struct mosquitto* mosq, void* userdata, int level, const char* str);
@@ -11,6 +13,7 @@ void Subscribe(struct mosquitto* mosq, void* userdata, int mid, int qos_count, c
 void Global_Reconnect(struct mosquitto* mosq, void* data, int num);
 
 mqttClient::mqttClient() {
+	FUNCTION_PROFILE();
 	p_Instance = nullptr;
 	mosq = nullptr;
 	_State = STATE1;
@@ -20,6 +23,7 @@ mqttClient::mqttClient() {
 }
 
 mqttClient::mqttClient(Delegate* inst, std::string BrokerAddress, std::string Username, std::string Password) {
+	FUNCTION_PROFILE();
 	_BrokerAddress = BrokerAddress.substr(0, BrokerAddress.find(':'));
 	_Port = stoi(BrokerAddress.substr(BrokerAddress.find(':') + 1));
 	mosq = nullptr;
@@ -42,12 +46,14 @@ mqttClient::mqttClient(Delegate* inst, std::string BrokerAddress, std::string Us
 }
 
 mqttClient::~mqttClient() {
+	FUNCTION_PROFILE();
 	mosquitto_loop_stop(mosq, true);
 	mosquitto_destroy(mosq);
 	mosquitto_lib_cleanup();
 }
 
 bool mqttClient::initalize() {
+	FUNCTION_PROFILE();
 	if (_State == STATE1) {
 		return false;
 	}
@@ -65,6 +71,7 @@ bool mqttClient::initalize() {
 	return Connect();
 }
 bool mqttClient::Connect() {
+	FUNCTION_PROFILE();
 	//Abort if class has not been initalized
 	if (_State == STATE1) {
 		return false;
@@ -80,20 +87,24 @@ bool mqttClient::Connect() {
 	return true;
 }
 void mqttClient::publish(std::string topic, SensorData msg) {
+	FUNCTION_PROFILE();
 	//function definition: int mosquitto_publish(mosq, mid, topic, payloadlen, payload, qos, retain);	
 	std::string temp = msg.id + std::to_string(msg.data);
 	mosquitto_publish(mosq, 0, topic.c_str(), temp.length(), temp.c_str(), 1, false);
 }
 
 std::string mqttClient::getState() { 
+	FUNCTION_PROFILE();
 	return _State;
 }
 
 void mqttClient::OnLogEvent(struct mosquitto* mosq, void* userdata, int level, const char* str) {
+	FUNCTION_PROFILE();
 
 }
 
 void mqttClient::OnConnected(struct mosquitto* mosq, void* userdata, int result) {
+	FUNCTION_PROFILE();
 	if (!result) {
 		//Successful Connect
 		_State = STATE0;
@@ -111,11 +122,13 @@ void mqttClient::OnConnected(struct mosquitto* mosq, void* userdata, int result)
 }
 
 void mqttClient::OnSubcribed(struct mosquitto* mosq, void* userdata, int mid, int qos_count, const int* granted_qos) {
+	FUNCTION_PROFILE();
 
 }
 
 //Golobal Functions
 void Logevent(struct mosquitto* mosq, void* userdata, int level, const char* str) {
+	FUNCTION_PROFILE();
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
 			Global_Connection[i]->OnLogEvent(mosq, userdata, level, str);
@@ -124,6 +137,7 @@ void Logevent(struct mosquitto* mosq, void* userdata, int level, const char* str
 	}
 }
 void Onconnect(struct mosquitto* mosq, void* userdata, int level) {
+	FUNCTION_PROFILE();
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
 			Global_Connection[i]->OnConnected(mosq, userdata, level);
@@ -132,6 +146,7 @@ void Onconnect(struct mosquitto* mosq, void* userdata, int level) {
 	}
 }
 void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquitto_message* message) {
+	FUNCTION_PROFILE();
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
 			//Filltering for incomming message
@@ -162,6 +177,7 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 }
 
 void Subscribe(struct mosquitto* mosq, void* userdata, int mid, int qos_count, const int* granted_qos) {
+	FUNCTION_PROFILE();
 	for (int i = 0; i < 5; i++) {
 		if (Global_Connection[i] != nullptr && Global_Connection[i]->mosq == mosq) {
 			Global_Connection[i]->OnSubcribed(mosq, userdata, mid, qos_count, granted_qos);
@@ -171,5 +187,6 @@ void Subscribe(struct mosquitto* mosq, void* userdata, int mid, int qos_count, c
 }
 
 void Global_Reconnect(struct mosquitto* mosq, void* data, int num) {
+	FUNCTION_PROFILE();
 	mosquitto_reconnect_async(mosq);
 }

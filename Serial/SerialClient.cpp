@@ -3,11 +3,14 @@
 #include <rs232.h>
 #include <stdio.h>
 
+#include "Profiler.h"
+
 SerialClient::SerialClient(Delegate* handle) {
 	p_updateHandler = handle;
 }
 
 bool SerialClient::Initalize(std::string port, int BaudRate) {
+	FUNCTION_PROFILE();
 //#if defined (__linux__)
 	_AsyncSerial = std::thread(&SerialClient::polSerialPort, this, port, BaudRate);
 //#endif
@@ -15,6 +18,7 @@ bool SerialClient::Initalize(std::string port, int BaudRate) {
 }
 
 SerialClient::~SerialClient() {
+	FUNCTION_PROFILE();
 	_EndRead = true;
 //#if defined (__linux__)
 	_AsyncSerial.join();
@@ -22,6 +26,7 @@ SerialClient::~SerialClient() {
 }
 
 void SerialClient::polSerialPort(std::string port, int bdrate) {
+	FUNCTION_PROFILE();
 //#if defined (__linux__)
 	int n = 0;
 
@@ -95,6 +100,7 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 }
 
 SensorData SerialClient::ConvertPayload(std::string& Temp_Input) {
+	FUNCTION_PROFILE();
 	SensorData Temp_Struct = SensorData();
 	if (Temp_Input.length() > 1) {
 		Temp_Struct.id = Temp_Input[0];

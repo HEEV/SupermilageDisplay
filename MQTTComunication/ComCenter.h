@@ -6,13 +6,14 @@
 #include "mqttClient.h"
 #include "Delegate.h"
 #include "SerialClient.h"
+#include "Profiler.h"
 
 constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 old
 
 class ComCenter : Delegate {
 public:
 	// CONSTRUCTORS
-	ComCenter(Delegate* inst) : 
+	ComCenter(Delegate* inst) :
 		p_cellClient((Delegate*)this, Address), 
 		_SerialClient((Delegate*)this)//,
 		/*_Mutex(std::mutex()),
@@ -20,10 +21,12 @@ public:
 		_Lock2(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
 		msgAvailable(std::condition_variable())*/
 	{
+		FUNCTION_PROFILE();
 		p_Instance = inst;
 	}
 
 	bool initalize() {
+		FUNCTION_PROFILE();
 		//setup the connetion with the mqtt module
 		p_cellClient.initalize();
 
@@ -38,17 +41,20 @@ public:
 	/*Gets the State of the mqtt clients
 	@return a string that is the client connection status*/
 	std::string getState() { 
+		FUNCTION_PROFILE();
 		return p_cellClient.getState(); 
 	}
 
 	//Sends topic and message out all connected channels
 	void Publish(std::string topic, SensorData message) {
+		FUNCTION_PROFILE();
 		if (getState() == "0:Connected") {
 			p_cellClient.publish(topic, message);
 		}
 	}
 
 	void updateHandler(std::string topic, SensorData msg) {
+		FUNCTION_PROFILE();
 		// This function handle async update from lower classes.the notifications are consolided and
 		//filtered here so that the user only has to look at one function.
 		if (msg.id == 'A') {

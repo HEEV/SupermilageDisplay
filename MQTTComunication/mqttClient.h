@@ -9,15 +9,15 @@
 #include "mosquitto.h"
 
 //Static Connection Paramaters
-#define keepalive 60
-#define clean_session true
-#define DEFAULT_ADRESS "127.0.0.1"
+constexpr int keepalive = 60;
+constexpr bool clean_session = true;
+constexpr char const* DEFAULT_ADRESS = "127.0.0.1";
 
 //State Codes:
-#define STATE0 "0:Connected"
-#define STATE1 "1:Uninitalized"
-#define STATE2 "2:Unable to connect"
-#define STATE3 "3:Connection Failed"
+constexpr char const* STATE0 = "0:Connected";
+constexpr char const* STATE1 = "1:Uninitalized";
+constexpr char const* STATE2 = "2:Unable to connect";
+constexpr char const* STATE3 = "3:Connection Failed";
 
 
 class mqttClient {
