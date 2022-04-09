@@ -11,7 +11,6 @@ SerialClient::SerialClient(Delegate* handle) {
 
 bool SerialClient::Initalize(std::string port, int BaudRate) {
 	FUNCTION_PROFILE();
-#if defined (__linux__)
 //#if defined (__linux__)
 	_AsyncSerial = std::thread(&SerialClient::polSerialPort, this, port, BaudRate);
 //#endif
@@ -28,8 +27,6 @@ SerialClient::~SerialClient() {
 
 void SerialClient::polSerialPort(std::string port, int bdrate) {
 	FUNCTION_PROFILE();
-#if defined (__linux__)
-	int i = 0;
 //#if defined (__linux__)
 	int n = 0;
 
@@ -102,9 +99,8 @@ void SerialClient::polSerialPort(std::string port, int bdrate) {
 //#endif
 }
 
-SensorData SerialClient::ConvertPayload(std::string Temp_Input) {
-	FUNCTION_PROFILE();
 SensorData SerialClient::ConvertPayload(std::string& Temp_Input) {
+	FUNCTION_PROFILE();
 	SensorData Temp_Struct = SensorData();
 	if (Temp_Input.length() > 1) {
 		Temp_Struct.id = Temp_Input[0];

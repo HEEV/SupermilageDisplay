@@ -1,8 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include <ComCenter.h>
-#include <Delegate.h>
+#include "ComCenter.h"
+#include "Delegate.h"
 
 #include "Speedometer.h"
 #include "ColorLight.h"

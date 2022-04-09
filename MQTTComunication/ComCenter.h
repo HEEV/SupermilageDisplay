@@ -13,9 +13,7 @@ constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 o
 class ComCenter : Delegate {
 public:
 	// CONSTRUCTORS
-	ComCenter(Delegate* inst) : p_cellClient((Delegate*)this, Address), _SerialClient((Delegate*)this) {
-		FUNCTION_PROFILE();
-	ComCenter(Delegate* inst) : 
+	ComCenter(Delegate* inst) :
 		p_cellClient((Delegate*)this, Address), 
 		_SerialClient((Delegate*)this)//,
 		/*_Mutex(std::mutex()),
@@ -23,6 +21,7 @@ public:
 		_Lock2(std::unique_lock<std::mutex>(_Mutex, std::defer_lock)),
 		msgAvailable(std::condition_variable())*/
 	{
+		FUNCTION_PROFILE();
 		p_Instance = inst;
 	}
 
@@ -49,8 +48,6 @@ public:
 	//Sends topic and message out all connected channels
 	void Publish(std::string topic, SensorData message) {
 		FUNCTION_PROFILE();
-		p_cellClient.publish(topic, message);
-	}
 		if (getState() == "0:Connected") {
 			p_cellClient.publish(topic, message);
 		}
