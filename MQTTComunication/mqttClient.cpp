@@ -110,10 +110,10 @@ void mqttClient::OnConnected(struct mosquitto* mosq, void* userdata, int result)
 		_State = STATE0;
 		//Subscribe in incomming topics
 #if defined (_WIN32) || defined( _WIN64)
-		mosquitto_subscribe(mosq, NULL, "#", 2);
+		mosquitto_subscribe(mosq, NULL, "CedarvilleSupermilageCarData", 2);
 #endif
 #if defined (__linux__)
-		mosquitto_subscribe(mosq, NULL, "Car", 1);
+		mosquitto_subscribe(mosq, NULL, "CedarvilleSupermilageCar", 1);
 #endif
 	}
 	else {
