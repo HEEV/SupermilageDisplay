@@ -12,6 +12,8 @@
 #include <atomic>
 #include <thread>
 
+#include "LapCounter.h"
+
 class Speedometer : public AnimatedAppComponent
 {
 public:
@@ -22,7 +24,9 @@ public:
 	
 	void paint(juce::Graphics& g) override;
 	void resized() override { /*do nothing*/ }
-	void update() override { /*Do Nothing*/ }
+	void update() override;
+
+	void addLapCounter(LapCounter* lc);
 
 	// # SPEEDOMETER INTERFACING
 
@@ -69,6 +73,8 @@ private:
 	// # DISPLAY DATA
 	int _lineWidth;
 	int _subdivisions;
+
+	LapCounter* _lc;
 
 	/*
 	 * The rotation value of the speedometer, in radians.

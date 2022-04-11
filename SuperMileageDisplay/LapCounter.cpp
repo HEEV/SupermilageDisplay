@@ -1,4 +1,5 @@
 #include "LapCounter.h"
+#include <sstream>
 
 #include "Profiler.h"
 
@@ -43,7 +44,16 @@ void LapCounter::incDistanceTraveled(double dist)
 
 		_lapDist = 0.0;
 
+		std::stringstream ss;
+		ss << (int)(_lapCount * _lapAmount + 1);
+
 		const MessageManagerLock lck;
-		_lapCounter.setTextToDisplay("Lap " + std::to_string((int)_lapCount));
+		if (_lapCount < 1.0f)
+			_lapCounter.setTextToDisplay("Lap " + ss.str());
+		else
+		{
+			_lapCounter.setTextToDisplay("Finished");
+			_lapCounter.setColour(_lapCounter.foregroundColourId, Colours::green);
+		}
 	}
 }

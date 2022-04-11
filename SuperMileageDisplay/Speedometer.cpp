@@ -7,7 +7,8 @@
 #include "Constants.h"
 
 Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
-	_name(name), _dataMin(minData), _dataMax(maxData), _color(color), _lineWidth(lineWidth), _subdivisions(subdivisions)
+	_name(name), _dataMin(minData), _dataMax(maxData), 
+	_color(color), _lineWidth(lineWidth), _subdivisions(subdivisions), _lc(nullptr)
 {
 	FUNCTION_PROFILE();
 	setData(_dataMin);
@@ -86,14 +87,29 @@ void Speedometer::paint(juce::Graphics& g)
 
 	//Make the meter take up space before drawing the labels
 	bounds.removeFromTop(bounds.getHeight() - (2 * f.getHeight()));
+
+	std::stringstream ss;
+	ss.precision();
+	ss << std::fixed << _data;
 	
 	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
-	g.drawFittedText(std::to_string(_data), bounds.removeFromTop(bounds.getHeight() / 2), Justification::centred, 1);
+	g.drawFittedText(ss.str(), bounds.removeFromTop(bounds.getHeight() / 2), Justification::centred, 1);
 	g.drawFittedText(_name, bounds, Justification::centred, 1);
 
 
 
 
+}
+
+void Speedometer::update()
+{
+	if (_lc)
+		_lc->incDistanceTraveled((1.0f / 30.0f) / 3600.0f *_data);
+}
+
+void Speedometer::addLapCounter(LapCounter* lc)
+{
+	_lc = lc;
 }
 
 

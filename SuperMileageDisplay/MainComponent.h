@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <fstream>
 #include "ComCenter.h"
 #include "Delegate.h"
 
@@ -50,7 +51,7 @@ private:
     LapCounter _counter;
 
     ComCenter _ComManager;
-    std::stringstream _DebugStream;
+    std::fstream _dataStream;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 

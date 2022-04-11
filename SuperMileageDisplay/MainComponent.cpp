@@ -1,19 +1,19 @@
 #include "MainComponent.h"
 #include <string>
-#include <fstream>
+#include <chrono>
+#include <iostream>
 
 #include "Profiler.h"
 
 //==============================================================================
 MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
-    _speed("Vehicle MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _wind("Wind MPH", 0.0f, 50.0f, Colour(253, 185, 19), 10),
-    _engTemp("Eng. Temp.", 100, 200, Colour(253, 185, 19), 4),
-    _volts("Bat. Volt.", 0, 12, Colour(253, 185, 19), 4),
-    _counter(10.0, 3),
-    _ComManager(ComCenter((Delegate*)this)),
-    _DebugStream(std::stringstream())
+    _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
+    _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
+    _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
+    _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
+    _counter(2.5f, 4),
+    _ComManager(ComCenter((Delegate*)this))
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
@@ -24,17 +24,24 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
 
+    _speed.addLapCounter(&_counter);
+    
     setSize(getParentWidth(), getParentHeight());
+
+    _dataStream.open("data.txt", std::ios::out | std::ios::app);
+    if (_dataStream.is_open())
+    {
+        _dataStream << "Begin Race\n";
+        _dataStream << "Time, Speed, Wind Speed\n";
+    }
 
     _ComManager.initalize();
 }
 
 MainComponent::~MainComponent()
 {
-    std::fstream fout = std::fstream();
-    fout.open("data.txt", std::ios::out || std::ios::trunc);
-    fout << _DebugStream.str();
-    fout.close();
+    if(_dataStream.is_open())
+        _dataStream.close();
 }
 
 //==============================================================================
@@ -76,12 +83,26 @@ void MainComponent::resized()
 void MainComponent::updateHandler(std::string topic, SensorData msg) 
 {
     FUNCTION_PROFILE();
+
+    auto now = std::chrono::high_resolution_clock::now();
+
     switch (msg.id) {
     case(SensorType::Speed):
         _speed.setData(msg.data);
+        if (_dataStream.is_open())
+        {
+            _dataStream << (now - APP_START).count() / 1000000.0f << ", " << msg.data << ", \n";
+            _dataStream.flush();
+        }
         break;
     case(SensorType::Wind):
         _wind.setData(msg.data);
+        _speed.setData(msg.data);
+        if (_dataStream.is_open())
+        {
+            _dataStream << (now - APP_START).count() / 1000000.0f << ", , " << msg.data << "\n";
+            _dataStream.flush();
+        }
         break;
     case(SensorType::EngineTemperature):
         _engTemp.setData(msg.data);
@@ -93,5 +114,4 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
 
         break;
     }
-    _DebugStream << msg.id << " " << msg.data << "\n";
 }
