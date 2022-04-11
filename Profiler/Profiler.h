@@ -40,5 +40,5 @@ public:
 #define FUNCTION_PROFILE() SCOPED_PROFILE(__FUNCTION__)
 #else
 #define SCOPED_PROFILE(name)
-#define FUNCTION_PROFILE
+#define FUNCTION_PROFILE()
 #endif
