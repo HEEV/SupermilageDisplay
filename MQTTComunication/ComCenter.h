@@ -8,7 +8,7 @@
 #include "SerialClient.h"
 #include "Profiler.h"
 
-constexpr char const* Address = "10.12.12.224:1883"; //tcp://10.12.12.224:1883 old
+constexpr char const* Address = "broker.mqttdashboard.com:1883"; //"10.12.12.224:1883"; //tcp://10.12.12.224:1883 old
 
 class ComCenter : Delegate {
 public:
@@ -31,7 +31,7 @@ public:
 		p_cellClient.initalize();
 
 		//Test mqtt network connection
-		p_cellClient.publish("ComCenter", SensorData());
+		p_cellClient.publish("CedarvilleSupermilageCarData", SensorData());
 
 		_SerialClient.Initalize();
 
@@ -65,7 +65,7 @@ public:
 
 #if defined (__linux__)
 		if (topic == "Sensor") {
-			Publish(std::to_string(msg.id), msg);
+			Publish("CedarvilleSupermilageCarData", msg);
 		}
 #endif
 	}
