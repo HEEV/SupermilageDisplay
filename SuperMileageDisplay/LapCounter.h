@@ -1,5 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
+#include <locale>
 
 class LapCounter : public Component
 {
@@ -22,6 +23,13 @@ private:
 
 	double _lapLength;
 	unsigned _lapAmount;
+
+	struct Formatter : public std::numpunct<char>
+	{
+		std::string do_grouping() const override { return "\3"; }
+	};
+
+	bool _finished;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LapCounter)
 

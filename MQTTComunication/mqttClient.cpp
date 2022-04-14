@@ -155,7 +155,13 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 			memcpy(stringLoad, message->payload, message->payloadlen);
 			stringLoad[message->payloadlen] = '\0';
 			std::string temp = std::string(stringLoad);
-			SensorData msg = SensorData(stringLoad[0], std::stof(temp.substr(1)));
+
+			SensorData msg;
+			if (!temp.empty())
+			{
+				msg = SensorData(stringLoad[0], std::stof(temp.substr(1)));
+				Global_Connection[i]->p_Instance->updateHandler(topic, msg);
+			}
 
 			//COPYING and casting attemp that did not work
 			/*SensorData msg;
@@ -170,7 +176,6 @@ void Global_Message(struct mosquitto* mosq, void* userdata, const struct mosquit
 				}
 			}*/
 
-			Global_Connection[i]->p_Instance->updateHandler(topic, msg);
 			break;
 		}
 	}

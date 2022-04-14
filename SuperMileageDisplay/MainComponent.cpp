@@ -8,11 +8,11 @@
 //==============================================================================
 MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
-    _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
+    _speed("Vehicle MPH", 0.0f, 3000.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
     _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
-    _counter(2.5f, 4),
+    _counter(2.22475f, 4),
     _ComManager(ComCenter((Delegate*)this))
 {
     FUNCTION_PROFILE();
@@ -23,8 +23,10 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_volts);
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
-
+    _speed.setData(3000.0f);
     _speed.addLapCounter(&_counter);
+
+    addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
 
@@ -75,7 +77,10 @@ void MainComponent::resized()
     _engTemp.setBounds(row.removeFromLeft(row.getWidth() / 2));
     row.removeFromLeft(marginSmall);
     _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
-    _timer.setBounds(bounds.removeFromTop(bounds.getHeight() / 2));
+
+    auto topHalf = bounds.removeFromTop(bounds.getHeight() / 2);
+
+    _timer.setBounds(topHalf.removeFromTop(topHalf.getHeight() / 2));
     
     _counter.setBounds(bounds);
 }
@@ -114,4 +119,9 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
 
         break;
     }
+}
+
+void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
+{
+    JUCEApplicationBase::quit();
 }

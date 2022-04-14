@@ -45,10 +45,15 @@ private:
     Speedometer _volts;
 
     ColorLight _burn;
-
     RaceTimer _timer;
-
     LapCounter _counter;
+
+    class MouseEvents : public MouseListener
+    {
+    public:
+        void mouseDoubleClick(const MouseEvent& e) override;
+    } _mouse;
+
 
     ComCenter _ComManager;
     std::fstream _dataStream;

@@ -4,9 +4,14 @@
 #include "Profiler.h"
 
 LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
-	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), _lapDist(0), _lapLength(lapLength), _lapAmount(lapAmount)
+	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), 
+	_lapDist(0), _lapLength(lapLength), _lapAmount(lapAmount), _finished(false)
 {
 	FUNCTION_PROFILE();
+
+	_lapCounter.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
+	_lapProgress.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
+
 	_lapCounter.setTextToDisplay("Lap 1");
 
 	addAndMakeVisible(_lapCounter);
@@ -21,6 +26,10 @@ void LapCounter::paint(Graphics& g)
 void LapCounter::resized()
 {
 	FUNCTION_PROFILE();
+
+	_lapCounter.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
+	_lapProgress.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
+
 	auto bounds = getLocalBounds();
 	constexpr int margin = 5;
 
@@ -37,23 +46,37 @@ void LapCounter::resized()
 void LapCounter::incDistanceTraveled(double dist)
 {
 	FUNCTION_PROFILE();
-	_lapDist += dist / _lapLength;
-	if (_lapDist >= 1.0)
+
+	if (!_finished)
 	{
-		_lapCount += 1.0 / _lapAmount;
-
-		_lapDist = 0.0;
-
+		_lapDist += dist / _lapLength;
 		std::stringstream ss;
-		ss << (int)(_lapCount * _lapAmount + 1);
+		ss.imbue(std::locale(ss.getloc(), new Formatter));
+		ss << "Distance: " << (int)((_lapDist * _lapLength) * 5280.0) << " ft";
+		_lapProgress.setTextToDisplay(ss.str());
 
-		const MessageManagerLock lck;
-		if (_lapCount < 1.0f)
-			_lapCounter.setTextToDisplay("Lap " + ss.str());
-		else
+		if (_lapDist >= 1.0)
 		{
-			_lapCounter.setTextToDisplay("Finished");
-			_lapCounter.setColour(_lapCounter.foregroundColourId, Colours::green);
+			_lapCount += 1.0 / _lapAmount;
+
+			_lapDist = 0.0;
+
+			const MessageManagerLock lck;
+			if (_lapCount < 1.0f)
+			{
+				std::stringstream ss2;
+				ss2 << "Lap " << (int)(_lapCount * _lapAmount + 1);
+				_lapCounter.setTextToDisplay(ss2.str());
+			}
+			else
+			{
+				_lapCounter.setTextToDisplay("Finished");
+				_lapCounter.setColour(_lapCounter.foregroundColourId, Colours::green);
+				_lapProgress.setColour(_lapProgress.foregroundColourId, Colours::green);
+				_lapDist = 1.0f;
+
+				_finished = true;
+			}
 		}
 	}
 }
