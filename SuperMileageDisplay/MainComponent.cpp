@@ -8,7 +8,7 @@
 //==============================================================================
 MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
-    _speed("Vehicle MPH", 0.0f, 3000.0f, Colour(253, 185, 19), 6),
+    _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
     _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
@@ -23,7 +23,6 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_volts);
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
-    _speed.setData(3000.0f);
     _speed.addLapCounter(&_counter);
 
     addMouseListener(&_mouse, true);
