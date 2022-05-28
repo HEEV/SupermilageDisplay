@@ -1,7 +1,9 @@
 #include "LapCounter.h"
 #include <sstream>
+#include <locale>
 
 #include "Profiler.h"
+#include "Formatter.h"
 
 LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
 	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), 

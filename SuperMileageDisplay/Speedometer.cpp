@@ -1,10 +1,11 @@
-
 #include <stdexcept>
 #include <sstream>
+#include <locale>
 
 #include "Profiler.h"
 #include "Speedometer.h"
 #include "Constants.h"
+#include "Formatter.h"
 
 Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
 	_name(name), _dataMin(minData), _dataMax(maxData), 
@@ -56,8 +57,8 @@ void Speedometer::paint(juce::Graphics& g)
 		float y2 = (radius - 1.5 * _lineWidth) * sin(-i * PI / _subdivisions) + gaugeBottom;
 
 		std::stringstream label;
-		label.precision(0);
-		label << std::fixed << _dataMax - i * (_dataMax - _dataMin) / _subdivisions;
+		label.imbue(std::locale(label.getloc(), new Formatter));
+		label << _dataMax - i * (_dataMax - _dataMin) / _subdivisions;
 
 		float textX = (radius - _lineWidth * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
 		float textY = (radius - _lineWidth * _lineWidth) * sin(-i * PI / _subdivisions) + gaugeBottom;
@@ -89,8 +90,8 @@ void Speedometer::paint(juce::Graphics& g)
 	bounds.removeFromTop(bounds.getHeight() - (2 * f.getHeight()));
 
 	std::stringstream ss;
-	ss.precision();
-	ss << std::fixed << _data;
+	ss.imbue(std::locale(ss.getloc(), new Formatter));
+	ss << _data;
 	
 	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
 	g.drawFittedText(ss.str(), bounds.removeFromTop(bounds.getHeight() / 2), Justification::centred, 1);

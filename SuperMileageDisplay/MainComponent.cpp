@@ -10,19 +10,17 @@ MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
-    _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
     _counter(2.22475f, 4),
-    _ComManager(ComCenter((Delegate*)this))
+    _ComManager(ComCenter((Delegate*)this)),
+    _volt(0.0f, 14.0f)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
     addAndMakeVisible(_speed);
     addAndMakeVisible(_wind);
-    addAndMakeVisible(_engTemp);
-    addAndMakeVisible(_volts);
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
+    addAndMakeVisible(_volt);
     _speed.addLapCounter(&_counter);
 
     addMouseListener(&_mouse, true);
@@ -55,33 +53,9 @@ void MainComponent::paint (juce::Graphics& g)
 void MainComponent::resized()
 {
     FUNCTION_PROFILE();
-    constexpr int margin = 50;
-    constexpr int marginSmall = 10;
-    constexpr int mainMeterSize = 250;
-    constexpr int rowSize = 200;
-
+    //TODO: Implement UI
     auto bounds = getLocalBounds();
-    bounds.removeFromTop(margin);
-
-    auto row = bounds.removeFromTop(rowSize);
-    row.removeFromLeft(margin);
-    row.removeFromRight(margin);
-
-    _speed.setBounds(row.removeFromLeft(mainMeterSize));
-    _wind.setBounds(row.removeFromRight(mainMeterSize));
-    _burn.setBounds(row.removeFromTop(row.getHeight() / 4));
-
-    row.removeFromLeft(marginSmall);
-
-    _engTemp.setBounds(row.removeFromLeft(row.getWidth() / 2));
-    row.removeFromLeft(marginSmall);
-    _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
-
-    auto topHalf = bounds.removeFromTop(bounds.getHeight() / 2);
-
-    _timer.setBounds(topHalf.removeFromTop(topHalf.getHeight() / 2));
-    
-    _counter.setBounds(bounds);
+    _volt.setBounds(bounds.removeFromLeft(50));
 }
 
 void MainComponent::updateHandler(std::string topic, SensorData msg) 
@@ -109,10 +83,8 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
         }
         break;
     case(SensorType::EngineTemperature):
-        _engTemp.setData(msg.data);
         break;
     case(SensorType::BatterVoltage):
-        _volts.setData(msg.data);
         break;
     case(SensorType::Burn):
 

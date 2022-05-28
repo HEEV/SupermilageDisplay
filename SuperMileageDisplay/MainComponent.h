@@ -9,6 +9,7 @@
 #include "ColorLight.h"
 #include "RaceTimer.h"
 #include "LapCounter.h"
+#include "VerticleGauge.h"
 
 enum SensorType {
     Speed = '1',
@@ -41,12 +42,11 @@ public:
 private:
     Speedometer _speed;
     Speedometer _wind;
-    Speedometer _engTemp;
-    Speedometer _volts;
 
     ColorLight _burn;
     RaceTimer _timer;
     LapCounter _counter;
+    VerticleGauge _volt;
 
     class MouseEvents : public MouseListener
     {
