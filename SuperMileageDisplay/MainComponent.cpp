@@ -12,7 +12,8 @@ MainComponent::MainComponent() :
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _counter(2.22475f, 4),
     _ComManager(ComCenter((Delegate*)this)),
-    _volt(0.0f, 14.0f)
+    _volt(0.0f, 14.0f, 4),
+    _temp(50.0f, 200.0f, 5)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
@@ -21,6 +22,7 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
     addAndMakeVisible(_volt);
+    addAndMakeVisible(_temp);
     _speed.addLapCounter(&_counter);
 
     addMouseListener(&_mouse, true);
@@ -55,7 +57,7 @@ void MainComponent::resized()
     FUNCTION_PROFILE();
     //TODO: Implement UI
     auto bounds = getLocalBounds();
-    _volt.setBounds(bounds.removeFromLeft(50));
+    _temp.setBounds(bounds.removeFromLeft(50));
 }
 
 void MainComponent::updateHandler(std::string topic, SensorData msg) 
@@ -83,8 +85,10 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
         }
         break;
     case(SensorType::EngineTemperature):
+        _temp.setData(msg.data);
         break;
     case(SensorType::BatterVoltage):
+        _volt.setData(msg.data);
         break;
     case(SensorType::Burn):
 

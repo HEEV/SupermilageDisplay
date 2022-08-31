@@ -47,6 +47,7 @@ private:
     RaceTimer _timer;
     LapCounter _counter;
     VerticleGauge _volt;
+    VerticleGauge _temp;
 
     class MouseEvents : public MouseListener
     {

@@ -3,8 +3,9 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <format>
 
-const std::chrono::high_resolution_clock::time_point APP_START = std::chrono::high_resolution_clock::now();
+const std::chrono::steady_clock::time_point APP_START = std::chrono::high_resolution_clock::now();
 TracerFile Profiler::s_output;
 std::mutex Profiler::s_fileLock;
 
@@ -14,7 +15,10 @@ Profiler::Profiler(std::string_view name) : _name(name), _timerStopped(false)
 
 	if (!s_output.is_open())
 	{
-		s_output.open("AppProfile.json", std::ios::out | std::ios::trunc);
+		
+		const auto wallTime = std::chrono::system_clock::now();
+		std::string timeStr = std::format("AppProfile {}.json", wallTime);
+		s_output.open(timeStr, std::ios::out | std::ios::trunc);
 		if (s_output.is_open())
 			s_output.writeHeader();
 		else

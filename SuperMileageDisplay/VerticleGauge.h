@@ -4,7 +4,7 @@
 class VerticleGauge : public AnimatedAppComponent
 {
 public:
-	VerticleGauge(float dataMin, float dataMax);
+	VerticleGauge(float dataMin, float dataMax, int step);
 
 	void paint(juce::Graphics& g) override;
 	void resized() override;
@@ -15,11 +15,8 @@ public:
 private:
 	float _dataMin;
 	float _dataMax;
+	int _step;
 	float _data;
-
-	double _prog;
-	LookAndFeel_V2 _lf;
-	ProgressBar _bar;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VerticleGauge)
