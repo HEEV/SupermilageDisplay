@@ -1,0 +1,82 @@
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  "C"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_C
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/actions.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/actions.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/callbacks.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/callbacks.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/connect.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/connect.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_auth.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_auth.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_connack.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_connack.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_disconnect.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_disconnect.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_ping.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_ping.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_pubackcomp.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_pubackcomp.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_publish.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_publish.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_pubrec.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_pubrec.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_pubrel.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_pubrel.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_suback.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_suback.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/handle_unsuback.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/handle_unsuback.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/helpers.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/helpers.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/logging_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/logging_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/loop.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/loop.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/memory_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/memory_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/messages_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/messages_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/misc_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/misc_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/mosquitto.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/mosquitto.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/net_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/net_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/net_mosq_ocsp.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/net_mosq_ocsp.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/options.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/options.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/packet_datatypes.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/packet_datatypes.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/packet_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/packet_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/property_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/property_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/read_handle.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/read_handle.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_connect.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_connect.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_disconnect.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_disconnect.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_publish.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_publish.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_subscribe.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_subscribe.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/send_unsubscribe.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/send_unsubscribe.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/socks_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/socks_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/srv_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/srv_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/strings_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/strings_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/thread_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/thread_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/time_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/time_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/tls_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/tls_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/utf8_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/utf8_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/util_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/util_mosq.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/util_topic.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/util_topic.c.o"
+  "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/lib/will_mosq.c" "/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib/CMakeFiles/libmosquitto_static.dir/will_mosq.c.o"
+  )
+set(CMAKE_C_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_C
+  "CMAKE"
+  "LIBMOSQUITTO_STATIC"
+  "VERSION=\"2.0.14\""
+  "WITH_SOCKS"
+  "WITH_THREADING"
+  "WITH_UNIX_SOCKETS"
+  )
+
+# The include file search paths:
+set(CMAKE_C_TARGET_INCLUDE_PATH
+  "../mosquitto/include"
+  "../RS-232"
+  "../Serial"
+  "../MQTTComunication"
+  "../SuperMileageDisplay"
+  "../Profiler"
+  "../fmt/include"
+  "../mosquitto"
+  "../mosquitto/lib"
+  "../mosquitto/deps"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

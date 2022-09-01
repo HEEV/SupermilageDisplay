@@ -1,0 +1,230 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "mosquitto/plugins/message-timestamp/mosquitto_message_timestamp.so"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"mosquitto/plugins/message-timestamp/CMakeLists.txt",
+			"mosquitto/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 4,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 15,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 58,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 68,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 53,
+				"parent" : 2
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 65,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 66,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 67,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 68,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 69,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 70,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 71,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 1,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -fPIC  "
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "CMAKE"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "VERSION=\"2.0.14\""
+				},
+				{
+					"backtrace" : 4,
+					"define" : "WITH_SOCKS"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "WITH_THREADING"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "WITH_UNIX_SOCKETS"
+				},
+				{
+					"define" : "mosquitto_message_timestamp_EXPORTS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 8,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto/include"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/RS-232"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/Serial"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/MQTTComunication"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/SuperMileageDisplay"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/Profiler"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/fmt/include"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "/home/joshua/Documents/repos/SupermilageDisplay/mosquitto"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"id" : "mosquitto_message_timestamp::@7064375d0ec3c512769a",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "",
+				"role" : "flags"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "mosquitto_message_timestamp",
+	"nameOnDisk" : "mosquitto_message_timestamp.so",
+	"paths" : 
+	{
+		"build" : "mosquitto/plugins/message-timestamp",
+		"source" : "mosquitto/plugins/message-timestamp"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "mosquitto/plugins/message-timestamp/mosquitto_message_timestamp.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "MODULE_LIBRARY"
+}

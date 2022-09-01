@@ -13,3 +13,6 @@
 [submodule "RS-232"]
 	path = RS-232
 	url = https://gitlab.com/Teuniz/RS-232.git
+[submodule "fmt"]
+	path = fmt
+	url = git@github.com:fmtlib/fmt.git

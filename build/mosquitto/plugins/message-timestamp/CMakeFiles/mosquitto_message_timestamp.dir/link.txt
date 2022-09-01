@@ -1,0 +1,1 @@
+/usr/bin/gcc -fPIC -g  -shared  -o mosquitto_message_timestamp.so CMakeFiles/mosquitto_message_timestamp.dir/mosquitto_message_timestamp.c.o 

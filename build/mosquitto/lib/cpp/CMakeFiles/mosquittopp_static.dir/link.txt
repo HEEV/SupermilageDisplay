@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmosquittopp_static.a  CMakeFiles/mosquittopp_static.dir/mosquittopp.cpp.o
+/usr/bin/ranlib libmosquittopp_static.a

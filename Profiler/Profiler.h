@@ -4,7 +4,7 @@
 #include <mutex>
 
 class TracerFile;
-extern const std::chrono::high_resolution_clock::time_point APP_START;
+extern const std::chrono::steady_clock::time_point APP_START;
 
 class Profiler
 {
@@ -15,7 +15,7 @@ public:
 	void stopTimer();
 
 private:
-	std::chrono::high_resolution_clock::time_point _start;
+	std::chrono::steady_clock::time_point _start;
 	const std::string_view _name;
 	bool _timerStopped;
 

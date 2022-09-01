@@ -64,7 +64,7 @@ void MainComponent::updateHandler(std::string topic, SensorData msg)
 {
     FUNCTION_PROFILE();
 
-    auto now = std::chrono::high_resolution_clock::now();
+    auto now = std::chrono::steady_clock::now();
 
     switch (msg.id) {
     case(SensorType::Speed):
