@@ -1,1 +1,0 @@
-/usr/bin/g++ -fPIC -g  -shared -Wl,-soname,libmosquittopp.so.1 -o libmosquittopp.so.2.0.14 CMakeFiles/mosquittopp.dir/mosquittopp.cpp.o   -L/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib  -Wl,-rpath,/home/joshua/Documents/repos/SupermilageDisplay/build/mosquitto/lib: ../libmosquitto.so.2.0.14 -lpthread -lrt 

@@ -1,1 +1,0 @@
-/usr/bin/gcc -fPIC -g  -shared  -o mosquitto_payload_modification.so CMakeFiles/mosquitto_payload_modification.dir/mosquitto_payload_modification.c.o   -L/home/joshua/Documents/repos/SupermilageDisplay/mosquitto 

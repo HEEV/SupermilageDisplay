@@ -1,0 +1,1242 @@
+{"displayTimeUnit": "ns", "traceEvents": [{
+"name": "setData",
+"cat": "Function",
+"ph": "X",
+"ts": 175233,
+"dur": 20.517,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Speedometer",
+"cat": "Function",
+"ph": "X",
+"ts": 175232,
+"dur": 85.467,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "setData",
+"cat": "Function",
+"ph": "X",
+"ts": 175336,
+"dur": 6.017,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Speedometer",
+"cat": "Function",
+"ph": "X",
+"ts": 175336,
+"dur": 25.643,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "ColorLight",
+"cat": "Function",
+"ph": "X",
+"ts": 175378,
+"dur": 5.847,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "RaceTimer",
+"cat": "Function",
+"ph": "X",
+"ts": 175399,
+"dur": 7.8,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "LapCounter",
+"cat": "Function",
+"ph": "X",
+"ts": 175459,
+"dur": 52.034,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "VerticleGauge",
+"cat": "Function",
+"ph": "X",
+"ts": 175533,
+"dur": 4.936,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "VerticleGauge",
+"cat": "Function",
+"ph": "X",
+"ts": 175548,
+"dur": 2.625,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "mqttClient",
+"cat": "Function",
+"ph": "X",
+"ts": 175565,
+"dur": 8.594,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "ComCenter",
+"cat": "Function",
+"ph": "X",
+"ts": 175585,
+"dur": 3.089,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 175638,
+"dur": 4.986,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 175637,
+"dur": 30.732,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 216373,
+"dur": 91.932,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 216373,
+"dur": 217.141,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Connect",
+"cat": "Function",
+"ph": "X",
+"ts": 175808,
+"dur": 40945.9,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "initalize",
+"cat": "Function",
+"ph": "X",
+"ts": 175768,
+"dur": 41011.3,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 216807,
+"dur": 3.528,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 216807,
+"dur": 16.37,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "publish",
+"cat": "Function",
+"ph": "X",
+"ts": 216793,
+"dur": 51.692,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "Initalize",
+"cat": "Function",
+"ph": "X",
+"ts": 216855,
+"dur": 70.277,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "initalize",
+"cat": "Function",
+"ph": "X",
+"ts": 175767,
+"dur": 41175.5,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "MainComponent",
+"cat": "Function",
+"ph": "X",
+"ts": 175605,
+"dur": 41360,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 221232,
+"dur": 20.01,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 221230,
+"dur": 82.178,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 221344,
+"dur": 5.34,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "resized",
+"cat": "Function",
+"ph": "X",
+"ts": 221343,
+"dur": 24.333,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "MainWindow",
+"cat": "Function",
+"ph": "X",
+"ts": 175215,
+"dur": 48272.1,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "initialise",
+"cat": "Function",
+"ph": "X",
+"ts": 780.051,
+"dur": 222742,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "paint",
+"cat": "Function",
+"ph": "X",
+"ts": 679030,
+"dur": 5664.32,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 709786,
+"dur": 44.252,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 710081,
+"dur": 39.687,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "paint",
+"cat": "Function",
+"ph": "X",
+"ts": 817797,
+"dur": 4821.02,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "update",
+"cat": "Function",
+"ph": "X",
+"ts": 845795,
+"dur": 17.087,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 845884,
+"dur": 51.799,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 876260,
+"dur": 45.82,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 909626,
+"dur": 92.959,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 942338,
+"dur": 92.081,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 975636,
+"dur": 91.413,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.0091e+06,
+"dur": 119.945,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.04114e+06,
+"dur": 48.923,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.07476e+06,
+"dur": 45.194,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.1079e+06,
+"dur": 46.162,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.1412e+06,
+"dur": 91.819,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.17428e+06,
+"dur": 118.994,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.1781e+06,
+"dur": 46.416,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.1781e+06,
+"dur": 108.012,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.17824e+06,
+"dur": 6.23,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.17824e+06,
+"dur": 28.656,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "OnConnected",
+"cat": "Function",
+"ph": "X",
+"ts": 1.17823e+06,
+"dur": 81.03,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Onconnect",
+"cat": "Function",
+"ph": "X",
+"ts": 1.17822e+06,
+"dur": 102.613,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.20808e+06,
+"dur": 50.211,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.24694e+06,
+"dur": 70.798,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.27436e+06,
+"dur": 248.527,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.30758e+06,
+"dur": 22.477,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.30758e+06,
+"dur": 68.198,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.30771e+06,
+"dur": 81.194,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.34022e+06,
+"dur": 52.484,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "update",
+"cat": "Function",
+"ph": "X",
+"ts": 1.34362e+06,
+"dur": 18.82,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.37354e+06,
+"dur": 35.586,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.40706e+06,
+"dur": 50.002,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "OnLogEvent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.4239e+06,
+"dur": 22.71,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Logevent",
+"cat": "Function",
+"ph": "X",
+"ts": 1.42389e+06,
+"dur": 77.846,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "OnSubcribed",
+"cat": "Function",
+"ph": "X",
+"ts": 1.424e+06,
+"dur": 6.036,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "Subscribe",
+"cat": "Function",
+"ph": "X",
+"ts": 1.424e+06,
+"dur": 32.83,
+"pid": 1,
+"tid": 140037912000256,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.4407e+06,
+"dur": 76.786,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.47417e+06,
+"dur": 68.372,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.50741e+06,
+"dur": 88.401,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.541e+06,
+"dur": 89.281,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.57325e+06,
+"dur": 91.413,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.60674e+06,
+"dur": 92.005,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.63996e+06,
+"dur": 64.405,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.67346e+06,
+"dur": 64.686,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.70716e+06,
+"dur": 82.925,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.7403e+06,
+"dur": 81.987,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.77358e+06,
+"dur": 82.602,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.80617e+06,
+"dur": 81.538,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.83995e+06,
+"dur": 82.296,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "update",
+"cat": "Function",
+"ph": "X",
+"ts": 1.84375e+06,
+"dur": 33.757,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.87223e+06,
+"dur": 40.518,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.90557e+06,
+"dur": 46.162,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.93902e+06,
+"dur": 93.958,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 1.97218e+06,
+"dur": 91.137,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.00584e+06,
+"dur": 90.96,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.0385e+06,
+"dur": 81.543,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.07195e+06,
+"dur": 36.691,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.10506e+06,
+"dur": 44.851,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.13923e+06,
+"dur": 91.956,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.17313e+06,
+"dur": 89.435,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.20571e+06,
+"dur": 92.646,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.23816e+06,
+"dur": 47.916,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.27197e+06,
+"dur": 51.427,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.3041e+06,
+"dur": 64.559,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.33759e+06,
+"dur": 59.299,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "update",
+"cat": "Function",
+"ph": "X",
+"ts": 2.34399e+06,
+"dur": 33.208,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.37031e+06,
+"dur": 60.92,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.40406e+06,
+"dur": 49.003,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.43748e+06,
+"dur": 48.577,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.47114e+06,
+"dur": 81.973,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.50336e+06,
+"dur": 91.615,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.53654e+06,
+"dur": 91.174,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.56961e+06,
+"dur": 93.152,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.603e+06,
+"dur": 89.874,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.68201e+06,
+"dur": 56.45,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.73808e+06,
+"dur": 49.715,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "incDistanceTraveled",
+"cat": "Function",
+"ph": "X",
+"ts": 2.81574e+06,
+"dur": 49.192,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "polSerialPort",
+"cat": "Function",
+"ph": "X",
+"ts": 217138,
+"dur": 3.00115e+06,
+"pid": 1,
+"tid": 140037903607552,
+"args": []
+},
+
+{
+"name": "~SerialClient",
+"cat": "Function",
+"ph": "X",
+"ts": 2.81695e+06,
+"dur": 401679,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "~mqttClient",
+"cat": "Function",
+"ph": "X",
+"ts": 3.2187e+06,
+"dur": 706.583,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "~ColorLight",
+"cat": "Function",
+"ph": "X",
+"ts": 3.221e+06,
+"dur": 27.935,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "~Speedometer",
+"cat": "Function",
+"ph": "X",
+"ts": 3.22128e+06,
+"dur": 15.845,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "~Speedometer",
+"cat": "Function",
+"ph": "X",
+"ts": 3.22162e+06,
+"dur": 18.691,
+"pid": 1,
+"tid": 140037917590912,
+"args": []
+},
+
+{
+"name": "shutdown",
+"cat": "Function",
+"ph": "X",
+"ts": 2.81588e+06,
+"dur": 412106,
+"pid": 1,
+"tid": 140037917590912,
+"args": []]},
+
