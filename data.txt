@@ -1,2 +1,0 @@
-Begin Race
-Time, Speed, Wind Speed
