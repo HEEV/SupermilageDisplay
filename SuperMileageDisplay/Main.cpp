@@ -68,7 +68,7 @@ public:
             llf.setColour(ColourIds::textColourId, Colour(241, 229, 199));
 
             //Forces GUI to be fullscreen in the car, but remain windowed for development
-#ifdef WIN32
+#ifndef WIN32
             setResizable(true, true);
             centreWithSize (WIDTH, HEIGHT);
 #else

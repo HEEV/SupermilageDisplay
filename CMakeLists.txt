@@ -52,30 +52,15 @@ if(NOT EXISTS "RS-232/CMakeLists.txt")
 
 endif()
 
-set(WITH_TLS no)
-set(DOCUMENTATION no)
-set(WITH_CJSON no)
-set(WITH_SHARED_LIBRARIES no)
-set(WITH_STATIC_LIBRARIES on)
-
-if(WIN32)
-    find_package(pthreads REQUIRED)
-endif(WIN32)
-
-include_directories("mosquitto/include")
 include_directories("RS-232")
 include_directories("Serial")
 include_directories("MQTTComunication")
 include_directories("SuperMileageDisplay")
 include_directories("Profiler")
-add_subdirectory(mosquitto)
 add_subdirectory(SuperMileageDisplay)
-add_subdirectory(MQTTComunication)
 add_subdirectory(RS-232)
-add_subdirectory(Serial)
+# add_subdirectory(Serial)
 add_subdirectory(Profiler)
-
-target_link_libraries(SuperMileageDisplay PUBLIC libmosquitto_static)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

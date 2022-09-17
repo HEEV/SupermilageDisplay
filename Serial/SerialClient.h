@@ -3,7 +3,6 @@
 #include <string>
 #include <thread>
 #include <mutex>
-#include "Delegate.h"
 
 #if defined (_WIN32) || defined( _WIN64)
 constexpr char const* PORT = "COM7";

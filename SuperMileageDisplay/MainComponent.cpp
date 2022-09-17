@@ -12,8 +12,7 @@ MainComponent::MainComponent() :
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
     _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
-    _counter(2.22475f, 4),
-    _ComManager(ComCenter((Delegate*)this))
+    _counter(2.22475f, 4)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
@@ -35,8 +34,6 @@ MainComponent::MainComponent() :
         _dataStream << "Begin Race\n";
         _dataStream << "Time, Speed, Wind Speed\n";
     }
-
-    _ComManager.initalize();
 }
 
 MainComponent::~MainComponent()
@@ -82,42 +79,6 @@ void MainComponent::resized()
     _timer.setBounds(topHalf.removeFromTop(topHalf.getHeight() / 2));
     
     _counter.setBounds(bounds);
-}
-
-void MainComponent::updateHandler(std::string topic, SensorData msg) 
-{
-    FUNCTION_PROFILE();
-
-    auto now = std::chrono::high_resolution_clock::now();
-
-    switch (msg.id) {
-    case(SensorType::Speed):
-        _speed.setData(msg.data);
-        if (_dataStream.is_open())
-        {
-            _dataStream << (now - APP_START).count() / 1000000.0f << ", " << msg.data << ", \n";
-            _dataStream.flush();
-        }
-        break;
-    case(SensorType::Wind):
-        _wind.setData(msg.data);
-        _speed.setData(msg.data);
-        if (_dataStream.is_open())
-        {
-            _dataStream << (now - APP_START).count() / 1000000.0f << ", , " << msg.data << "\n";
-            _dataStream.flush();
-        }
-        break;
-    case(SensorType::EngineTemperature):
-        _engTemp.setData(msg.data);
-        break;
-    case(SensorType::BatterVoltage):
-        _volts.setData(msg.data);
-        break;
-    case(SensorType::Burn):
-
-        break;
-    }
 }
 
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)

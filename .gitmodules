@@ -1,9 +1,6 @@
 [submodule "JUCE"]
 	path = JUCE
 	url = https://github.com/juce-framework/JUCE.git
-[submodule "SuperMileageDisplay/mosquitto"]
-	path = SuperMileageDisplay/mosquitto
-	url = https://github.com/eclipse/mosquitto.git
 [submodule "mosquitto"]
 	path = mosquitto
 	url = https://github.com/eclipse/mosquitto.git
