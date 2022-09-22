@@ -10,10 +10,9 @@ MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _counter(2.22475f, 4),
-    _ComManager(ComCenter((Delegate*)this)),
-    _volt(0.0f, 14.0f, 4),
-    _temp(50.0f, 200.0f, 5)
+    _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
+    _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
+    _counter(2.22475f, 4)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_burn);
@@ -35,8 +34,6 @@ MainComponent::MainComponent() :
         _dataStream << "Begin Race\n";
         _dataStream << "Time, Speed, Wind Speed\n";
     }
-
-    _ComManager.initalize();
 }
 
 MainComponent::~MainComponent()
@@ -55,45 +52,33 @@ void MainComponent::paint (juce::Graphics& g)
 void MainComponent::resized()
 {
     FUNCTION_PROFILE();
-    //TODO: Implement UI
+    constexpr int margin = 50;
+    constexpr int marginSmall = 10;
+    constexpr int mainMeterSize = 250;
+    constexpr int rowSize = 200;
+
     auto bounds = getLocalBounds();
-    _temp.setBounds(bounds.removeFromLeft(50));
-}
+    bounds.removeFromTop(margin);
 
-void MainComponent::updateHandler(std::string topic, SensorData msg) 
-{
-    FUNCTION_PROFILE();
+    auto row = bounds.removeFromTop(rowSize);
+    row.removeFromLeft(margin);
+    row.removeFromRight(margin);
 
-    auto now = std::chrono::steady_clock::now();
+    _speed.setBounds(row.removeFromLeft(mainMeterSize));
+    _wind.setBounds(row.removeFromRight(mainMeterSize));
+    _burn.setBounds(row.removeFromTop(row.getHeight() / 4));
 
-    switch (msg.id) {
-    case(SensorType::Speed):
-        _speed.setData(msg.data);
-        if (_dataStream.is_open())
-        {
-            _dataStream << (now - APP_START).count() / 1000000.0f << ", " << msg.data << ", \n";
-            _dataStream.flush();
-        }
-        break;
-    case(SensorType::Wind):
-        _wind.setData(msg.data);
-        _speed.setData(msg.data);
-        if (_dataStream.is_open())
-        {
-            _dataStream << (now - APP_START).count() / 1000000.0f << ", , " << msg.data << "\n";
-            _dataStream.flush();
-        }
-        break;
-    case(SensorType::EngineTemperature):
-        _temp.setData(msg.data);
-        break;
-    case(SensorType::BatterVoltage):
-        _volt.setData(msg.data);
-        break;
-    case(SensorType::Burn):
+    row.removeFromLeft(marginSmall);
 
-        break;
-    }
+    _engTemp.setBounds(row.removeFromLeft(row.getWidth() / 2));
+    row.removeFromLeft(marginSmall);
+    _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
+
+    auto topHalf = bounds.removeFromTop(bounds.getHeight() / 2);
+
+    _timer.setBounds(topHalf.removeFromTop(topHalf.getHeight() / 2));
+    
+    _counter.setBounds(bounds);
 }
 
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)

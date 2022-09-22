@@ -2,8 +2,6 @@
 
 #include <JuceHeader.h>
 #include <fstream>
-#include "ComCenter.h"
-#include "Delegate.h"
 
 #include "Speedometer.h"
 #include "ColorLight.h"
@@ -24,7 +22,7 @@ enum SensorType {
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::Component, Delegate
+class MainComponent  : public juce::Component
 {
 public:
     //==============================================================================
@@ -34,7 +32,6 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void updateHandler(std::string topic, SensorData msg) override;
 
     
     //DataValues Storage;
@@ -56,7 +53,6 @@ private:
     } _mouse;
 
 
-    ComCenter _ComManager;
     std::fstream _dataStream;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
