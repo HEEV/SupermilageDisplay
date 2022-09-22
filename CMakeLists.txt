@@ -57,11 +57,14 @@ include_directories("Serial")
 include_directories("MQTTComunication")
 include_directories("SuperMileageDisplay")
 include_directories("Profiler")
+include_directories("fmt/include")
 add_subdirectory(SuperMileageDisplay)
 add_subdirectory(RS-232)
 # add_subdirectory(Serial)
 add_subdirectory(Profiler)
 add_subdirectory(fmt)
+
+target_link_libraries(SuperMileageDisplay PRIVATE fmt)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

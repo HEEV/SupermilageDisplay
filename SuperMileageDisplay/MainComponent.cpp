@@ -10,8 +10,8 @@ MainComponent::MainComponent() :
     _burn("Burn", Colours::red),
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _engTemp("Eng. Temp.", 30, 150, Colour(253, 185, 19), 4),
-    _volts("Bat. Volt.", 0, 14, Colour(253, 185, 19), 4),
+    _temp(0, 200, 20),
+    _volt(0, 12, 1),
     _counter(2.22475f, 4)
 {
     FUNCTION_PROFILE();
@@ -70,9 +70,9 @@ void MainComponent::resized()
 
     row.removeFromLeft(marginSmall);
 
-    _engTemp.setBounds(row.removeFromLeft(row.getWidth() / 2));
-    row.removeFromLeft(marginSmall);
-    _volts.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
+    //_temp.setBounds(row.removeFromLeft(row.getWidth() / 2));
+    //row.removeFromLeft(marginSmall);
+    //_volt.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
 
     auto topHalf = bounds.removeFromTop(bounds.getHeight() / 2);
 
