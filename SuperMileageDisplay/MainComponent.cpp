@@ -52,33 +52,18 @@ void MainComponent::paint (juce::Graphics& g)
 void MainComponent::resized()
 {
     FUNCTION_PROFILE();
-    constexpr int margin = 50;
-    constexpr int marginSmall = 10;
-    constexpr int mainMeterSize = 250;
-    constexpr int rowSize = 200;
+    juce::Grid grid;
+    using Track = juce::Grid::TrackInfo;
+    using Fr = juce::Grid::Fr;
 
-    auto bounds = getLocalBounds();
-    bounds.removeFromTop(margin);
-
-    auto row = bounds.removeFromTop(rowSize);
-    row.removeFromLeft(margin);
-    row.removeFromRight(margin);
-
-    _speed.setBounds(row.removeFromLeft(mainMeterSize));
-    _wind.setBounds(row.removeFromRight(mainMeterSize));
-    _burn.setBounds(row.removeFromTop(row.getHeight() / 4));
-
-    row.removeFromLeft(marginSmall);
-
-    //_temp.setBounds(row.removeFromLeft(row.getWidth() / 2));
-    //row.removeFromLeft(marginSmall);
-    //_volt.setBounds(row.removeFromLeft(row.getWidth() - marginSmall));
-
-    auto topHalf = bounds.removeFromTop(bounds.getHeight() / 2);
-
-    _timer.setBounds(topHalf.removeFromTop(topHalf.getHeight() / 2));
-    
-    _counter.setBounds(bounds);
+    grid.alignContent = juce::Grid::AlignContent::center;
+    grid.alignItems   = juce::Grid::AlignItems::center;
+    grid.templateRows = { Track(Fr(1)) };
+    grid.templateColumns = { Track(Fr(1)), Track(Fr(1)) };
+    grid.items.add(
+        juce::GridItem(_speed), juce::GridItem(_wind)
+    );
+    grid.performLayout(getLocalBounds());
 }
 
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
