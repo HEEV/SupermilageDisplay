@@ -1,19 +1,17 @@
 #pragma once
 
-//
-// A speedometer JUCE widget, with which to display car data in a
-// speedometer-type format.
-//
-// Author:	Ian Hubble, Andrew Huffman
-// Date:	November 13, 2021
-//
-
 #include <JuceHeader.h>
 #include <atomic>
 #include <thread>
 
 #include "LapCounter.h"
 
+/**
+ * A speedometer JUCE widget, with which to display car data in a
+ * speedometer-type format
+ * .
+ * @implements AnimatedAppComponent
+ */
 class Speedometer : public AnimatedAppComponent
 {
 public:
@@ -30,42 +28,38 @@ public:
 
 	// # SPEEDOMETER INTERFACING
 
-	/*
-	 * Sets the minimum and maximum value which the speedometer
+	/**
+	 * @brief Sets the minimum and maximum value which the speedometer
 	 * can display.
 	 *
-	 * Params:
-	 * min -> The minimum display value.
-	 * max -> The maximum display value.
+	 * @param min The minimum display value.
+	 * @param max The maximum display value.
 	 */	
 	void setDataRange(float min, float max);
 
-	/*
-	 * Sets the data to currently display on the speedometer.
+	/**
+	 * @brief The data to currently display on the speedometer. 
+	 * Data outside of the range will be set to the closest
+	 * extreme.
+	 * 
+	 * @param value -> The value to display
 	 *
-	 * Params:
-	 * value -> The value to display.
-	 *
-	 * Throws:
-	 * std::out_of_range -> If the data given is outside the range
-	 * set by Speedometer::setDataRange(float, float).
 	 */
 	void setData(float value); // throws std::out_of_range
 	
-	/*
-	 * Gets the data currently displaying on the speedometer.
+	/**
+	 * @brief The data currently displaying on the speedometer.
 	 *
-	 * Returns:
-	 * The data now displaying on the speedometer (set using
+	 * 
+	 * @return data now displaying on the speedometer (set using
 	 * Speedometer::setData(float)).
 	 */
 	float getData() const;
 
-	/*
-	 * Sets the name of the speedometer.
+	/**
+	 * @brief Sets the name of the speedometer.
 	 *
-	 * Params:
-	 * name -> The new name the speedometer.
+	 * @param name The new name the speedometer.
 	 */
 	void setName(std::string name);
 
