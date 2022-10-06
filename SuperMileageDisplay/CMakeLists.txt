@@ -18,4 +18,6 @@ target_sources(SuperMileageDisplay
         Formatter.h
         VerticleGauge.h
         VerticleGauge.cpp
+        MapComponent.h
+        MapComponent.cpp
 )
