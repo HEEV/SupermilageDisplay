@@ -20,4 +20,6 @@ target_sources(SuperMileageDisplay
         VerticleGauge.cpp
         MapComponent.h
         MapComponent.cpp
+        Tiltmeter.h
+        Tiltmeter.cpp
 )
