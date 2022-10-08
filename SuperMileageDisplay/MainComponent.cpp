@@ -7,22 +7,14 @@
 
 //==============================================================================
 MainComponent::MainComponent() :
-    _burn("Burn", Colours::red),
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _temp(0, 200, 20),
-    _volt(0, 12, 1),
-    _counter(2.22475f, 4)
+    _map("Tracks/ShellTrack.svg", 1.0f)
 {
     FUNCTION_PROFILE();
-    addAndMakeVisible(_burn);
     addAndMakeVisible(_speed);
     addAndMakeVisible(_wind);
-    addAndMakeVisible(_timer);
-    addAndMakeVisible(_counter);
-    addAndMakeVisible(_volt);
-    addAndMakeVisible(_temp);
-    _speed.addLapCounter(&_counter);
+    addAndMakeVisible(_map);
 
     addMouseListener(&_mouse, true);
     
@@ -59,9 +51,9 @@ void MainComponent::resized()
     grid.alignContent = juce::Grid::AlignContent::center;
     grid.alignItems   = juce::Grid::AlignItems::center;
     grid.templateRows = { Track(Fr(1)) };
-    grid.templateColumns = { Track(Fr(1)), Track(Fr(1)) };
+    grid.templateColumns = { Track(Fr(1)), Track(Fr(4)), Track(Fr(1)) };
     grid.items.add(
-        juce::GridItem(_speed), juce::GridItem(_wind)
+        juce::GridItem(), juce::GridItem(_map), juce::GridItem()
     );
     grid.performLayout(getLocalBounds());
 }

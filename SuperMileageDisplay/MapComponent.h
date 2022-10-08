@@ -1,16 +1,22 @@
 #include <JuceHeader.h>
+#include <memory>
 
-class MapComponent : public juce::Component
+class MapComponent : public juce::AnimatedAppComponent
 {
 public:
-	MapComponent(float mapLength);
+	MapComponent(String trackFilepath, float mapLength);
 	~MapComponent() override;
 
 	void paint(juce::Graphics& g) override;
 	void resized() override;
+	void update() override;
+
+	void updateDistance(float dist);
 
 private:
-	float _mapLength;
-	float _distanceAlong;
+	Path _track;
+	float _trackLength;
+	Point<float> _trackerPos;
+	PathStrokeType _stroke;
 
 };

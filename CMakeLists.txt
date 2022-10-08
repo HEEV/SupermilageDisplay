@@ -13,6 +13,8 @@ add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory
 # up by default. This function accepts many optional arguments. Check the readme at
 # `docs/CMake API.md` in the JUCE repo for the full list.
 
+
+add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
 juce_add_gui_app(SuperMileageDisplay
     # VERSION ...                       # Set this if the app version is different to the project version
     # ICON_BIG ...                      # ICON_* arguments specify a path to an image file to use as an icon
@@ -104,4 +106,13 @@ target_link_libraries(SuperMileageDisplay
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+
+# Copy track data into program dir
+add_custom_command(
+    TARGET SuperMileageDisplay
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/Tracks
+            $<TARGET_FILE_DIR:SuperMileageDisplay>/Tracks
+)
 
