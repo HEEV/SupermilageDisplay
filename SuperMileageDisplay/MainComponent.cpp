@@ -38,7 +38,7 @@ MainComponent::~MainComponent()
 //Function exicuts every frame
 void MainComponent::paint (juce::Graphics& g)
 {
-
+    g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 }
 
 void MainComponent::resized()

@@ -7,11 +7,10 @@
 #include "Constants.h"
 
 MapComponent::MapComponent(String trackFilepath, float mapLength) : 
-    _track(), _trackLength(mapLength), _trackerPos(0.0f, 0.0f), _stroke(5.0f, PathStrokeType::JointStyle::curved)
+    _track(), _trackLength(mapLength), _trackerPos(0.0f, 0.0f), _lastPos(0.0f, 0.0f), _stroke(5.0f, PathStrokeType::JointStyle::curved), _distanceAlong(0.0f)
 {
     FUNCTION_PROFILE();
-    auto svg = Drawable::createFromSVGFile(trackFilepath);
-    setFramesPerSecond(30);
+    auto svg = Drawable::createFromSVGFile(File::getCurrentWorkingDirectory().getChildFile(trackFilepath));
     
     if(svg == nullptr)
         throw std::runtime_error("Failed to create track object with SVG " + trackFilepath.toStdString());
@@ -29,9 +28,22 @@ void MapComponent::paint(juce::Graphics& g)
     FUNCTION_PROFILE();
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
     g.strokePath(_track, _stroke);
+
     g.setColour(Colours::red);
     float width = _stroke.getStrokeThickness();
-    g.fillEllipse(_trackerPos.x - width / 2.0f, _trackerPos.y - width / 2.0f, width, width);
+    Line<float> ar(_lastPos, _trackerPos);
+    float curLength = ar.getLength();
+    ar = ar.withShortenedEnd((curLength - ARROW_LENGTH) / 2.0f).withShortenedStart((curLength - ARROW_LENGTH) / 2.0f);
+    g.drawArrow(ar, width, width * 2.5f, width * 2.5f);
+
+    g.setColour(Colours::green);
+    auto start = _track.getPointAlongPath(0.0f);
+    Rectangle<float> startLine;
+    startLine.setWidth(width);
+    startLine.setHeight(width * 5.0f);
+    startLine.setCentre(start);
+    g.fillRect(startLine);
+
     g.setColour(Colours::black);
 }
 
@@ -39,30 +51,35 @@ void MapComponent::resized()
 {
     FUNCTION_PROFILE();
     auto bounds = getBounds().toFloat();
+    float margin = ARROW_LENGTH / 2.0f;
     _track.scaleToFit
     (
-        _stroke.getStrokeThickness() / 2.0f, 
-        _stroke.getStrokeThickness() / 2.0f, 
-        bounds.getWidth() - _stroke.getStrokeThickness(), 
-        bounds.getHeight() - _stroke.getStrokeThickness(), 
+        (_stroke.getStrokeThickness() + margin) / 2.0f,
+        (_stroke.getStrokeThickness() + margin) / 2.0f,
+        bounds.getWidth() - _stroke.getStrokeThickness() - margin,
+        bounds.getHeight() - _stroke.getStrokeThickness() - margin, 
         true
     );
-}
-
-void MapComponent::update()
-{
-    static float distance = 0.0f;
-    updateDistance(distance);
-    distance += 0.005f;
-    if(distance > _trackLength)
-        distance = 0.0f;
 }
 
 void MapComponent::updateDistance(float dist)
 {
     FUNCTION_PROFILE();
-    float distanceAlong = std::min(dist, _trackLength);
-    distanceAlong = std::max(distanceAlong, 0.0f);
+    _distanceAlong = std::min(dist, _trackLength);
+    _distanceAlong = std::max(_distanceAlong, 0.0f);
     float graphicLength = _track.getLength();
-    _trackerPos = _track.getPointAlongPath(distanceAlong / _trackLength * graphicLength);
+    _lastPos = _trackerPos;
+    _trackerPos = _track.getPointAlongPath(_distanceAlong / _trackLength * graphicLength);
+    repaint();
+}
+
+void MapComponent::incDistance(float deltaDist)
+{
+    FUNCTION_PROFILE();
+    if (_distanceAlong + deltaDist > _trackLength)
+        updateDistance(_trackLength - _distanceAlong + deltaDist);
+    else if (_distanceAlong + deltaDist < 0.0f)
+        updateDistance(_trackLength + _distanceAlong + deltaDist);
+
+    updateDistance(_distanceAlong + deltaDist);
 }
