@@ -7,7 +7,9 @@
 #include "Constants.h"
 
 MapComponent::MapComponent(String trackFilepath, float mapLength) : 
-    _track(), _trackLength(mapLength), _trackerPos(0.0f, 0.0f), _lastPos(0.0f, 0.0f), _stroke(5.0f, PathStrokeType::JointStyle::curved), _distanceAlong(0.0f)
+    _track(), _trackLength(mapLength), _trackerPos(0.0f, 0.0f), 
+    _lastPos(0.0f, 0.0f), _stroke(5.0f, PathStrokeType::JointStyle::curved), 
+    _distanceAlong(0.0f), _arrowLength(0.0f)
 {
     FUNCTION_PROFILE();
     auto svg = Drawable::createFromSVGFile(File::getCurrentWorkingDirectory().getChildFile(trackFilepath));
@@ -16,7 +18,8 @@ MapComponent::MapComponent(String trackFilepath, float mapLength) :
         throw std::runtime_error("Failed to create track object with SVG " + trackFilepath.toStdString());
     
     _track = svg->getOutlineAsPath();
-    updateDistance(0.0f);
+    _lastPos = _track.getPointAlongPath(0.0f);
+    _trackerPos = _track.getPointAlongPath(0.1f);
 }
 
 MapComponent::~MapComponent()
@@ -33,7 +36,7 @@ void MapComponent::paint(juce::Graphics& g)
     float width = _stroke.getStrokeThickness();
     Line<float> ar(_lastPos, _trackerPos);
     float curLength = ar.getLength();
-    ar = ar.withShortenedEnd((curLength - ARROW_LENGTH) / 2.0f).withShortenedStart((curLength - ARROW_LENGTH) / 2.0f);
+    ar = ar.withShortenedEnd((curLength - _arrowLength) / 2.0f).withShortenedStart((curLength - _arrowLength) / 2.0f);
     g.drawArrow(ar, width, width * 2.5f, width * 2.5f);
 
     g.setColour(Colours::green);
@@ -51,7 +54,8 @@ void MapComponent::resized()
 {
     FUNCTION_PROFILE();
     auto bounds = getBounds().toFloat();
-    float margin = ARROW_LENGTH / 2.0f;
+    _arrowLength = 0.1f * bounds.getWidth();
+    float margin = _arrowLength / 2.0f;
     _track.scaleToFit
     (
         (_stroke.getStrokeThickness() + margin) / 2.0f,
@@ -80,6 +84,6 @@ void MapComponent::incDistance(float deltaDist)
         updateDistance(_trackLength - _distanceAlong + deltaDist);
     else if (_distanceAlong + deltaDist < 0.0f)
         updateDistance(_trackLength + _distanceAlong + deltaDist);
-
-    updateDistance(_distanceAlong + deltaDist);
+    else
+        updateDistance(_distanceAlong + deltaDist);
 }

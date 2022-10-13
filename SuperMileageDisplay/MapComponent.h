@@ -1,7 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
 
-constexpr float ARROW_LENGTH = 40.0f;
 class MapComponent : public juce::Component
 {
 public:
@@ -21,5 +20,6 @@ private:
 	Point<float> _lastPos;
 	PathStrokeType _stroke;
 	float _distanceAlong;
+	float _arrowLength;
 
 };

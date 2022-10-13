@@ -45,7 +45,7 @@ void VerticleGauge::paint(juce::Graphics& g)
 	g.fillRoundedRectangle(bounds.toFloat(), 5.0f);
 
 	g.setColour(Colours::red);
-	int fillHeight = _data / (_dataMax - _dataMin) * bounds.getHeight();
+	int fillHeight = (_data - _dataMin) / (_dataMax - _dataMin) * bounds.getHeight();
 	g.fillRoundedRectangle(bounds.getX(), bounds.getBottom() - fillHeight, bounds.getWidth(), fillHeight, 5.0f);
 
 	g.setColour(lf.findColour(DocumentWindow::ColourIds::textColourId));

@@ -22,8 +22,6 @@ Speedometer::~Speedometer() {
 void Speedometer::paint(juce::Graphics& g) 
 {
 	auto bounds = getLocalBounds();
-	constexpr float FONT_HEIGHT = 25.0f;
-	constexpr float LINE_WEIGHT = 10.0f;
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 	Font f("Consolas", FONT_HEIGHT, juce::Font::bold);
 	g.setFont(f);
