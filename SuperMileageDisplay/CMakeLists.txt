@@ -15,4 +15,11 @@ target_sources(SuperMileageDisplay
         RaceTimer.cpp
         LapCounter.h
         LapCounter.cpp
+        Formatter.h
+        VerticleGauge.h
+        VerticleGauge.cpp
+        MapComponent.h
+        MapComponent.cpp
+        Tiltmeter.h
+        Tiltmeter.cpp
 )

@@ -4,6 +4,9 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 build/
 
+# Profiling results
+AppProfile*.json
+
 # User-specific files
 *.rsuser
 *.suo
@@ -18,6 +21,7 @@ build/
 mono_crash.*
 
 # Build results
+[Bb]uild/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

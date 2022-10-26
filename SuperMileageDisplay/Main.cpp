@@ -56,7 +56,7 @@ public:
     public:
         MainWindow (juce::String name)
             : DocumentWindow (name,
-                              Colour(0, 82, 136),
+                              Colours::grey,
                               DocumentWindow::closeButton)
         {
             FUNCTION_PROFILE();
@@ -65,10 +65,10 @@ public:
 
             auto& llf = getLookAndFeel();
             llf.setColour(DocumentWindow::backgroundColourId, getBackgroundColour());
-            llf.setColour(ColourIds::textColourId, Colour(241, 229, 199));
+            llf.setColour(ColourIds::textColourId, Colours::black);
 
             //Forces GUI to be fullscreen in the car, but remain windowed for development
-#ifndef WIN32
+#ifdef DEBUG
             setResizable(true, true);
             centreWithSize (WIDTH, HEIGHT);
 #else

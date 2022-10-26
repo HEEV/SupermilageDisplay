@@ -1,6 +1,5 @@
-
 #include <stdexcept>
-#include <sstream>
+#include <fmt/format.h>
 
 #include "Profiler.h"
 #include "Speedometer.h"
@@ -15,89 +14,98 @@ Speedometer::Speedometer(std::string_view name, float minData, float maxData, ju
 	setFramesPerSecond(30);
 }
 
-/**
- * Destructor.
- */
 Speedometer::~Speedometer() {
 	FUNCTION_PROFILE();
 
 }
 
-/**
- * Draws the speedometer within the graphics context.
- * Do NOT call - called by JUCE
- *
- * @param g The JUCE graphics context.
- */
 void Speedometer::paint(juce::Graphics& g) 
 {
-	FUNCTION_PROFILE();
 	auto bounds = getLocalBounds();
-
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
-
-	Font f("Consolas", 25.0f, Font::bold);
+	Font f("Consolas", FONT_HEIGHT, juce::Font::bold);
 	g.setFont(f);
-
-	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
-
-	//Create semicircle for speedomoter
-	Path arc;
-	float radius = bounds.getWidth() / 2.0f - 2 * _lineWidth - 10;
-	float gaugeBottom = bounds.getBottom() - (2 * f.getHeight() + 10);
-	arc.addCentredArc(bounds.getCentreX(), gaugeBottom, radius, radius, 0.0f, -PI / 2, PI / 2, true);
-
-	//Add tickmarks to arc
-	for (int i = 0; i < _subdivisions + 1; i++)
+	g.setColour(Colours::black);
+	PathStrokeType stroke(LINE_WEIGHT);
+	
+	//Find largest area with the correct proportians widget's draw space
+	if (7 * bounds.getWidth() / 8 < bounds.getHeight())
 	{
-		float x1 = (radius + 1.5 * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
-		float y1 = (radius + 1.5 * _lineWidth) * sin(-i * PI / _subdivisions) + gaugeBottom;
-		float x2 = (radius - 1.5 * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
-		float y2 = (radius - 1.5 * _lineWidth) * sin(-i * PI / _subdivisions) + gaugeBottom;
+		//Space is taller than is usable due to width constraints
+		int heightToRemove = (bounds.getHeight() - 7 * bounds.getWidth() / 8) / 2;
+		//center widget verticly
+		bounds.removeFromTop(heightToRemove);
+		auto label = bounds.removeFromBottom(heightToRemove);
 
-		std::stringstream label;
-		label.precision(0);
-		label << std::fixed << _dataMax - i * (_dataMax - _dataMin) / _subdivisions;
-
-		float textX = (radius - _lineWidth * _lineWidth) * cos(i * PI / _subdivisions) + bounds.getCentreX();
-		float textY = (radius - _lineWidth * _lineWidth) * sin(-i * PI / _subdivisions) + gaugeBottom;
-		Rectangle<int> textPos;
-		textPos.setWidth(f.getStringWidthFloat(label.str()));
-		textPos.setHeight(f.getHeight());
-		textPos.setCentre(textX, textY);
-
-		g.drawFittedText(label.str(), textPos, Justification::centred, 1);
-
-		arc.startNewSubPath(x1, y1);
-		arc.lineTo(x2, y2);
+		//Use extra space to add label
+		if(label.getHeight() >= FONT_HEIGHT)
+			g.drawText(_name, label, Justification::centredTop);
+	}
+	else if(7 * bounds.getWidth() / 8 > bounds.getHeight())
+	{
+		//Space is wider than is usable due to height constraints
+		int widthToRemove = (7 * bounds.getWidth() / 8 - bounds.getHeight()) / 2;
+		//center widget horizontally
+		bounds.removeFromLeft(widthToRemove);
+		bounds.removeFromRight(widthToRemove);
 	}
 
-	g.setColour(_color);
-	g.strokePath(arc, PathStrokeType(_lineWidth));
+	//Draw semicircle
+	Path arc;
+	//Since JUCE widgets start from the top-left, all custom drawing should start there for consistency
+	Point start = bounds.getTopLeft().toFloat();
+	start.addXY(LINE_WEIGHT / 2.0f, LINE_WEIGHT / 2.0f);
+	float diameter = bounds.getWidth() - LINE_WEIGHT;
+	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
+	g.strokePath(arc, stroke);
 
-	Path needle;
-	float needleEndX = (radius + 3 * _lineWidth) * cos(_rotation) + bounds.getCentreX();
-	float needleEndY = (radius + 3 * _lineWidth) * sin(_rotation) + gaugeBottom;
+	//Draw labels
+	String largestLabel = fmt::format("{:.1f}", _dataMax);
+	float maxSize = std::max(FONT_HEIGHT, f.getStringWidthFloat(largestLabel) / 2.0f);
+	Point labelStart = start;
+	labelStart.addXY(maxSize, maxSize);
+	float labelDiameter = diameter - 2.0 * maxSize;
+	Point labelCenter = labelStart + Point(labelDiameter / 2.0f, labelDiameter / 2.0f);
+	float labelMultiple = (_dataMax - _dataMin) / _subdivisions;
+	for(int i = 0; i < _subdivisions + 1; i++)
+	{
+		Point<float> p(
+			labelDiameter / 2.0f * cos(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.x,
+			labelDiameter / 2.0f * sin(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.y
+		);
+		
+		String label = fmt::format("{:.0f}", i * labelMultiple + _dataMin);
+		float width = f.getStringWidthFloat(label);
+		Rectangle<float> textArea;
+		textArea.setY(p.y - FONT_HEIGHT);
+		textArea.setLeft(p.x - width / 2.0f);
+		textArea.setSize(width, FONT_HEIGHT);
 
-	needle.startNewSubPath(bounds.getCentreX(), gaugeBottom);
-	needle.lineTo(needleEndX, needleEndY);
+		g.drawText(label, textArea, Justification::centred);
+	}
 
-	g.setColour(Colours::red);
-	g.strokePath(needle, PathStrokeType(_lineWidth / 2.0f, PathStrokeType::JointStyle::mitered, PathStrokeType::EndCapStyle::rounded));
+	//Draw digital readout
+	Rectangle<float> readoutArea;
+	String readout = fmt::format("{:.1f}", _data);
+	float readoutWidth = f.getStringWidthFloat(readout);
+	readoutArea.setSize(readoutWidth, FONT_HEIGHT);
+	readoutArea.setCentre(labelCenter.x, labelCenter.y + FONT_HEIGHT);
+	g.drawText(readout, readoutArea, Justification::centred);
 
-	//Make the meter take up space before drawing the labels
-	bounds.removeFromTop(bounds.getHeight() - (2 * f.getHeight()));
-
-	std::stringstream ss;
-	ss.precision();
-	ss << std::fixed << _data;
-	
-	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
-	g.drawFittedText(ss.str(), bounds.removeFromTop(bounds.getHeight() / 2), Justification::centred, 1);
-	g.drawFittedText(_name, bounds, Justification::centred, 1);
-
-
-
+	//Draw hand
+	constexpr float baseWidth = 20.0f;
+	float length = 9.0f * diameter / 16.0f;
+	Path hand;
+	Point top(labelCenter.x, labelCenter.y - length);
+	Point bottomLeft = labelCenter - Point(baseWidth / 2.0f, -baseWidth / 2.0f);
+	Point bottomRight = labelCenter + Point(baseWidth / 2.0f, baseWidth / 2.0f);
+	hand.startNewSubPath(labelCenter);
+	hand.lineTo(bottomLeft);
+	hand.lineTo(top);
+	hand.lineTo(bottomRight);
+	hand.closeSubPath();
+	hand.applyTransform(AffineTransform::rotation(_rotation, labelCenter.x, labelCenter.y));
+	g.fillPath(hand);
 
 }
 
@@ -112,14 +120,6 @@ void Speedometer::addLapCounter(LapCounter* lc)
 	_lc = lc;
 }
 
-
-/**
- * Sets the range of data points in the speedometer.
- *
- * @param min The minimum speedometer value.
- * @param max The maximum speedometer value.
- * @throws std::out_of_range
- */
 void Speedometer::setDataRange(float min, float max) {
 	FUNCTION_PROFILE();
 	_dataMin = min;
@@ -128,11 +128,6 @@ void Speedometer::setDataRange(float min, float max) {
 	setData(_data);
 }
 
-/**
- * Sets the speedometer value.
- *
- * @param The speedometer value.
- */
 void Speedometer::setData(float value) {
 	FUNCTION_PROFILE();
 
@@ -145,26 +140,15 @@ void Speedometer::setData(float value) {
 	value = value - _dataMin;
 
 	// Set the rotation
-	_rotation = PI * (weight + value) / weight;
+	_rotation = value / weight * (3 * PI / 2) - 3 * PI / 4;
 	
 }
 
-/**
- * Gets the data that is displaying on the speedometer.
- *
- * @return The speedometer data.
- */
 float Speedometer::getData() const {
 	FUNCTION_PROFILE();
 	return _data;
 }
 
-/*
- * Sets the name of the speedometer.
- *
- * Params:
- * name -> The new name the speedometer.
- */
 void Speedometer::setName(std::string name) {
 	FUNCTION_PROFILE();
 	_name = name;

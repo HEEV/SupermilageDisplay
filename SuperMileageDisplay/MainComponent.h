@@ -7,6 +7,9 @@
 #include "ColorLight.h"
 #include "RaceTimer.h"
 #include "LapCounter.h"
+#include "VerticleGauge.h"
+#include "MapComponent.h"
+#include "Tiltmeter.h"
 
 enum SensorType {
     Speed = '1',
@@ -21,7 +24,7 @@ enum SensorType {
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::Component
+class MainComponent  : public juce::AnimatedAppComponent
 {
 public:
     //==============================================================================
@@ -31,28 +34,26 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-
+    void update() override;
     
     //DataValues Storage;
 
 private:
     Speedometer _speed;
     Speedometer _wind;
-    Speedometer _engTemp;
-    Speedometer _volts;
-
-    ColorLight _burn;
+    MapComponent _map;
+    Tiltmeter _tilt;
     RaceTimer _timer;
     LapCounter _counter;
+    VerticleGauge _engTemp;
+    VerticleGauge _volt;
+
 
     class MouseEvents : public MouseListener
     {
     public:
         void mouseDoubleClick(const MouseEvent& e) override;
     } _mouse;
-
-
-    std::fstream _dataStream;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 
