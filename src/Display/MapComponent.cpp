@@ -1,10 +1,10 @@
-#include "MapComponent.h"
+#include "Display/MapComponent.h"
 #include <fmt/format.h>
 #include <iostream>
 #include <string>
 
-#include "Profiler.h"
-#include "Constants.h"
+#include "Profiler/Profiler.h"
+#include "Display/Constants.h"
 
 MapComponent::MapComponent(String trackFilepath, float mapLength) : 
     _track(), _trackLength(mapLength), _trackerPos(0.0f, 0.0f), 

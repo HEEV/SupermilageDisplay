@@ -7,8 +7,8 @@
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
-#include "Profiler.h"
+#include "Display/MainComponent.h"
+#include "Profiler/Profiler.h"
 
 constexpr int WIDTH = 1024;
 constexpr int HEIGHT = 600;

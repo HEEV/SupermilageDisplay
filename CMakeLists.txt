@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.15)
 
 project(SuperMileageDisplay VERSION 0.0.1)
-add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+add_subdirectory(lib)
 
 # If your app depends the VST2 SDK, perhaps to host VST2 plugins, CMake needs to be told where
 # to find the SDK on your system. This setup should be done before calling `juce_add_gui_app`.
@@ -36,36 +36,9 @@ juce_generate_juce_header(SuperMileageDisplay)
 # Finally, we supply a list of source files that will be built into the target. This is a standard
 # CMake command.
 
-# Create CMake in Serial lib if it does not exist
-
-if(NOT EXISTS "RS-232/CMakeLists.txt")
-    message("RS-232/CMakeLists.txt does not exist. Creating file...")
-    file(WRITE "RS-232/CMakeLists.txt"
-        "
-        cmake_minimum_required(VERSION 3.15)
-
-        target_compile_features(SuperMileageDisplay PRIVATE cxx_std_20)
-        target_sources(SuperMileageDisplay PRIVATE 
-	        rs232.h
-	        rs232.c
-         )
-        "
-    )
-
-endif()
-
-include_directories("RS-232")
-include_directories("Serial")
-include_directories("MQTTComunication")
-include_directories("SuperMileageDisplay")
-include_directories("Profiler")
-include_directories("fmt/include")
-add_subdirectory(SuperMileageDisplay)
-add_subdirectory(RS-232)
-# add_subdirectory(Serial)
-add_subdirectory(Profiler)
-add_subdirectory(fmt)
-
+set_property(TARGET SuperMileageDisplay PROPERTY CXX_STANDARD 20)
+include_directories("include")
+add_subdirectory(src)
 target_link_libraries(SuperMileageDisplay PRIVATE fmt)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer

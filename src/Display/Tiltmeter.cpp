@@ -1,5 +1,5 @@
-#include "Tiltmeter.h"
-#include "Constants.h"
+#include "Display/Tiltmeter.h"
+#include "Display/Constants.h"
 
 Tiltmeter::Tiltmeter(float tiltLimit) : 
 	_tiltLimit(tiltLimit), _curTilt(0.0f), _guagePos(0.0f, 0.0f), _travelLine(), _labelText(tiltLimit),

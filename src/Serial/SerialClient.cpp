@@ -1,9 +1,10 @@
 
-#include "SerialClient.h"
+#ifdef SERIAL
+#include "Serial/SerialClient.h"
 #include <rs232.h>
 #include <stdio.h>
 
-#include "Profiler.h"
+#include "Profiler/Profiler.h"
 
 SerialClient::SerialClient(Delegate* handle) {
 	p_updateHandler = handle;
@@ -116,3 +117,4 @@ SensorData SerialClient::ConvertPayload(std::string& Temp_Input) {
 	}
 	return Temp_Struct;
 }
+#endif

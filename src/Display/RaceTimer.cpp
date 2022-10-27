@@ -1,8 +1,8 @@
-#include "RaceTimer.h"
+#include "Display/RaceTimer.h"
 #include <sstream>
 #include <iomanip>
 
-#include "Profiler.h"
+#include "Profiler/Profiler.h"
 
 RaceTimer::RaceTimer()
 {

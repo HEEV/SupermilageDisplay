@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <fmt/format.h>
 
-#include "Profiler.h"
-#include "Speedometer.h"
-#include "Constants.h"
+#include "Profiler/Profiler.h"
+#include "Display/Speedometer.h"
+#include "Display/Constants.h"
 
 Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
 	_name(name), _dataMin(minData), _dataMax(maxData), 

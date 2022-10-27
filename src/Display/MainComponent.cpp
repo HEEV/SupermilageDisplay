@@ -1,9 +1,9 @@
-#include "MainComponent.h"
+#include "Display/MainComponent.h"
 #include <string>
 #include <chrono>
 #include <iostream>
 
-#include "Profiler.h"
+#include "Profiler/Profiler.h"
 
 //==============================================================================
 MainComponent::MainComponent() :
