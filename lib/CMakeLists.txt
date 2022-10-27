@@ -1,5 +1,10 @@
 set(JUCE_BUILD_EXTRAS off CACHE BOOL "Disables projucer" FORCE)
 set(JUCE_BUILD_EXAMPLES off CACHE BOOL "Disables JUCE examples" FORCE)
 add_subdirectory(JUCE)
-add_subdirectory(fmt)
-include_directories(fmt/include)
+add_subdirectory(fmt EXCLUDE_FROM_ALL)
+include_directories(SYSTEM fmt/include)
+target_compile_options(fmt PRIVATE
+     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+          -w>
+     $<$<CXX_COMPILER_ID:MSVC>:
+          /w>)
