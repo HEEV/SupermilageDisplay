@@ -29,6 +29,7 @@ jobs:
           libglu1-mesa-dev mesa-common-dev
   Compile:
     name: Compile project
+    runs-on: ubuntu-latest
     steps:
       - name: Build project
         run: |
@@ -46,6 +47,7 @@ jobs:
           url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
   Tests:
     name: Test project
+    runs-on: ubuntu-latest
     steps:
       - name: Run Tests
         run: |
