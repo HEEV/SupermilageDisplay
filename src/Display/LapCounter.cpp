@@ -1,9 +1,8 @@
-#include "LapCounter.h"
-#include <sstream>
-#include <locale>
+#include "Display/LapCounter.h"
+#include <fmt/format.h>
+#include <string>
 
-#include "Profiler.h"
-#include "Formatter.h"
+#include "Profiler/Profiler.h"
 
 LapCounter::LapCounter(double lapLength, unsigned lapAmount) :
 	_lapCounter(_lapCount), _lapProgress(_lapDist), _lapCount(0), 
@@ -52,10 +51,8 @@ void LapCounter::incDistanceTraveled(double dist)
 	if (!_finished)
 	{
 		_lapDist += dist / _lapLength;
-		std::stringstream ss;
-		ss.imbue(std::locale(ss.getloc(), new Formatter));
-		ss << "Distance: " << (int)((_lapDist * _lapLength) * 5280.0) << " ft";
-		_lapProgress.setTextToDisplay(ss.str());
+		std::string label = fmt::format("{:L} ft", (int)(_lapDist * 5280.0f));
+		_lapProgress.setTextToDisplay(label);
 
 		if (_lapDist >= 1.0)
 		{
@@ -65,11 +62,7 @@ void LapCounter::incDistanceTraveled(double dist)
 
 			const MessageManagerLock lck;
 			if (_lapCount < 1.0f)
-			{
-				std::stringstream ss2;
-				ss2 << "Lap " << (int)(_lapCount * _lapAmount + 1);
-				_lapCounter.setTextToDisplay(ss2.str());
-			}
+				_lapCounter.setTextToDisplay(fmt::format("Lap {}", (int)(_lapCount * _lapAmount + 1)));
 			else
 			{
 				_lapCounter.setTextToDisplay("Finished");

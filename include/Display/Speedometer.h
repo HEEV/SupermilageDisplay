@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include <atomic>
 #include <thread>
+#include <string_view>
 
 #include "LapCounter.h"
 

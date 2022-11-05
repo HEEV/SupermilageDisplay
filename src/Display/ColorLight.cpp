@@ -1,8 +1,8 @@
-#include "ColorLight.h"
+#include "Display/ColorLight.h"
 
 #include <stdexcept>
 
-#include "Profiler.h"
+#include "Profiler/Profiler.h"
 
 ColorLight::ColorLight(std::string name, Colour color) : _name(name), _color(color)
 {

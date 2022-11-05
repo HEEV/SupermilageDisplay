@@ -35,7 +35,7 @@ public:
 
 };
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && !defined(TESTING_ENABLED)
 #define SCOPED_PROFILE(name) Profiler prof##__LINE__(name)
 #define FUNCTION_PROFILE() SCOPED_PROFILE(__FUNCTION__)
 #else

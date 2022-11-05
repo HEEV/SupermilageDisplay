@@ -7,18 +7,26 @@
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
-#include "Profiler.h"
+#include <locale>
+#include "Display/MainComponent.h"
+#include "Profiler/Profiler.h"
+
+#ifdef TESTING_ENABLED
+#include <gtest/gtest.h>
+#include <thread>
+#include <future>
+#include <memory>
+#endif
 
 constexpr int WIDTH = 1024;
 constexpr int HEIGHT = 600;
 
 //==============================================================================
-class JuceFirstApplication  : public juce::JUCEApplication
+class SuperMileageApp  : public juce::JUCEApplication
 {
 public:
     //==============================================================================
-    JuceFirstApplication() {}
+    SuperMileageApp() {}
     const juce::String getApplicationName() override       { return ProjectInfo::projectName; }
     const juce::String getApplicationVersion() override    { return ProjectInfo::versionString; }
     bool moreThanOneInstanceAllowed() override             { return false; }
@@ -29,12 +37,44 @@ public:
         // This method is where you should put your application's initialisation code..
         FUNCTION_PROFILE();
         mainWindow.reset (new MainWindow (getApplicationName()));
+
+#ifdef TESTING_ENABLED
+        auto params = juce::JUCEApplicationBase::getCommandLineParameterArray();
+
+        //Convert JUCE types to c primitives for gtest
+        //Note that params has the name of the app stripped, which gtest is expecting
+        int argc = params.size() + 1;
+        const std::string& name = getApplicationName().toStdString();
+        char** args = new char*[argc];
+
+        args[0] = new char[name.size()];
+        std::strcpy(args[0], name.c_str());
+        for(unsigned i = 1; i < argc; i++)
+        {
+            const juce::String& ref = params.strings[i];
+            args[i] = new char[ref.length()];
+            std::strcpy(args[i], ref.toStdString().c_str());
+        }
+        ::testing::InitGoogleTest(&argc, args);
+        _testResult = std::async([&]()
+            {
+                int retValue = RUN_ALL_TESTS();
+                juce::JUCEApplicationBase::quit();
+                return retValue;
+            }
+        );
+#endif
+        
     }
 
     void shutdown() override
     {
         FUNCTION_PROFILE();
         mainWindow = nullptr;
+        #ifdef TESTING_ENABLED
+        int testResult = _testResult.get();
+        juce::JUCEApplicationBase::setApplicationReturnValue(testResult);
+        #endif
     }
 
     //==============================================================================
@@ -80,6 +120,9 @@ public:
 
             Desktop::getInstance().setScreenSaverEnabled(false);
 
+            //Set locale for our formatting lib
+            std::locale::global(std::locale("en_US.UTF-8"));
+
             setVisible (true);  
         }
 
@@ -105,8 +148,11 @@ public:
 
 private:
     std::unique_ptr<MainWindow> mainWindow;
+#ifdef TESTING_ENABLED
+    std::future<int> _testResult;
+#endif
 };
 
 //==============================================================================
 // This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION (JuceFirstApplication)
+START_JUCE_APPLICATION (SuperMileageApp)

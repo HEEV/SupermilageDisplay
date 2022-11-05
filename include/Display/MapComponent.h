@@ -22,4 +22,6 @@ private:
 	float _distanceAlong;
 	float _arrowLength;
 
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MapComponent)
+
 };

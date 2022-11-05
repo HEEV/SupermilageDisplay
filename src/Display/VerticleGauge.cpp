@@ -1,10 +1,8 @@
-#include "VerticleGauge.h"
-#include <sstream>
-#include <locale>
+#include "Display/VerticleGauge.h"
+#include <fmt/format.h>
 #include <utility>
 
-#include "Profiler.h"
-#include "Formatter.h"
+#include "Profiler/Profiler.h"
 
 VerticleGauge::VerticleGauge(float dataMin, float dataMax, int step) : 
 	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin)
@@ -20,8 +18,6 @@ void VerticleGauge::paint(juce::Graphics& g)
 	auto& lf = getLookAndFeel();
 	Colour mainBC = lf.findColour(DocumentWindow::backgroundColourId);
 	g.fillAll(mainBC);
-	std::stringstream ss;
-	ss.imbue(std::locale(ss.getloc(), new Formatter));
 	auto bounds = getLocalBounds();
 	auto font = g.getCurrentFont();
 	int width = 0.0f;
@@ -30,9 +26,8 @@ void VerticleGauge::paint(juce::Graphics& g)
 	float stepSize = (_dataMax - _dataMin) / _step;
 	for (unsigned i = 0; i <= _step; i++)
 	{
-		ss.str("");
-		ss << _dataMin + i * stepSize;
-		width = std::max(width, font.getStringWidth(ss.str()));
+		std::string temp = fmt::format("%d", _dataMin + i * stepSize);
+		width = std::max(width, font.getStringWidth(temp));
 	}
 
 	g.setColour(mainBC.darker());
@@ -53,10 +48,8 @@ void VerticleGauge::paint(juce::Graphics& g)
 	for (unsigned i = 0; i <= _step; i++)
 	{
 		int yPos = bounds.getHeight() - bounds.getHeight() / _step * i;
-		ss.str("");
-		float num = _dataMin + i * stepSize;
-		ss << num;
-		g.drawText(ss.str(), xPos, yPos + height / 2, width, height, Justification::centredLeft, false);
+		std::string label = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
+		g.drawText(label, xPos, yPos + height / 2, width, height, Justification::centredLeft, false);
 		g.drawLine(0, yPos + height, xPos, yPos + height);
 	}
 }

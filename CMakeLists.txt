@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.15)
 
 project(SuperMileageDisplay VERSION 0.0.1)
-add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+add_subdirectory(lib)
 
 # If your app depends the VST2 SDK, perhaps to host VST2 plugins, CMake needs to be told where
 # to find the SDK on your system. This setup should be done before calling `juce_add_gui_app`.
@@ -13,8 +13,6 @@ add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory
 # up by default. This function accepts many optional arguments. Check the readme at
 # `docs/CMake API.md` in the JUCE repo for the full list.
 
-
-add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
 juce_add_gui_app(SuperMileageDisplay
     # VERSION ...                       # Set this if the app version is different to the project version
     # ICON_BIG ...                      # ICON_* arguments specify a path to an image file to use as an icon
@@ -22,6 +20,13 @@ juce_add_gui_app(SuperMileageDisplay
     # DOCUMENT_EXTENSIONS ...           # Specify file extensions that should be associated with this app
     COMPANY_NAME "SuperMileage Computer/Electric Team"                  # Specify the name of the app's author
     PRODUCT_NAME "SuperMileageDisplay")     # The name of the final executable, which can differ from the target name
+juce_add_gui_app(TestApp
+    COMPANY_NAME "SuperMileage Computer/Electric Team"
+    PRODUCT_NAME "SuperMileageDisplay"
+)
+
+add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
+target_compile_definitions(TestApp PRIVATE TESTING_ENABLED)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -30,43 +35,17 @@ juce_add_gui_app(SuperMileageDisplay
 # probably don't need to call this.
 
 juce_generate_juce_header(SuperMileageDisplay)
+juce_generate_juce_header(TestApp)
 
 # `target_sources` adds source files to a target. We pass the target that needs the sources as the
 # first argument, then a visibility parameter for the sources which should normally be PRIVATE.
 # Finally, we supply a list of source files that will be built into the target. This is a standard
 # CMake command.
 
-# Create CMake in Serial lib if it does not exist
-
-if(NOT EXISTS "RS-232/CMakeLists.txt")
-    message("RS-232/CMakeLists.txt does not exist. Creating file...")
-    file(WRITE "RS-232/CMakeLists.txt"
-        "
-        cmake_minimum_required(VERSION 3.15)
-
-        target_compile_features(SuperMileageDisplay PRIVATE cxx_std_20)
-        target_sources(SuperMileageDisplay PRIVATE 
-	        rs232.h
-	        rs232.c
-         )
-        "
-    )
-
-endif()
-
-include_directories("RS-232")
-include_directories("Serial")
-include_directories("MQTTComunication")
-include_directories("SuperMileageDisplay")
-include_directories("Profiler")
-include_directories("fmt/include")
-add_subdirectory(SuperMileageDisplay)
-add_subdirectory(RS-232)
-# add_subdirectory(Serial)
-add_subdirectory(Profiler)
-add_subdirectory(fmt)
-
-target_link_libraries(SuperMileageDisplay PRIVATE fmt)
+set_property(TARGET SuperMileageDisplay PROPERTY CXX_STANDARD 20)
+set_property(TARGET TestApp PROPERTY CXX_STANDARD 20)
+include_directories("include")
+add_subdirectory(src)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
@@ -76,6 +55,13 @@ target_link_libraries(SuperMileageDisplay PRIVATE fmt)
 # definitions, pick unique names that are unlikely to collide! This is a standard CMake command.
 
 target_compile_definitions(SuperMileageDisplay
+    PRIVATE
+        # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
+        JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_gui_app` call
+        JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_gui_app` call
+        JUCE_APPLICATION_NAME_STRING="$<TARGET_PROPERTY:SuperMileageDisplay,JUCE_PRODUCT_NAME>"
+        JUCE_APPLICATION_VERSION_STRING="$<TARGET_PROPERTY:SuperMileageDisplay,JUCE_VERSION>")
+target_compile_definitions(TestApp
     PRIVATE
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_gui_app` call
@@ -102,11 +88,22 @@ target_link_libraries(SuperMileageDisplay
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
+        fmt
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags)
-
+)
+target_link_libraries(TestApp
+    PRIVATE
+        # GuiAppData            # If we'd created a binary data target, we'd link to it here
+        juce::juce_gui_extra
+        fmt
+        GTest::gtest
+        GTest::gmock
+    PUBLIC
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_lto_flags
+)
 
 # Copy track data into program dir
 add_custom_command(
@@ -115,4 +112,9 @@ add_custom_command(
             ${CMAKE_SOURCE_DIR}/Tracks
             $<TARGET_FILE_DIR:SuperMileageDisplay>/Tracks
 )
-
+add_custom_command(
+    TARGET TestApp
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/Tracks
+            $<TARGET_FILE_DIR:TestApp>/Tracks
+)
