@@ -3,6 +3,7 @@ run-name: Building Hello World
 on: [push]
 jobs:
   Compile:
+    # TODO: Add Windows and Mac(?) tests
     runs-on: ubuntu-latest
     steps:
       - uses: ouzi-dev/commit-status-updater@v2
