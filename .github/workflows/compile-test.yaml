@@ -23,7 +23,7 @@ jobs:
           cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
           -DCMAKE_BUILD_TYPE:STRING=Debug -G "Unix Makefiles" ..
           cmake --build . --config Debug --target all -j 2 --
-      - if: {{ failure() }}
+      - if: ${{ failure() }}
         uses: ouzi-dev/commit-status-updater@v2
         with:
           name: "Compile and Unit Tests"
@@ -33,7 +33,7 @@ jobs:
         run: |
           cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/build/TestApp_artefacts/Debug
           ./SuperMileageDisplay
-      - if: {{failure()}}
+      - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:
           name: "Compile and Unit Tests"
