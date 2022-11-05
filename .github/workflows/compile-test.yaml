@@ -34,6 +34,7 @@ jobs:
     steps:
       - name: Build project
         run: |
+          ls /home/runner/work/SupermilageDisplay/SupermilageDisplay
           cd /home/runner/work/SupermilageDisplay/SupermilageDisplay
           mkdir build
           cd build
