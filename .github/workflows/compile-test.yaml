@@ -32,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: Environment
     steps:
+      - run: ls /home/runner/work/SupermilageDisplay/SupermilageDisplay
       - name: Build project
         run: |
-          ls /home/runner/work/SupermilageDisplay/SupermilageDisplay
           cd /home/runner/work/SupermilageDisplay/SupermilageDisplay
           mkdir build
           cd build
