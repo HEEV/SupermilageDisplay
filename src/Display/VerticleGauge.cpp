@@ -48,7 +48,7 @@ void VerticleGauge::paint(juce::Graphics& g)
 	for (unsigned i = 0; i <= _step; i++)
 	{
 		int yPos = bounds.getHeight() - bounds.getHeight() / _step * i;
-		std::string label = fmt::format("%d", _dataMin + i * stepSize);
+		std::string label = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
 		g.drawText(label, xPos, yPos + height / 2, width, height, Justification::centredLeft, false);
 		g.drawLine(0, yPos + height, xPos, yPos + height);
 	}

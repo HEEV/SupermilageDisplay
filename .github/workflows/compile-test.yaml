@@ -1,0 +1,23 @@
+name: Build Project
+run-name: Building Hello World
+on: [push]
+jobs:
+  Compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build project
+        run: |
+          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/
+          mkdir build
+          cd build
+          cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+          -DCMAKE_BUILD_TYPE:STRING=Debug -G "Unix Makefiles" ..
+          cmake --build . --config Debug --target all -j 2 --
+      - name: Run Tests
+        run: |
+          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/build/TestApp_artefacts/Debug
+          ./SuperMileageDisplay

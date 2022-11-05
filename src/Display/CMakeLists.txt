@@ -1,6 +1,5 @@
-target_sources(
-    SuperMileageDisplay
-    PRIVATE
+set(
+    DisplaySources
     CMakeLists.txt
     ColorLight.cpp
     LapCounter.cpp
@@ -12,3 +11,6 @@ target_sources(
     Tiltmeter.cpp
     VerticleGauge.cpp
 )
+
+target_sources(SuperMileageDisplay PRIVATE ${DisplaySources})
+target_sources(TestApp PRIVATE ${DisplaySources})

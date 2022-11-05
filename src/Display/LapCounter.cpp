@@ -51,7 +51,7 @@ void LapCounter::incDistanceTraveled(double dist)
 	if (!_finished)
 	{
 		_lapDist += dist / _lapLength;
-		std::string label = fmt::format("%d ft", _lapDist);
+		std::string label = fmt::format("{:L} ft", (int)(_lapDist * 5280.0f));
 		_lapProgress.setTextToDisplay(label);
 
 		if (_lapDist >= 1.0)
@@ -62,11 +62,7 @@ void LapCounter::incDistanceTraveled(double dist)
 
 			const MessageManagerLock lck;
 			if (_lapCount < 1.0f)
-			{
-				std::stringstream ss2;
-				ss2 << "Lap " << (int)(_lapCount * _lapAmount + 1);
-				_lapCounter.setTextToDisplay(ss2.str());
-			}
+				_lapCounter.setTextToDisplay(fmt::format("Lap {}", (int)(_lapCount * _lapAmount + 1)));
 			else
 			{
 				_lapCounter.setTextToDisplay("Finished");
