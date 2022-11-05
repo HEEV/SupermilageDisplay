@@ -30,7 +30,7 @@ jobs:
   Compile:
     name: Compile Project
     runs-on: ubuntu-latest
-    depends-on: Environment
+    needs: Environment
     steps:
       - name: Build project
         run: |
@@ -49,7 +49,7 @@ jobs:
   Tests:
     name: Test project
     runs-on: ubuntu-latest
-    depends-on: Compile
+    needs: Compile
     steps:
       - name: Run Tests
         run: |
