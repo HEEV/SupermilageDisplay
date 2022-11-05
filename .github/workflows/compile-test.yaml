@@ -28,8 +28,9 @@ jobs:
           libwebkit2gtk-4.0-dev \
           libglu1-mesa-dev mesa-common-dev
   Compile:
-    name: Compile project
+    name: Compile Project
     runs-on: ubuntu-latest
+    depends-on: Environment
     steps:
       - name: Build project
         run: |
@@ -48,6 +49,7 @@ jobs:
   Tests:
     name: Test project
     runs-on: ubuntu-latest
+    depends-on: Compile
     steps:
       - name: Run Tests
         run: |
