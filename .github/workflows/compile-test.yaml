@@ -17,7 +17,7 @@ jobs:
           submodules: recursive
       - name: Build project
         run: |
-          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/
+          cd /home/runner/work/SupermilageDisplay/SupermilageDisplay
           mkdir build
           cd build
           cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
@@ -31,7 +31,7 @@ jobs:
           url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Run Tests
         run: |
-          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/build/TestApp_artefacts/Debug
+          cd /home/runner/work/SupermilageDisplay/SupermilageDisplay/build/TestApp_artefacts/Debug
           ./SuperMileageDisplay
       - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
