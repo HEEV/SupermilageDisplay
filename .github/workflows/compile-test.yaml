@@ -26,9 +26,9 @@ jobs:
       - if: {{ failure() }}
         uses: ouzi-dev/commit-status-updater@v2
         with:
-          name: "Compile and Unit Tests"
-          status: failure
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        name: "Compile and Unit Tests"
+        status: failure
+        url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Run Tests
         run: |
           cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/build/TestApp_artefacts/Debug
@@ -36,6 +36,6 @@ jobs:
       - if: {{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:
-          name: "Compile and Unit Tests"
-          status: failure
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        name: "Compile and Unit Tests"
+        status: failure
+        url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
