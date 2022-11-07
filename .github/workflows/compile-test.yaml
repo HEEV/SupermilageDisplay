@@ -3,7 +3,7 @@ run-name: Building and Testing Display
 on: [push]
 jobs:
   Environment:
-    name: Environment Setup
+    name: Compile and Test
     # TODO: Add Windows and Mac(?) tests
     runs-on: ubuntu-latest
     steps:
