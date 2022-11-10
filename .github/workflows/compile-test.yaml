@@ -1,8 +1,10 @@
 name: Build Project
-run-name: Building Hello World
+run-name: Building and Testing Display
 on: [push]
 jobs:
-  Compile:
+  Environment:
+    name: Compile and Test
+    # TODO: Add Windows and Mac(?) tests
     runs-on: ubuntu-latest
     steps:
       - uses: ouzi-dev/commit-status-updater@v2
@@ -14,15 +16,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
+      - name: Get deps
+        run: | 
+          sudo apt update
+          sudo apt install libasound2-dev libjack-jackd2-dev \
+          ladspa-sdk \
+          libcurl4-openssl-dev  \
+          libfreetype6-dev \
+          libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev \
+          libxext-dev libxinerama-dev libxrandr-dev libxrender-dev \
+          libwebkit2gtk-4.0-dev \
+          libglu1-mesa-dev mesa-common-dev xvfb
       - name: Build project
         run: |
-          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/
-          mkdir build
-          cd build
+          cd /home/runner/work/SupermilageDisplay/SupermilageDisplay
+          mkdir build && cd build
           cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
           -DCMAKE_BUILD_TYPE:STRING=Debug -G "Unix Makefiles" ..
           cmake --build . --config Debug --target all -j 2 --
-      - if: {{ failure() }}
+      - if: ${{ failure() }}
         uses: ouzi-dev/commit-status-updater@v2
         with:
           name: "Compile and Unit Tests"
@@ -30,11 +42,17 @@ jobs:
           url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Run Tests
         run: |
-          cd /home/runner/work/SupermileageDisplay/SupermileageDisplay/build/TestApp_artefacts/Debug
-          ./SuperMileageDisplay
-      - if: {{failure()}}
+          cd build/TestApp_artefacts/Debug
+          xvfb-run ./SuperMileageDisplay
+      - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:
           name: "Compile and Unit Tests"
           status: failure
+          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      - if: ${{success()}}
+        uses: ouzi-dev/commit-status-updater@v2
+        with: 
+          name: "Compile and Unit Tests"
+          status: success
           url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
