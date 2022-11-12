@@ -22,7 +22,7 @@ juce_add_gui_app(SuperMileageDisplay
     PRODUCT_NAME "SuperMileageDisplay")     # The name of the final executable, which can differ from the target name
 juce_add_gui_app(TestApp
     COMPANY_NAME "SuperMileage Computer/Electric Team"
-    PRODUCT_NAME "SuperMileageDisplay"
+    PRODUCT_NAME "Test"
 )
 
 add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
@@ -89,6 +89,7 @@ target_link_libraries(SuperMileageDisplay
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
         fmt
+        fastrtps
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -100,6 +101,7 @@ target_link_libraries(TestApp
         fmt
         GTest::gtest
         GTest::gmock
+        fastrtps
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags

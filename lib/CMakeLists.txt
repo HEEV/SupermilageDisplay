@@ -13,3 +13,6 @@ target_compile_options(fmt PRIVATE
 # Load GoogleTest for our unit testing
 include(GoogleTest)
 add_subdirectory(googletest)
+
+include(cmake/getDDSDeps.cmake)
+add_subdirectory(Fast-DDS)
