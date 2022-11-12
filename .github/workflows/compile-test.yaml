@@ -43,7 +43,7 @@ jobs:
       - name: Run Tests
         run: |
           cd build/TestApp_artefacts/Debug
-          xvfb-run ./SuperMileageDisplay
+          xvfb-run ./Test
       - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:
