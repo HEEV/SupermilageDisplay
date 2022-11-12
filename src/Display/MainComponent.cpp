@@ -67,30 +67,31 @@ void MainComponent::paint (juce::Graphics& g)
 void MainComponent::resized()
 {
     FUNCTION_PROFILE();
+
+    //vert.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+
+    //spedomiters 
     FlexBox speed;
     speed.alignContent = FlexBox::AlignContent::center;
     speed.alignItems = FlexBox::AlignItems::center;
     speed.justifyContent = FlexBox::JustifyContent::center;
 
-    speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
-    speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
+    speed.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+    speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));    
+    
 
-    FlexBox vert;
-    vert.alignContent = FlexBox::AlignContent::center;
-    vert.alignItems = FlexBox::AlignItems::center;
-    vert.justifyContent = FlexBox::JustifyContent::center;
-    vert.flexDirection = FlexBox::Direction::column;
+    //horz.items.add(FlexItem(_map).withMinWidth(300.0f).withMinHeight(250.0f));
 
-    vert.items.add(FlexItem(_tilt).withMinWidth(500.0f).withMinHeight(50.0f).withMargin(5.0f));
-    vert.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+    FlexBox horz1;
+    horz1.alignContent = FlexBox::AlignContent::center;
+    horz1.alignItems = FlexBox::AlignItems::center;
+    horz1.justifyContent = FlexBox::JustifyContent::center;
 
-    FlexBox horz;
-    horz.alignContent = FlexBox::AlignContent::center;
-    horz.alignItems = FlexBox::AlignItems::center;
-    horz.justifyContent = FlexBox::JustifyContent::center;
-
-    horz.items.add(FlexItem(vert).withFlex(1.0f).withMinWidth(500.0f).withMinHeight(250.0f));
-    horz.items.add(FlexItem(_map).withMinWidth(300.0f).withMinHeight(250.0f));
+    horz1.items.add(FlexItem(_map).withMinWidth(250.0f).withMinHeight(200.0f).withMargin(50.0f));
+    horz1.items.add(FlexItem(_counter).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f));
 
     FlexBox vert2;
     vert2.alignContent = FlexBox::AlignContent::center;
@@ -98,9 +99,9 @@ void MainComponent::resized()
     vert2.justifyContent = FlexBox::JustifyContent::center;
     vert2.flexDirection = FlexBox::Direction::column;
     
-    vert2.items.add(FlexItem(horz).withFlex(1.0f));
-    vert2.items.add(FlexItem(speed).withFlex(1.5f));
-    vert2.items.add(FlexItem(_counter).withMinWidth(getWidth() - 100.0f).withMinHeight(125.0f));
+    vert2.items.add(FlexItem(speed).withFlex(0.5f));
+    vert2.items.add(FlexItem(_tilt).withMinWidth(500.0f).withMinHeight(50.0f).withMargin(5.0f));
+    vert2.items.add(FlexItem(horz1).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f).withMargin(30.0f));
 
     FlexBox horz2;
     horz2.alignContent = FlexBox::AlignContent::center;
