@@ -8,23 +8,22 @@ execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" -DCMAKE_INSTA
                                 .
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/memory
                                 RESULT_VARIABLE configure_ret)
-execute_process(COMMAND "${CMAKE_COMMAND}" --build . --config Debug --target install
+execute_process(COMMAND "${CMAKE_COMMAND}" --build . --config ${CMAKE_BUILD_TYPE} --target install
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/memory
-                RESULT_VARIABLE debug_build_ret)
-execute_process(COMMAND "${CMAKE_COMMAND}" --build . --config RelWithDebInfo --target install
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/memory
-                RESULT_VARIABLE relDeb_build_ret)
-execute_process(COMMAND "${CMAKE_COMMAND}" --build . --config Release --target install
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/memory
-                RESULT_VARIABLE rel_build_ret)
-if(configure_ret OR debug_build_ret OR relDeb_build_ret OR rel_build_ret)
+                RESULT_VARIABLE build_ret)
+if(configure_ret OR build_ret)
     message(FATAL_ERROR "Failed to create Foonanthan memory: 
                         Configure: ${configure_ret}
-                        Debug: ${debug_build_ret}
-                        RelDebug: ${relDeb_build_ret}
-                        Release: ${rel_build_ret}")
+                        Build: ${build_ret}")
 endif()
-set(foonathan_memory_DIR ${CMAKE_CURRENT_BINARY_DIR}/memory/lib/foonathan_memory/cmake)
+
+if(MSVC)
+    set(foonathan_memory_DIR ${CMAKE_CURRENT_BINARY_DIR}/memory/share/foonathan_memory/cmake)
+elseif(UNIX)
+    set(foonathan_memory_DIR ${CMAKE_CURRENT_BINARY_DIR}/memory/lib/foonathan_memory/cmake)
+endif()
+
+message(${foonathan_memory_DIR})
 set(THIRDPARTY_Asio FORCE CACHE INTERNAL "" FORCE)
 set(THIRDPARTY_fastcdr FORCE CACHE INTERNAL "" FORCE)
 set(THIRDPARTY_TinyXML2 FORCE CACHE INTERNAL "" FORCE)

@@ -2,6 +2,7 @@
 
 project(SuperMileageDisplay VERSION 0.0.1)
 add_subdirectory(lib)
+cmake_policy(SET CMP0111 NEW)
 
 # If your app depends the VST2 SDK, perhaps to host VST2 plugins, CMake needs to be told where
 # to find the SDK on your system. This setup should be done before calling `juce_add_gui_app`.
@@ -106,6 +107,21 @@ target_link_libraries(TestApp
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
 )
+
+if(WIN32)
+    add_custom_command(
+        TARGET SuperMileageDisplay
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/bin
+                $<TARGET_FILE_DIR:SuperMileageDisplay>
+    )
+    add_custom_command(
+        TARGET TestApp
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/bin
+                $<TARGET_FILE_DIR:TestApp>
+    )
+endif()
 
 # Copy track data into program dir
 add_custom_command(
