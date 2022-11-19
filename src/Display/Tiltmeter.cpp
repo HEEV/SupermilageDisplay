@@ -17,8 +17,9 @@ void Tiltmeter::paint(Graphics& g)
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 	g.setFont(_font);
 
-	g.setGradientFill(_grad);
-	g.fillRect(_travelLine);
+	//g.setGradientFill(_grad);
+	//g.fillRect(_travelLine);
+	g.drawEllipse(_travelLine, 1);
 	g.setColour(Colours::black);
 
 	g.drawText("-" + _labelText, _leftArea, Justification::centred);
@@ -36,7 +37,8 @@ void Tiltmeter::resized()
 	auto bounds = getLocalBounds();
 	auto center = bounds.getCentre().toFloat();
 	_travelLine.setWidth(bounds.getWidth() - 2 * labelWidth - 10.0f);
-	_travelLine.setHeight(LINE_WEIGHT / 4.0f);
+	//_travelLine.setHeight(LINE_WEIGHT / 4.0f);
+	_travelLine.setHeight(bounds.getWidth() - 2 * labelWidth - 10.0f);
 	_travelLine.setCentre(center);
 
 	_leftArea.setRight(_travelLine.getX());
