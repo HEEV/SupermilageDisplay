@@ -1,0 +1,7 @@
+
+struct Velocity
+{
+    long timeOccured;
+    long timeSent;
+    float vel;
+};
