@@ -1,7 +1,7 @@
+#include "header.idl"
 
 struct Velocity
 {
-    long timeOccured;
-    long timeSent;
-    float vel;
+    Header head;
+    float magnitude;
 };

@@ -1,0 +1,7 @@
+
+struct Header
+{
+    uint32 id;
+    int32 time;
+    int32 timeSent;
+};

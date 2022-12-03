@@ -36,12 +36,10 @@ using namespace eprosima::fastcdr::exception;
 
 Velocity::Velocity()
 {
-    // m_timeOccured com.eprosima.idl.parser.typecode.PrimitiveTypeCode@4abdb505
-    m_timeOccured = 0;
-    // m_timeSent com.eprosima.idl.parser.typecode.PrimitiveTypeCode@7ce6a65d
-    m_timeSent = 0;
-    // m_vel com.eprosima.idl.parser.typecode.PrimitiveTypeCode@1500955a
-    m_vel = 0.0;
+    // m_head com.eprosima.fastdds.idl.parser.typecode.StructTypeCode@687080dc
+
+    // m_magnitude com.eprosima.idl.parser.typecode.PrimitiveTypeCode@7a9273a8
+    m_magnitude = 0.0;
 
 }
 
@@ -49,43 +47,38 @@ Velocity::~Velocity()
 {
 
 
-
 }
 
 Velocity::Velocity(
         const Velocity& x)
 {
-    m_timeOccured = x.m_timeOccured;
-    m_timeSent = x.m_timeSent;
-    m_vel = x.m_vel;
+    m_head = x.m_head;
+    m_magnitude = x.m_magnitude;
 }
 
 Velocity::Velocity(
-        Velocity&& x)
+        Velocity&& x) noexcept 
 {
-    m_timeOccured = x.m_timeOccured;
-    m_timeSent = x.m_timeSent;
-    m_vel = x.m_vel;
+    m_head = std::move(x.m_head);
+    m_magnitude = x.m_magnitude;
 }
 
 Velocity& Velocity::operator =(
         const Velocity& x)
 {
 
-    m_timeOccured = x.m_timeOccured;
-    m_timeSent = x.m_timeSent;
-    m_vel = x.m_vel;
+    m_head = x.m_head;
+    m_magnitude = x.m_magnitude;
 
     return *this;
 }
 
 Velocity& Velocity::operator =(
-        Velocity&& x)
+        Velocity&& x) noexcept
 {
 
-    m_timeOccured = x.m_timeOccured;
-    m_timeSent = x.m_timeSent;
-    m_vel = x.m_vel;
+    m_head = std::move(x.m_head);
+    m_magnitude = x.m_magnitude;
 
     return *this;
 }
@@ -94,7 +87,7 @@ bool Velocity::operator ==(
         const Velocity& x) const
 {
 
-    return (m_timeOccured == x.m_timeOccured && m_timeSent == x.m_timeSent && m_vel == x.m_vel);
+    return (m_head == x.m_head && m_magnitude == x.m_magnitude);
 }
 
 bool Velocity::operator !=(
@@ -109,12 +102,7 @@ size_t Velocity::getMaxCdrSerializedSize(
     size_t initial_alignment = current_alignment;
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
-
-
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
-
-
+    current_alignment += Header::getMaxCdrSerializedSize(current_alignment);
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
 
@@ -130,12 +118,7 @@ size_t Velocity::getCdrSerializedSize(
     size_t initial_alignment = current_alignment;
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
-
-
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
-
-
+    current_alignment += Header::getCdrSerializedSize(data.head(), current_alignment);
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
 
@@ -147,9 +130,8 @@ void Velocity::serialize(
         eprosima::fastcdr::Cdr& scdr) const
 {
 
-    scdr << m_timeOccured;
-    scdr << m_timeSent;
-    scdr << m_vel;
+    scdr << m_head;
+    scdr << m_magnitude;
 
 }
 
@@ -157,93 +139,73 @@ void Velocity::deserialize(
         eprosima::fastcdr::Cdr& dcdr)
 {
 
-    dcdr >> m_timeOccured;
-    dcdr >> m_timeSent;
-    dcdr >> m_vel;
+    dcdr >> m_head;
+    dcdr >> m_magnitude;
 }
 
 /*!
- * @brief This function sets a value in member timeOccured
- * @param _timeOccured New value for member timeOccured
+ * @brief This function copies the value in member head
+ * @param _head New value to be copied in member head
  */
-void Velocity::timeOccured(
-        int32_t _timeOccured)
+void Velocity::head(
+        const Header& _head)
 {
-    m_timeOccured = _timeOccured;
+    m_head = _head;
 }
 
 /*!
- * @brief This function returns the value of member timeOccured
- * @return Value of member timeOccured
+ * @brief This function moves the value in member head
+ * @param _head New value to be moved in member head
  */
-int32_t Velocity::timeOccured() const
+void Velocity::head(
+        Header&& _head)
 {
-    return m_timeOccured;
+    m_head = std::move(_head);
 }
 
 /*!
- * @brief This function returns a reference to member timeOccured
- * @return Reference to member timeOccured
+ * @brief This function returns a constant reference to member head
+ * @return Constant reference to member head
  */
-int32_t& Velocity::timeOccured()
+const Header& Velocity::head() const
 {
-    return m_timeOccured;
+    return m_head;
 }
 
 /*!
- * @brief This function sets a value in member timeSent
- * @param _timeSent New value for member timeSent
+ * @brief This function returns a reference to member head
+ * @return Reference to member head
  */
-void Velocity::timeSent(
-        int32_t _timeSent)
+Header& Velocity::head()
 {
-    m_timeSent = _timeSent;
+    return m_head;
+}
+/*!
+ * @brief This function sets a value in member magnitude
+ * @param _magnitude New value for member magnitude
+ */
+void Velocity::magnitude(
+        float _magnitude)
+{
+    m_magnitude = _magnitude;
 }
 
 /*!
- * @brief This function returns the value of member timeSent
- * @return Value of member timeSent
+ * @brief This function returns the value of member magnitude
+ * @return Value of member magnitude
  */
-int32_t Velocity::timeSent() const
+float Velocity::magnitude() const
 {
-    return m_timeSent;
+    return m_magnitude;
 }
 
 /*!
- * @brief This function returns a reference to member timeSent
- * @return Reference to member timeSent
+ * @brief This function returns a reference to member magnitude
+ * @return Reference to member magnitude
  */
-int32_t& Velocity::timeSent()
+float& Velocity::magnitude()
 {
-    return m_timeSent;
-}
-
-/*!
- * @brief This function sets a value in member vel
- * @param _vel New value for member vel
- */
-void Velocity::vel(
-        float _vel)
-{
-    m_vel = _vel;
-}
-
-/*!
- * @brief This function returns the value of member vel
- * @return Value of member vel
- */
-float Velocity::vel() const
-{
-    return m_vel;
-}
-
-/*!
- * @brief This function returns a reference to member vel
- * @return Reference to member vel
- */
-float& Velocity::vel()
-{
-    return m_vel;
+    return m_magnitude;
 }
 
 
@@ -251,7 +213,6 @@ size_t Velocity::getKeyMaxCdrSerializedSize(
         size_t current_alignment)
 {
     size_t current_align = current_alignment;
-
 
 
 
@@ -269,5 +230,5 @@ void Velocity::serializeKey(
         eprosima::fastcdr::Cdr& scdr) const
 {
     (void) scdr;
-       
+      
 }
