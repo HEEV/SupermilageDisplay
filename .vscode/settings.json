@@ -65,6 +65,13 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "bitset": "cpp",
+        "csignal": "cpp",
+        "forward_list": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "scoped_allocator": "cpp",
+        "valarray": "cpp"
     }
 }

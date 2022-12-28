@@ -10,6 +10,7 @@
 #include "VerticleGauge.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
+#include "Communication/CommunicationManager.h"
 
 enum SensorType {
     Speed = '1',
@@ -47,6 +48,9 @@ private:
     LapCounter _counter;
     VerticleGauge _engTemp;
     VerticleGauge _volt;
+    CommunicationManager _manager;
+    int _velID;
+    int _id = 0;
 
 
     class MouseEvents : public MouseListener

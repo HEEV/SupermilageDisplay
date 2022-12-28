@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Profiler/Profiler.h"
+#include "Communication/PacketTypes/velocityPubSubTypes.h"
 
 //==============================================================================
 MainComponent::MainComponent() :
@@ -35,6 +36,9 @@ MainComponent::MainComponent() :
     
     setSize(getParentWidth(), getParentHeight());
     setFramesPerSecond(30);
+
+    _manager.registerTopic("Velocity", VelocityPubSubType());
+    _velID = _manager.addDataWriter("Velocity");
 }
 
 void MainComponent::update()
@@ -51,6 +55,16 @@ void MainComponent::update()
     randSpeed += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
     randWind += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
     _tilt.setCurrentTilt(rand.nextFloat() / 2.0f);
+
+    Velocity vel;
+    vel.head().id() = _id++;
+    vel.head().time() = 1;
+    vel.magnitude() = randSpeed;
+
+    std::cout << vel.head().id() << std::endl;
+
+    _manager.writeData(_velID, &vel);
+    
 }
 
 MainComponent::~MainComponent()
