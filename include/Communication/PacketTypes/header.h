@@ -93,7 +93,7 @@ public:
      * @param x Reference to the object Header that will be copied.
      */
     eProsima_user_DllExport Header(
-            Header&& x) noexcept;
+            Header&& x);
 
     /*!
      * @brief Copy assignment.
@@ -107,7 +107,7 @@ public:
      * @param x Reference to the object Header that will be copied.
      */
     eProsima_user_DllExport Header& operator =(
-            Header&& x) noexcept;
+            Header&& x);
 
     /*!
      * @brief Comparison operator.
@@ -143,42 +143,42 @@ public:
     eProsima_user_DllExport uint32_t& id();
 
     /*!
-     * @brief This function sets a value in member time
-     * @param _time New value for member time
+     * @brief This function sets a value in member timeRec
+     * @param _timeRec New value for member timeRec
      */
-    eProsima_user_DllExport void time(
-            int32_t _time);
+    eProsima_user_DllExport void timeRec(
+            int64_t _timeRec);
 
     /*!
-     * @brief This function returns the value of member time
-     * @return Value of member time
+     * @brief This function returns the value of member timeRec
+     * @return Value of member timeRec
      */
-    eProsima_user_DllExport int32_t time() const;
+    eProsima_user_DllExport int64_t timeRec() const;
 
     /*!
-     * @brief This function returns a reference to member time
-     * @return Reference to member time
+     * @brief This function returns a reference to member timeRec
+     * @return Reference to member timeRec
      */
-    eProsima_user_DllExport int32_t& time();
+    eProsima_user_DllExport int64_t& timeRec();
 
     /*!
      * @brief This function sets a value in member timeSent
      * @param _timeSent New value for member timeSent
      */
     eProsima_user_DllExport void timeSent(
-            int32_t _timeSent);
+            int64_t _timeSent);
 
     /*!
      * @brief This function returns the value of member timeSent
      * @return Value of member timeSent
      */
-    eProsima_user_DllExport int32_t timeSent() const;
+    eProsima_user_DllExport int64_t timeSent() const;
 
     /*!
      * @brief This function returns a reference to member timeSent
      * @return Reference to member timeSent
      */
-    eProsima_user_DllExport int32_t& timeSent();
+    eProsima_user_DllExport int64_t& timeSent();
 
 
     /*!
@@ -241,8 +241,8 @@ public:
 private:
 
     uint32_t m_id;
-    int32_t m_time;
-    int32_t m_timeSent;
+    int64_t m_timeRec;
+    int64_t m_timeSent;
 };
 
 #endif // _FAST_DDS_GENERATED_HEADER_H_

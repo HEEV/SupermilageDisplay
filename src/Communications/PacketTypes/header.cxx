@@ -26,7 +26,7 @@ char dummy;
 }  // namespace
 #endif  // _WIN32
 
-#include "Communication/PacketTypes/header.h"
+#include "Communications/PacketTyeps/header.h"
 #include <fastcdr/Cdr.h>
 
 #include <fastcdr/exceptions/BadParamException.h>
@@ -36,11 +36,11 @@ using namespace eprosima::fastcdr::exception;
 
 Header::Header()
 {
-    // m_id com.eprosima.idl.parser.typecode.PrimitiveTypeCode@6121c9d6
+    // m_id com.eprosima.idl.parser.typecode.PrimitiveTypeCode@2c039ac6
     m_id = 0;
-    // m_time com.eprosima.idl.parser.typecode.PrimitiveTypeCode@87f383f
-    m_time = 0;
-    // m_timeSent com.eprosima.idl.parser.typecode.PrimitiveTypeCode@4eb7f003
+    // m_timeRec com.eprosima.idl.parser.typecode.PrimitiveTypeCode@587d1d39
+    m_timeRec = 0;
+    // m_timeSent com.eprosima.idl.parser.typecode.PrimitiveTypeCode@58c1670b
     m_timeSent = 0;
 
 }
@@ -56,15 +56,15 @@ Header::Header(
         const Header& x)
 {
     m_id = x.m_id;
-    m_time = x.m_time;
+    m_timeRec = x.m_timeRec;
     m_timeSent = x.m_timeSent;
 }
 
 Header::Header(
-        Header&& x) noexcept 
+        Header&& x)
 {
     m_id = x.m_id;
-    m_time = x.m_time;
+    m_timeRec = x.m_timeRec;
     m_timeSent = x.m_timeSent;
 }
 
@@ -73,18 +73,18 @@ Header& Header::operator =(
 {
 
     m_id = x.m_id;
-    m_time = x.m_time;
+    m_timeRec = x.m_timeRec;
     m_timeSent = x.m_timeSent;
 
     return *this;
 }
 
 Header& Header::operator =(
-        Header&& x) noexcept
+        Header&& x)
 {
 
     m_id = x.m_id;
-    m_time = x.m_time;
+    m_timeRec = x.m_timeRec;
     m_timeSent = x.m_timeSent;
 
     return *this;
@@ -94,7 +94,7 @@ bool Header::operator ==(
         const Header& x) const
 {
 
-    return (m_id == x.m_id && m_time == x.m_time && m_timeSent == x.m_timeSent);
+    return (m_id == x.m_id && m_timeRec == x.m_timeRec && m_timeSent == x.m_timeSent);
 }
 
 bool Header::operator !=(
@@ -112,10 +112,10 @@ size_t Header::getMaxCdrSerializedSize(
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
 
@@ -133,10 +133,10 @@ size_t Header::getCdrSerializedSize(
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
 
@@ -148,7 +148,7 @@ void Header::serialize(
 {
 
     scdr << m_id;
-    scdr << m_time;
+    scdr << m_timeRec;
     scdr << m_timeSent;
 
 }
@@ -158,7 +158,7 @@ void Header::deserialize(
 {
 
     dcdr >> m_id;
-    dcdr >> m_time;
+    dcdr >> m_timeRec;
     dcdr >> m_timeSent;
 }
 
@@ -191,31 +191,31 @@ uint32_t& Header::id()
 }
 
 /*!
- * @brief This function sets a value in member time
- * @param _time New value for member time
+ * @brief This function sets a value in member timeRec
+ * @param _timeRec New value for member timeRec
  */
-void Header::time(
-        int32_t _time)
+void Header::timeRec(
+        int64_t _timeRec)
 {
-    m_time = _time;
+    m_timeRec = _timeRec;
 }
 
 /*!
- * @brief This function returns the value of member time
- * @return Value of member time
+ * @brief This function returns the value of member timeRec
+ * @return Value of member timeRec
  */
-int32_t Header::time() const
+int64_t Header::timeRec() const
 {
-    return m_time;
+    return m_timeRec;
 }
 
 /*!
- * @brief This function returns a reference to member time
- * @return Reference to member time
+ * @brief This function returns a reference to member timeRec
+ * @return Reference to member timeRec
  */
-int32_t& Header::time()
+int64_t& Header::timeRec()
 {
-    return m_time;
+    return m_timeRec;
 }
 
 /*!
@@ -223,7 +223,7 @@ int32_t& Header::time()
  * @param _timeSent New value for member timeSent
  */
 void Header::timeSent(
-        int32_t _timeSent)
+        int64_t _timeSent)
 {
     m_timeSent = _timeSent;
 }
@@ -232,7 +232,7 @@ void Header::timeSent(
  * @brief This function returns the value of member timeSent
  * @return Value of member timeSent
  */
-int32_t Header::timeSent() const
+int64_t Header::timeSent() const
 {
     return m_timeSent;
 }
@@ -241,7 +241,7 @@ int32_t Header::timeSent() const
  * @brief This function returns a reference to member timeSent
  * @return Reference to member timeSent
  */
-int32_t& Header::timeSent()
+int64_t& Header::timeSent()
 {
     return m_timeSent;
 }
