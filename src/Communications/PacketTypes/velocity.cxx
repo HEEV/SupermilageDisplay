@@ -27,6 +27,7 @@ char dummy;
 #endif  // _WIN32
 
 #include "Communication/PacketTypes/velocity.h"
+#include "Communication/PacketTypes/velocityTypeObject.h"
 #include <fastcdr/Cdr.h>
 
 #include <fastcdr/exceptions/BadParamException.h>
@@ -36,11 +37,13 @@ using namespace eprosima::fastcdr::exception;
 
 Velocity::Velocity()
 {
-    // m_head com.eprosima.fastdds.idl.parser.typecode.StructTypeCode@687080dc
+    // m_head com.eprosima.fastdds.idl.parser.typecode.StructTypeCode@6dde5c8c
 
-    // m_magnitude com.eprosima.idl.parser.typecode.PrimitiveTypeCode@7a9273a8
+    // m_magnitude com.eprosima.idl.parser.typecode.PrimitiveTypeCode@5123a213
     m_magnitude = 0.0;
 
+    // Just to register all known types
+    registervelocityTypes();
 }
 
 Velocity::~Velocity()
@@ -57,7 +60,7 @@ Velocity::Velocity(
 }
 
 Velocity::Velocity(
-        Velocity&& x) noexcept 
+        Velocity&& x)
 {
     m_head = std::move(x.m_head);
     m_magnitude = x.m_magnitude;
@@ -74,7 +77,7 @@ Velocity& Velocity::operator =(
 }
 
 Velocity& Velocity::operator =(
-        Velocity&& x) noexcept
+        Velocity&& x)
 {
 
     m_head = std::move(x.m_head);

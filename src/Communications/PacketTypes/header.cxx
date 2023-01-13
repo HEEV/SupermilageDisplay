@@ -27,6 +27,7 @@ char dummy;
 #endif  // _WIN32
 
 #include "Communication/PacketTypes/header.h"
+#include "Communication/PacketTypes/headerTypeObject.h"
 #include <fastcdr/Cdr.h>
 
 #include <fastcdr/exceptions/BadParamException.h>
@@ -36,13 +37,15 @@ using namespace eprosima::fastcdr::exception;
 
 Header::Header()
 {
-    // m_id com.eprosima.idl.parser.typecode.PrimitiveTypeCode@2c039ac6
+    // m_id com.eprosima.idl.parser.typecode.PrimitiveTypeCode@5e955596
     m_id = 0;
-    // m_timeRec com.eprosima.idl.parser.typecode.PrimitiveTypeCode@587d1d39
+    // m_timeRec com.eprosima.idl.parser.typecode.PrimitiveTypeCode@50de0926
     m_timeRec = 0;
-    // m_timeSent com.eprosima.idl.parser.typecode.PrimitiveTypeCode@58c1670b
+    // m_timeSent com.eprosima.idl.parser.typecode.PrimitiveTypeCode@2473b9ce
     m_timeSent = 0;
 
+    // Just to register all known types
+    registerheaderTypes();
 }
 
 Header::~Header()

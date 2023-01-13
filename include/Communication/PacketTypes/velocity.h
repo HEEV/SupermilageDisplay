@@ -94,7 +94,7 @@ public:
      * @param x Reference to the object Velocity that will be copied.
      */
     eProsima_user_DllExport Velocity(
-            Velocity&& x) noexcept;
+            Velocity&& x);
 
     /*!
      * @brief Copy assignment.
@@ -108,7 +108,7 @@ public:
      * @param x Reference to the object Velocity that will be copied.
      */
     eProsima_user_DllExport Velocity& operator =(
-            Velocity&& x) noexcept;
+            Velocity&& x);
 
     /*!
      * @brief Comparison operator.
