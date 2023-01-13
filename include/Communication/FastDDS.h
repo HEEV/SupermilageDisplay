@@ -15,3 +15,4 @@
 #include <fastdds/dds/domain/qos/DomainParticipantQos.hpp>
 #include <fastdds/dds/domain/qos/DomainParticipantFactoryQos.hpp>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
+#include <fastrtps/types/TypeObjectFactory.h>

@@ -44,6 +44,7 @@ requires std::derived_from<T, eprosima::fastdds::dds::TopicDataType>
 void CommunicationManager::registerTopic(std::string topicName, const T& t)
 {
     eprosima::fastdds::dds::TypeSupport type(new T());
+    type->auto_fill_type_information(true);
     type.register_type(_particpant, type.get_type_name());
     auto* topic = _particpant->create_topic(topicName, type.get_type_name(), eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
     _topics.insert(std::make_pair(topicName, topic));

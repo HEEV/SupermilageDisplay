@@ -58,7 +58,6 @@ void MainComponent::update()
 
     Velocity vel;
     vel.head().id() = _id++;
-    vel.head().time() = 1;
     vel.magnitude() = randSpeed;
 
     std::cout << vel.head().id() << std::endl;

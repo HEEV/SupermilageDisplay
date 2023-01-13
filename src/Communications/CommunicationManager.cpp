@@ -21,7 +21,7 @@ CommunicationManager::CommunicationManager()
 
     // Set SERVER's listening locator for PDP
     Locator_t locator;
-    IPLocator::setIPv4(locator, 172, 18, 0, 2);
+    IPLocator::setIPv4(locator, 10, 13, 76, 54);
     locator.port = 25565;
     remote_server_att.metatrafficUnicastLocatorList.push_back(locator);
 
@@ -31,6 +31,9 @@ CommunicationManager::CommunicationManager()
     // Set ping period to 250 ms
     client_qos.wire_protocol().builtin.discovery_config.discoveryServer_client_syncperiod =
             eprosima::fastrtps::Duration_t(0, 250000000);
+
+    client_qos.wire_protocol().builtin.typelookup_config.use_client = true;
+    client_qos.wire_protocol().builtin.typelookup_config.use_server = true;
 
     // Create CLIENT
     _particpant =
@@ -64,10 +67,11 @@ int CommunicationManager::addDataWriter(std::string topicName)
 void CommunicationManager::writeData(int dataWriterID, void* data)
 {
     auto now = std::chrono::system_clock::now();
-    auto nowMS = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-    auto epoch = nowMS.time_since_epoch();
+    auto epoch = now.time_since_epoch();
+    auto mill = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
 
-    ((Header*)data)->timeSent(std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
+    ((Header*)data)->timeSent(mill.count());
+    std::cout << epoch.count() << std::endl;
 
     _writers[dataWriterID]->write(data, eprosima::fastrtps::rtps::InstanceHandle_t());
 }
