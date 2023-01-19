@@ -4,7 +4,8 @@
 #include <concepts>
 #include "FastDDS.h"
 
-#define GET_TYPE_AS_STR(type) #type
+#define REGISTER_TYPE_TO_MANAGER(type, topicName, manager)\
+manager.registerTopic<type##PubSubType>(topicName)
 
 class CommunicationManager
 {
@@ -12,13 +13,9 @@ public:
     CommunicationManager();
     ~CommunicationManager();
 
-    
-    /// @brief  Register a new topic that can be written to or read from
-    /// @param topicName Name of the topic to register
-    /// @param dataTypeName Name of the data type the topic channel uses
     template <typename T>
     requires std::derived_from<T, eprosima::fastdds::dds::TopicDataType>
-    void registerTopic(std::string topicName, const T& type);
+    void registerTopic(std::string topicName);
 
     /// @brief Create a dataWriter attached to a given topic
     /// @param topicName The topic name to attach the dataWriter to. Must
@@ -41,11 +38,10 @@ private:
 
 template <typename T>
 requires std::derived_from<T, eprosima::fastdds::dds::TopicDataType>
-void CommunicationManager::registerTopic(std::string topicName, const T& t)
+inline void CommunicationManager::registerTopic(std::string topicName)
 {
     eprosima::fastdds::dds::TypeSupport type(new T());
-    type->auto_fill_type_information(true);
-    type.register_type(_particpant, type.get_type_name());
-    auto* topic = _particpant->create_topic(topicName, type.get_type_name(), eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+    _particpant->register_type(type);
+    auto* topic =_particpant->create_topic(topicName, type.get_type_name(), eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
     _topics.insert(std::make_pair(topicName, topic));
 }

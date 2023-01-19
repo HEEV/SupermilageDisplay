@@ -2,9 +2,11 @@
 #include <istream>
 #include <chrono>
 #include "Communication/PacketTypes/header.h"
+#include "Communication/PacketTypes/headerPubSubTypes.h"
 
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastrtps::rtps;
+using namespace eprosima::fastrtps;
 
 CommunicationManager::CommunicationManager()
 {
@@ -70,7 +72,7 @@ void CommunicationManager::writeData(int dataWriterID, void* data)
     auto epoch = now.time_since_epoch();
     auto mill = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
 
-    ((Header*)data)->timeSent(mill.count());
+    ((Header*)data)->timeSent(epoch.count());
     std::cout << epoch.count() << std::endl;
 
     _writers[dataWriterID]->write(data, eprosima::fastrtps::rtps::InstanceHandle_t());

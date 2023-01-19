@@ -2,9 +2,12 @@
 #include <string>
 #include <chrono>
 #include <iostream>
+#include "Communication/PacketTypes/velocityTypeObject.h"
+#include "Communication/PacketTypes/velocity.h"
+#include "Communication/PacketTypes/velocityPubSubTypes.h"
+
 
 #include "Profiler/Profiler.h"
-#include "Communication/PacketTypes/velocityPubSubTypes.h"
 
 //==============================================================================
 MainComponent::MainComponent() :
@@ -37,8 +40,8 @@ MainComponent::MainComponent() :
     setSize(getParentWidth(), getParentHeight());
     setFramesPerSecond(30);
 
-    _manager.registerTopic("Velocity", VelocityPubSubType());
-    _velID = _manager.addDataWriter("Velocity");
+    REGISTER_TYPE_TO_MANAGER(Velocity, "vel", _manager);
+    _velID = _manager.addDataWriter("vel");
 }
 
 void MainComponent::update()
@@ -61,7 +64,7 @@ void MainComponent::update()
     vel.magnitude() = randSpeed;
 
     std::cout << vel.head().id() << std::endl;
-
+    
     _manager.writeData(_velID, &vel);
     
 }
