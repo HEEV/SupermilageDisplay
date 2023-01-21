@@ -10,7 +10,7 @@ MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _map("Tracks/ShellTrack.svg", 1.0f),
-    _tilt(10.0f),
+    _tilt(3.1415f/6.0f),
     _timer(),
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
@@ -79,7 +79,7 @@ void MainComponent::resized()
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
-    speed.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+    speed.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
     speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));    
     
 
@@ -100,7 +100,7 @@ void MainComponent::resized()
     vert2.flexDirection = FlexBox::Direction::column;
     
     vert2.items.add(FlexItem(speed).withFlex(0.5f));
-    vert2.items.add(FlexItem(_tilt).withMinWidth(500.0f).withMinHeight(50.0f).withMargin(5.0f));
+    vert2.items.add(FlexItem(_timer).withMinWidth(500.0f).withMinHeight(50.0f).withMargin(5.0f));
     vert2.items.add(FlexItem(horz1).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f).withMargin(30.0f));
 
     FlexBox horz2;
