@@ -10,15 +10,9 @@
 [submodule "RS-232"]
 	path = lib/RS-232
 	url = https://gitlab.com/Teuniz/RS-232.git
-[submodule "fmt"]
-	path = lib/fmt
-	url = git@github.com:fmtlib/fmt.git
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = git@github.com:google/googletest.git
-[submodule "lib/Fast-DDS"]
-	path = lib/Fast-DDS
-	url = git@github.com:eProsima/Fast-DDS.git
-[submodule "lib/memory"]
-	path = lib/memory
-	url = git@github.com:foonathan/memory.git
+[submodule "lib/Fast-DDS-Communication-Manager"]
+	path = lib/Fast-DDS-Communication-Manager
+	url = git@github.com:HEEV/Fast-DDS-Communication-Manager.git

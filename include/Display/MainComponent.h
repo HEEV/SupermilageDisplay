@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include <fstream>
+#include <CommunicationManager.h>
 
 #include "Speedometer.h"
 #include "ColorLight.h"
@@ -10,7 +11,6 @@
 #include "VerticleGauge.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
-#include "Communication/CommunicationManager.h"
 
 enum SensorType {
     Speed = '1',

@@ -2,9 +2,8 @@
 #include <string>
 #include <chrono>
 #include <iostream>
-#include "Communication/PacketTypes/velocityTypeObject.h"
-#include "Communication/PacketTypes/velocity.h"
-#include "Communication/PacketTypes/velocityPubSubTypes.h"
+#include <PacketTypes/velocity.h>
+#include <PacketTypes/velocityPubSubTypes.h>
 
 
 #include "Profiler/Profiler.h"
@@ -18,7 +17,8 @@ MainComponent::MainComponent() :
     _timer(),
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
-    _volt(10.0f, 13.0f, 3)
+    _volt(10.0f, 13.0f, 3),
+    _manager("10.13.76.54:25565")
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);

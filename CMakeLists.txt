@@ -88,8 +88,7 @@ target_link_libraries(SuperMileageDisplay
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
-        fmt
-        fastrtps
+        CommunicationManager
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -98,10 +97,9 @@ target_link_libraries(TestApp
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
-        fmt
+        CommunicationManager
         GTest::gtest
         GTest::gmock
-        fastrtps
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
