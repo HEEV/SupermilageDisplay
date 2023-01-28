@@ -96,7 +96,7 @@ public:
     public:
         MainWindow (juce::String name)
             : DocumentWindow (name,
-                              Colours::grey,
+                              Colours::deepskyblue,
                               DocumentWindow::closeButton)
         {
             FUNCTION_PROFILE();

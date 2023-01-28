@@ -59,9 +59,11 @@ MainComponent::~MainComponent()
 
 //==============================================================================
 //Function exicuts every frame
-void MainComponent::paint (juce::Graphics& g)
+void MainComponent::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
+    //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
+    //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
 }
 
 void MainComponent::resized()
@@ -75,12 +77,14 @@ void MainComponent::resized()
     speed.alignContent = FlexBox::AlignContent::center;
     speed.alignItems = FlexBox::AlignItems::center;
     speed.justifyContent = FlexBox::JustifyContent::center;
-
+    
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
     speed.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
-    speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));    
+    speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));   
+        
+    //speed.items.add(FlexItem(_wind).;
     
 
     //horz.items.add(FlexItem(_map).withMinWidth(300.0f).withMinHeight(250.0f));
@@ -94,9 +98,9 @@ void MainComponent::resized()
     horz1.items.add(FlexItem(_counter).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f));
 
     FlexBox vert2;
-    vert2.alignContent = FlexBox::AlignContent::center;
-    vert2.alignItems = FlexBox::AlignItems::center;
-    vert2.justifyContent = FlexBox::JustifyContent::center;
+    vert2.alignContent = FlexBox::AlignContent::spaceAround;
+    vert2.alignItems = FlexBox::AlignItems::stretch;
+    vert2.justifyContent = FlexBox::JustifyContent::spaceAround;
     vert2.flexDirection = FlexBox::Direction::column;
     
     vert2.items.add(FlexItem(speed).withFlex(0.5f));
