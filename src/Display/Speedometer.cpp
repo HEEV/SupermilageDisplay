@@ -60,7 +60,12 @@ void Speedometer::paint(juce::Graphics& g)
 
 	// debug rectangle
 	g.setColour(Colours::red);
+	
 	g.drawRect(start.x, start.y, diameter, diameter, 3.0f);
+	g.drawLine(start.x, start.y + diameter / 2, start.x + diameter, start.y + diameter / 2, 3.0f);
+	g.drawLine(start.x + diameter / 2, start.y, start.x + diameter / 2, start.y + diameter, 3.0f);
+	//g.drawRect(start.x, start.y, diameter / 2, diameter, 1.0f);
+	//g.drawRect(start.x, start.y, diameter, diameter / 2, 1.0f);
 	g.setColour(Colours::black);
 	
 	g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
@@ -73,8 +78,8 @@ void Speedometer::paint(juce::Graphics& g)
 	float maxSize = std::max(FONT_HEIGHT, f.getStringWidthFloat(largestLabel) / 2.0f);
 	Point labelStart = start;
 	labelStart.addXY(maxSize, maxSize);
-	float labelDiameter = diameter - 2.0 * maxSize;
-	Point labelCenter = labelStart + Point(labelDiameter / 2.0f, labelDiameter / 2.0f);
+	float labelDiameter = diameter - 1.0 * maxSize;
+	Point labelCenter = labelStart + Point((0.9f * labelDiameter) / 2.0f, labelDiameter / 2.0f);
 	float labelMultiple = (_dataMax - _dataMin) / _subdivisions;
 	for(int i = 0; i < _subdivisions + 1; i++)
 	{
@@ -93,6 +98,8 @@ void Speedometer::paint(juce::Graphics& g)
 		g.drawText(label, textArea, Justification::centred);
 	}
 
+
+
 	//Draw digital readout
 	Rectangle<float> readoutArea;
 	String readout = fmt::format("{:.1f}", _data);
@@ -105,15 +112,16 @@ void Speedometer::paint(juce::Graphics& g)
 	constexpr float baseWidth = 20.0f;
 	float length = 9.0f * diameter / 16.0f;
 	Path hand;
+	Point center(start.x + (diameter / 2.0f), start.y + (diameter / 2.0f));
 	Point top(labelCenter.x, labelCenter.y - length);
 	Point bottomLeft = labelCenter - Point(baseWidth / 2.0f, -baseWidth / 2.0f);
 	Point bottomRight = labelCenter + Point(baseWidth / 2.0f, baseWidth / 2.0f);
-	hand.startNewSubPath(labelCenter);
+	hand.startNewSubPath(center);
 	hand.lineTo(bottomLeft);
 	hand.lineTo(top);
 	hand.lineTo(bottomRight);
 	hand.closeSubPath();
-	hand.applyTransform(AffineTransform::rotation(_rotation, labelCenter.x, labelCenter.y));
+	hand.applyTransform(AffineTransform::rotation(_rotation, center.x, center.y));
 	g.fillPath(hand);
 
 }
@@ -151,7 +159,7 @@ void Speedometer::setData(float value) {
 	value = value - _dataMin;
 
 	// Set the rotation
-	_rotation = value / weight * (3 * PI / 2) - 3 * PI / 4;
+	_rotation = _data / weight * (3 * PI / 2) - 3 * PI / 4;
 	
 }
 

@@ -81,9 +81,9 @@ void MainComponent::resized()
     
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
-    speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
-    speed.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
-    speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));   
+    //speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
+    //speed.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
+    //speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));   
         
     //speed.items.add(FlexItem(_wind).;
 //=======
@@ -99,6 +99,7 @@ void MainComponent::resized()
 
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    
     speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(350.0f).withMargin(1.0f));
     speed.items.add(FlexItem(vert1).withMinWidth(200.0f).withMinHeight(140.0f));
     speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(350.0f).withMargin(1.0f));    
