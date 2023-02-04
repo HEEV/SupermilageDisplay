@@ -19,14 +19,14 @@ void Tiltmeter::paint(Graphics& g)
 	Font f("Consolas", FONT_HEIGHT, juce::Font::bold);
 	g.setFont(f);
 	PathStrokeType stroke(LINE_WEIGHT / 2);
-	//g.setFont(_font);
 
+	// init arc variables
 	Point<float> start = _travelLine.getTopLeft().toFloat();
 	start.addXY(LINE_WEIGHT / 2.0f, LINE_WEIGHT / 2.0f);
 	float diameter = _travelLine.getWidth() - LINE_WEIGHT;
 
 	// draw circle
-	g.setColour(Colours::red);
+	g.setColour(Colour(130, 0, 0));
 	g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
 
 	//Draw semicircle

@@ -22,6 +22,7 @@ Speedometer::~Speedometer() {
 void Speedometer::paint(juce::Graphics& g) 
 {
 	auto bounds = getLocalBounds();
+	//explicit background color for animated components
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 	Font f("Consolas", FONT_HEIGHT, juce::Font::bold);
 	g.setFont(f);
@@ -38,8 +39,8 @@ void Speedometer::paint(juce::Graphics& g)
 		auto label = bounds.removeFromBottom(heightToRemove);
 
 		//Use extra space to add label
-		if(label.getHeight() >= FONT_HEIGHT)
-			g.drawText(_name, label, Justification::centredTop);
+		/*if(label.getHeight() >= FONT_HEIGHT)
+			g.drawText(_name, label, Justification::centredTop);*/
 	}
 	else if(7 * bounds.getWidth() / 8 > bounds.getHeight())
 	{
@@ -56,7 +57,15 @@ void Speedometer::paint(juce::Graphics& g)
 	Point start = bounds.getTopLeft().toFloat();
 	start.addXY(LINE_WEIGHT / 2.0f, LINE_WEIGHT / 2.0f);
 	float diameter = bounds.getWidth() - LINE_WEIGHT;
-	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
+
+	// debug rectangle
+	g.setColour(Colours::red);
+	g.drawRect(start.x, start.y, diameter, diameter, 3.0f);
+	g.setColour(Colours::black);
+	
+	g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
+	//arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
+	//arc.addArc(start.x, start.y, diameter, diameter, -PI, PI, true);
 	g.strokePath(arc, stroke);
 
 	//Draw labels
@@ -132,6 +141,8 @@ void Speedometer::setData(float value) {
 	FUNCTION_PROFILE();
 
 	value = std::min(_dataMax, std::max(_dataMin, value));
+
+	value = 15;
 
 	_data = value;
 
