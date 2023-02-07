@@ -38,35 +38,11 @@ MainComponent::MainComponent() :
     addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
-    setFramesPerSecond(30);
 
     REGISTER_TYPE_TO_MANAGER(Velocity, "vel", _manager);
-    _velID = _manager.addDataWriter("vel");
-}
-
-void MainComponent::update()
-{
-    static float randSpeed = 0.0f;
-    static float randWind = 0.0f;
-
-    _map.incDistance(0.01f);
-    _counter.incDistanceTraveled(0.01f);
-    _speed.setData(15.0f + randSpeed);
-    _wind.setData(20.0f + randWind);
-
-    Random& rand = Random::getSystemRandom();
-    randSpeed += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    randWind += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    _tilt.setCurrentTilt(rand.nextFloat() / 2.0f);
-
-    Velocity vel;
-    vel.head().id() = _id++;
-    vel.magnitude() = randSpeed;
-
-    std::cout << vel.head().id() << std::endl;
-    
-    _manager.writeData(_velID, &vel);
-    
+    _manager.addDataReader("vel", std::function([this](Velocity* v){
+        _speed.setData(v->magnitude());
+    }));
 }
 
 MainComponent::~MainComponent()

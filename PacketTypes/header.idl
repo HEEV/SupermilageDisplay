@@ -1,7 +1,0 @@
-
-struct Header
-{
-    uint32 id;
-    int64 timeRec;
-    int64 timeSent;
-};

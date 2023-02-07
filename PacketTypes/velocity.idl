@@ -1,7 +1,0 @@
-#include "header.idl"
-
-struct Velocity
-{
-    Header head;
-    float magnitude;
-};

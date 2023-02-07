@@ -25,7 +25,7 @@ enum SensorType {
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::AnimatedAppComponent
+class MainComponent  : public juce::Component
 {
 public:
     //==============================================================================
@@ -35,7 +35,6 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void update() override;
     
     //DataValues Storage;
 
@@ -49,8 +48,6 @@ private:
     VerticleGauge _engTemp;
     VerticleGauge _volt;
     CommunicationManager _manager;
-    int _velID;
-    int _id = 0;
 
 
     class MouseEvents : public MouseListener
