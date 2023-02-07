@@ -28,8 +28,8 @@ void LapCounter::resized()
 {
 	FUNCTION_PROFILE();
 
-	_lapCounter.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
-	_lapProgress.setColour(_lapCounter.foregroundColourId, Colour(253, 185, 19));
+	_lapCounter.setColour(_lapCounter.foregroundColourId, Colours::cornsilk);
+	_lapProgress.setColour(_lapCounter.foregroundColourId, Colours::cornsilk);
 
 	auto bounds = getLocalBounds();
 	constexpr int margin = 5;

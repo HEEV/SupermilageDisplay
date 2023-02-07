@@ -13,7 +13,7 @@ MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
     _map("Tracks/ShellTrack.svg", 1.0f),
-    _tilt(10.0f),
+    _tilt(3.1415f/12.0f),
     _timer(),
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
@@ -51,48 +51,72 @@ MainComponent::~MainComponent()
 
 //==============================================================================
 //Function exicuts every frame
-void MainComponent::paint (juce::Graphics& g)
+void MainComponent::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
+    //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
+    //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
 }
 
 void MainComponent::resized()
 {
     FUNCTION_PROFILE();
+
+    //vert.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+
+    //spedomiters 
     FlexBox speed;
     speed.alignContent = FlexBox::AlignContent::center;
     speed.alignItems = FlexBox::AlignItems::center;
     speed.justifyContent = FlexBox::JustifyContent::center;
+//<<<<<<< HEAD
+    
+    //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    //speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));
+    //speed.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
+    //speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(300.0f).withMargin(1.0f));   
+        
+    //speed.items.add(FlexItem(_wind).;
+//=======
 
-    speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
-    speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    FlexBox vert1;
+    vert1.alignContent = FlexBox::AlignContent::center;
+    vert1.alignItems = FlexBox::AlignItems::center;
+    vert1.justifyContent = FlexBox::JustifyContent::center;
+    vert1.flexDirection = FlexBox::Direction::column;
 
-    FlexBox vert;
-    vert.alignContent = FlexBox::AlignContent::center;
-    vert.alignItems = FlexBox::AlignItems::center;
-    vert.justifyContent = FlexBox::JustifyContent::center;
-    vert.flexDirection = FlexBox::Direction::column;
+    vert1.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
+    vert1.items.add(FlexItem(_timer).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
 
-    vert.items.add(FlexItem(_tilt).withMinWidth(500.0f).withMinHeight(50.0f).withMargin(5.0f));
-    vert.items.add(FlexItem(_timer).withMinWidth(250.0f).withMinHeight(60.0f));
+    //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
+    
+    speed.items.add(FlexItem(_speed).withMinWidth(300.0f).withMinHeight(350.0f).withMargin(1.0f));
+    speed.items.add(FlexItem(vert1).withMinWidth(200.0f).withMinHeight(140.0f));
+    speed.items.add(FlexItem(_wind).withMinWidth(300.0f).withMinHeight(350.0f).withMargin(1.0f));    
+//>>>>>>> 63ab22b42982da840e06a4bddd07f5b40c0ff53a
+    
 
-    FlexBox horz;
-    horz.alignContent = FlexBox::AlignContent::center;
-    horz.alignItems = FlexBox::AlignItems::center;
-    horz.justifyContent = FlexBox::JustifyContent::center;
+    //horz.items.add(FlexItem(_map).withMinWidth(300.0f).withMinHeight(250.0f));
 
-    horz.items.add(FlexItem(vert).withFlex(1.0f).withMinWidth(500.0f).withMinHeight(250.0f));
-    horz.items.add(FlexItem(_map).withMinWidth(300.0f).withMinHeight(250.0f));
+    FlexBox horz1;
+    horz1.alignContent = FlexBox::AlignContent::center;
+    horz1.alignItems = FlexBox::AlignItems::center;
+    horz1.justifyContent = FlexBox::JustifyContent::center;
+
+    horz1.items.add(FlexItem(_map).withMinWidth(250.0f).withMinHeight(200.0f).withMargin(50.0f));
+    horz1.items.add(FlexItem(_counter).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f));
 
     FlexBox vert2;
-    vert2.alignContent = FlexBox::AlignContent::center;
-    vert2.alignItems = FlexBox::AlignItems::center;
-    vert2.justifyContent = FlexBox::JustifyContent::center;
+    vert2.alignContent = FlexBox::AlignContent::spaceAround;
+    vert2.alignItems = FlexBox::AlignItems::stretch;
+    vert2.justifyContent = FlexBox::JustifyContent::spaceAround;
     vert2.flexDirection = FlexBox::Direction::column;
     
-    vert2.items.add(FlexItem(horz).withFlex(1.0f));
-    vert2.items.add(FlexItem(speed).withFlex(1.5f));
-    vert2.items.add(FlexItem(_counter).withMinWidth(getWidth() - 100.0f).withMinHeight(125.0f));
+    vert2.items.add(FlexItem(speed).withFlex(0.5f));
+    //vert2.items.add(FlexItem(_timer).withMinWidth(500.0f).withMinHeight(30.0f).withMargin(5.0f));
+    vert2.items.add(FlexItem(horz1).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f).withMargin(30.0f));
 
     FlexBox horz2;
     horz2.alignContent = FlexBox::AlignContent::center;
