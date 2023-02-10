@@ -16,7 +16,7 @@ MainComponent::MainComponent() :
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
     _volt(10.0f, 13.0f, 3),
-    _manager("10.13.76.54:25565")
+    _manager("10.12.11.32:25565")
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
