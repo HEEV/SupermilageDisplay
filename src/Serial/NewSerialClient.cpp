@@ -1,3 +1,4 @@
+#define NewSerial
 #ifdef NewSerial
 
 #include "Serial/NewSerialClient.h"
@@ -60,7 +61,7 @@ void serialWrite()
         totalBytes += (sizeof(carT) + 4);
         for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
     });
-    _manager.addDataReader<engineTemp>("engine", [this](engineTemp* engineT)
+    _manager.addDataReader<engineTemp>("enTemp", [this](engineTemp* engineT)
     {
         int totalBytes = 0;
         serialOutput << (temp = TEMP);
@@ -68,7 +69,7 @@ void serialWrite()
         totalBytes += (sizeof(engineT) + 4);
         for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
     });
-    _manager.addDataReader<wheelData>("wheel", [this](wheelData* wheelD)
+    _manager.addDataReader<wheelData>("vel", [this](wheelData* wheelD)
     {
         int totalBytes = 0;
         serialOutput << (temp = WHEEL);
@@ -108,31 +109,35 @@ void serialRead()
         case 1:
             BatteryVoltage battV;
             serialInput.read( (char*)&battV, sizeof(battV));
-            // WIP add new data "poster"
+            cout << battV->head()->id() << endl;
             break;
         case 2:
             CarTilt carT;
             serialInput.read( (char*)&carT, sizeof(carT));
-            // WIP add new data "poster"
+            cout << carT->head()->id() << endl;
             break;
         case 3:
             engineTemp engineT;
             serialInput.read( (char*)&engineT, sizeof(engineT));
+            cout << engineT->head()->id() << endl;
             // WIP add new data "poster"
             break;
         case 4:
             wheelData wheelD;
             serialInput.read( (char*)&wheelD, sizeof(wheelD));
+            cout << wheelD->head()->id() << endl;
             // WIP add new data "poster"
             break;
         case 5:
             windSpeed windS;
             serialInput.read( (char*)&windS, sizeof(windS));
+            cout << windS->head()->id() << endl;
             // WIP add new data "poster"
             break;
         case 6:
             GPSPosition GPS;
             serialInput.read( (char*)&GPS, sizeof(GPS));
+            cout << GPS->head()->id() << endl;
             // WIP add new data "poster"
             break;
         default:
