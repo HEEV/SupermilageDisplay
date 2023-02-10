@@ -2,9 +2,7 @@
 #include <string>
 #include <chrono>
 #include <iostream>
-#include <PacketTypes/velocity.h>
-#include <PacketTypes/velocityPubSubTypes.h>
-
+#include <Packets.h>
 
 #include "Profiler/Profiler.h"
 
@@ -30,19 +28,34 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_engTemp);
     addAndMakeVisible(_volt);
 
-    _speed.setData(15.0f);
-    _wind.setData(20.0f);
-    _engTemp.setData(45.0f);
-    _volt.setData(12.0f);
-
     addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
 
-    REGISTER_TYPE_TO_MANAGER(Velocity, "vel", _manager);
-    _manager.addDataReader("vel", std::function([this](Velocity* v){
-        _speed.setData(v->magnitude());
+    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", _manager);
+    REGISTER_TYPE_TO_MANAGER(BatteryVoltage, "bat", _manager);
+    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", _manager);
+    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", _manager);
+    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", _manager);
+    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
+
+    _manager.addDataReader("vel", std::function([this](WheelData* v){
+        _speed.setData(v->velocity());
+        _map.incDistance(v->distTravelled());
     }));
+    _manager.addDataReader("bat", std::function([this](BatteryVoltage* bat){
+        _volt.setData(bat->volt());
+    }));
+    _manager.addDataReader("enTemp", std::function([this](EngineTemp* temp) {
+        _engTemp.setData(temp->temp());
+    }));
+    _manager.addDataReader("wind", std::function([this](WindSpeed* wind) {
+        _wind.setData(wind->headSpeed());
+    }));
+    _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
+        _tilt.setCurrentTilt(tlt->angle());
+    }));
+
 }
 
 MainComponent::~MainComponent()
