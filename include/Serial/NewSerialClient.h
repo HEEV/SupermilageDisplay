@@ -14,14 +14,17 @@ class NewSerialClient {
 public:
 	NewSerialClient();
 	~NewSerialClient();
-	//bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
-	bool Initalize();
+	bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
 
 	// Serial IO
 	void serialWrite();
 	void serialRead();
 
 private:
+	CommunicationManager::CommunicationManager& comManager;
+
 	std::ifstream serialInput;
 	std::ofstream serialOutput
+
+	bool _activeSerial;
 };
