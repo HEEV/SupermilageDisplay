@@ -58,6 +58,15 @@ MainComponent::MainComponent() :
         _tilt.setCurrentTilt(tlt->angle());
     }));
 
+    try
+    {
+        NewSerialClient Serial = NewSerialClient();
+        try
+        {
+            thread(Serial.serialWrite());
+        }
+    }
+
 }
 
 MainComponent::~MainComponent()
