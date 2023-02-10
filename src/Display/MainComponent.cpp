@@ -2,8 +2,7 @@
 #include <string>
 #include <chrono>
 #include <iostream>
-#include <PacketTypes/velocity.h>
-#include <PacketTypes/velocityPubSubTypes.h>
+#include <Packets.h>
 
 
 #include "Profiler/Profiler.h"
@@ -18,7 +17,7 @@ MainComponent::MainComponent() :
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
     _volt(10.0f, 13.0f, 3),
-    _manager("10.13.76.54:25565")
+    _manager("10.12.11.32:25565")
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -34,39 +33,18 @@ MainComponent::MainComponent() :
     _wind.setData(20.0f);
     _engTemp.setData(45.0f);
     _volt.setData(12.0f);
+    _map.updateDistance(0.0f);
 
     addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
-    setFramesPerSecond(30);
 
     REGISTER_TYPE_TO_MANAGER(Velocity, "vel", _manager);
-    _velID = _manager.addDataWriter("vel");
-}
-
-void MainComponent::update()
-{
-    static float randSpeed = 0.0f;
-    static float randWind = 0.0f;
-
-    _map.incDistance(0.01f);
-    _counter.incDistanceTraveled(0.01f);
-    _speed.setData(15.0f + randSpeed);
-    _wind.setData(20.0f + randWind);
-
-    Random& rand = Random::getSystemRandom();
-    randSpeed += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    randWind += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    _tilt.setCurrentTilt(rand.nextFloat() / 2.0f);
-
-    Velocity vel;
-    vel.head().id() = _id++;
-    vel.magnitude() = randSpeed;
-
-    std::cout << vel.head().id() << std::endl;
-    
-    _manager.writeData(_velID, &vel);
-    
+    REGISTER_TYPE_TO_MANAGER(windSpeed, "wind", _manager);
+    REGISTER_TYPE_TO_MANAGER(BatteryVoltage, "bat", _manager);
+    _manager.addDataReader<Velocity>("vel", [this](Velocity* vel){ _speed.setData(vel->magnitude()); });
+    _manager.addDataReader<windSpeed>("wind", [this](windSpeed* ws){ _wind.setData(std::abs(ws->headSpeed())); });
+    _manager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* bat){ _volt.setData(bat->volt()); });
 }
 
 MainComponent::~MainComponent()
