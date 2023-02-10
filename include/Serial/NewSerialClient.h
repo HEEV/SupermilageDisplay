@@ -20,4 +20,8 @@ public:
 	// Serial IO
 	void serialWrite();
 	void serialRead();
+
+private:
+	std::ifstream serialInput;
+	std::ofstream serialOutput
 };

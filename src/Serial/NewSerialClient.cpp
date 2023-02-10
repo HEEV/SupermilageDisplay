@@ -6,18 +6,15 @@
 
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
-NewSerialClient()
+NewSerialClient::NewSerialClient()
 {
-    Initialize();
+    Initalize();
 }
 
-~NewSerialClient()
+NewSerialClient::~NewSerialClient()
 {
-    try
-    {
-        serialOutput.close();
-        serialInput.close();
-    }
+    serialOutput.close();
+    serialInput.close();
 }
 
 #ifdef DynamicSerial
@@ -32,16 +29,16 @@ bool Initalize(std::string port, int BaudRate)
 }
 #endif
 
-bool Initalize()
+bool NewSerialClient::Initalize()
 {
-    system("stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
-    ifstream serialInput("/dev/ttyUSB0");//Opens the tty connection as an ifstream
-    ofstream serialOutput("/dev/ttyUSB0");//Opens the tty connection as an ofstream, not used in this example
+    system("stty -F /dev/ttyACM0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
+    serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
+    serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
 
     return true;
 }
 
-void serialWrite()
+void NewSerialClient::serialWrite()
 {
     PACKET_TYPE temp;
     
@@ -96,7 +93,7 @@ void serialWrite()
 
 }
 
-void serialRead()
+void NewSerialClient::serialRead()
 {
     PACKET_TYPE readType;
     serialInput.read( (char*)&readType, sizeof(readType));
