@@ -6,17 +6,19 @@
 
 #include "Profiler/Profiler.h"
 
+constexpr float TRACK_DIST = 1000.0f;
+
 //==============================================================================
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
     _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
-    _map("Tracks/ShellTrack.svg", 1.0f),
+    _map("Tracks/ShellTrack.svg", TRACK_DIST),
     _tilt(3.1415f/12.0f),
     _timer(),
     _counter(1.0, 4),
-    _engTemp(0.0f, 90.0f, 9),
+    _engTemp(0.0f, 300.0f, 10),
     _volt(10.0f, 13.0f, 3),
-    _manager("10.12.11.32:25565")
+    _manager("10.13.108.7:25565")
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -40,8 +42,8 @@ MainComponent::MainComponent() :
     REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
 
     _manager.addDataReader("vel", std::function([this](WheelData* v){
-        _speed.setData(v->velocity());
-        _map.incDistance(v->distTravelled());
+        _speed.setData(v->velocity() * 0.681818);
+        _map.updateDistance(v->distTravelled());
     }));
     _manager.addDataReader("bat", std::function([this](BatteryVoltage* bat){
         _volt.setData(bat->volt());
@@ -50,7 +52,7 @@ MainComponent::MainComponent() :
         _engTemp.setData(temp->temp());
     }));
     _manager.addDataReader("wind", std::function([this](WindSpeed* wind) {
-        _wind.setData(wind->headSpeed());
+        _wind.setData(std::abs(wind->headSpeed() * 0.681818));
     }));
     _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
         _tilt.setCurrentTilt(tlt->angle());
