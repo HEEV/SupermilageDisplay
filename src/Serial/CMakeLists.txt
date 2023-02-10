@@ -1,7 +1,7 @@
 set(
     SerialSources
-    SerialClient.cpp
+    NewSerialClient.cpp
 )
 
-target_sources(SuperMileageDisplay ${SerialSources})
-target_sources(TestApp ${SerialSources})
+target_sources(SuperMileageDisplay PRIVATE ${SerialSources})
+target_sources(TestApp PRIVATE ${SerialSources})

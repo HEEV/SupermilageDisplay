@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include <fstream>
 #include <CommunicationManager.h>
+#include <thread>
 
 #include "Speedometer.h"
 #include "ColorLight.h"
@@ -11,6 +12,7 @@
 #include "VerticleGauge.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
+#include "Serial/NewSerialClient.h"
 
 enum SensorType {
     Speed = '1',
@@ -48,8 +50,13 @@ private:
     VerticleGauge _engTemp;
     VerticleGauge _volt;
     CommunicationManager _manager;
+<<<<<<< HEAD
     int _velID;
     int _id = 0;
+=======
+    std::thread _rfThread;
+    NewSerialClient _client;
+>>>>>>> comms
 
 
     class MouseEvents : public MouseListener

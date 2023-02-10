@@ -1,6 +1,5 @@
 set(
     DisplaySources
-    CMakeLists.txt
     ColorLight.cpp
     LapCounter.cpp
     MainComponent.cpp

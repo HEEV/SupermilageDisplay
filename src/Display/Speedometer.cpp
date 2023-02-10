@@ -56,7 +56,22 @@ void Speedometer::paint(juce::Graphics& g)
 	Point start = bounds.getTopLeft().toFloat();
 	start.addXY(LINE_WEIGHT / 2.0f, LINE_WEIGHT / 2.0f);
 	float diameter = bounds.getWidth() - LINE_WEIGHT;
+<<<<<<< HEAD
 	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
+=======
+
+	// debug rectangles
+	/*g.setColour(Colours::red);
+	
+	g.drawRect(start.x, start.y, diameter, diameter, 3.0f);
+	g.drawLine(start.x, start.y + diameter / 2, start.x + diameter, start.y + diameter / 2, 3.0f);
+	g.drawLine(start.x + diameter / 2, start.y, start.x + diameter / 2, start.y + diameter, 3.0f);
+	g.setColour(Colours::black);*/
+	
+	//g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
+	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
+	//arc.addArc(start.x, start.y, diameter, diameter, -PI, PI, true);
+>>>>>>> comms
 	g.strokePath(arc, stroke);
 
 	//Draw labels
@@ -133,6 +148,11 @@ void Speedometer::setData(float value) {
 
 	value = std::min(_dataMax, std::max(_dataMin, value));
 
+<<<<<<< HEAD
+=======
+	//value = 15;
+
+>>>>>>> comms
 	_data = value;
 
 	// Range the data around 0
