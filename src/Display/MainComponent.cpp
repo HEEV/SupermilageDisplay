@@ -45,6 +45,16 @@ MainComponent::MainComponent() :
     _manager.addDataReader<Velocity>("vel", [this](Velocity* vel){ _speed.setData(vel->magnitude()); });
     _manager.addDataReader<windSpeed>("wind", [this](windSpeed* ws){ _wind.setData(std::abs(ws->headSpeed())); });
     _manager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* bat){ _volt.setData(bat->volt()); });
+
+    try
+    {
+        NewSerialClient Serial = NewSerialClient();
+        try
+        {
+            thread(Serial.serialWrite());
+        }
+    }
+
 }
 
 MainComponent::~MainComponent()
