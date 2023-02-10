@@ -1,9 +1,8 @@
 #pragma once
 
- #include <iostream>
+#include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <ctime>
 #include <cstring>
 
 //constexpr char const* PORT = "ttyUSB0"; //"/dev/ttyUSB0"
@@ -13,24 +12,12 @@ constexpr int BAUDRATE = 115200; //9600
 
 class NewSerialClient {
 public:
-	NewSerialClient(uint32_t id, int64_t Sent, float Velocity);
+	NewSerialClient();
 	~NewSerialClient();
-	Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
-
-	// Setters
-	void setId(uint32_t id);
-	void setReceive(int64_t Recieve);
-	void setSent(int64_t Sent);
-	void setVelocity(float Velocity);
+	//bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
+	bool Initalize();
 
 	// Serial IO
-	void sendSerial();
-	void serialReceive();
-
-private:
-	uint32_t _id;
-    int64_t _timeRec;
-    int64_t _timeSent;
-	float _velocity;
-
+	void serialWrite();
+	void serialRead();
 };
