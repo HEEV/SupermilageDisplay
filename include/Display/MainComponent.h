@@ -50,13 +50,8 @@ private:
     VerticleGauge _engTemp;
     VerticleGauge _volt;
     CommunicationManager _manager;
-<<<<<<< HEAD
-    int _velID;
-    int _id = 0;
-=======
     std::thread _rfThread;
     NewSerialClient _client;
->>>>>>> comms
 
 
     class MouseEvents : public MouseListener
