@@ -23,5 +23,5 @@ public:
 
 private:
 	std::ifstream serialInput;
-	std::ofstream serialOutput
+	std::ofstream serialOutput;
 };
