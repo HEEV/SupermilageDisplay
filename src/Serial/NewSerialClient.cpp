@@ -102,43 +102,47 @@ void NewSerialClient::serialRead()
         _serialInput.read( (char*)&readType, sizeof(readType));
 
         // We will always send a PACKET_TYPE = NONE [0] at the end of every packet
-        while (readType != 0)
+        while (readType != NONE)
         {
-            switch (readType)
+            if (readType == VOLTAGE) 
             {
-            case VOLTAGE:
                 BatteryVoltage battV;
                 _serialInput.read( (char*)&battV, sizeof(battV));
-                std::cout << "Battery Packet ID: " << battV->head()->id() << std::endl;
-                break;
-            case TILT:
+                std::cout << "Battery Packet ID: " << battV.head().id() << std::endl;
+            }
+            else if (readType == TILT)
+            {
                 CarTilt carT;
                 _serialInput.read( (char*)&carT, sizeof(carT));
-                std::cout << "Car Tilt Packet ID: " << carT->head()->id() << std::endl;
-                break;
-            case TEMP:
-                engineTemp engineT;
+                std::cout << "Car Tilt Packet ID: " << carT.head().id() << std::endl;
+            }
+            else if (readType == TEMP)
+            {
+                EngineTemp engineT;
                 _serialInput.read( (char*)&engineT, sizeof(engineT));
-                std::cout << "Engine Temperature Packet ID: " << engineT->head()->id() << std::endl;
-                break;
-            case WHEEL:
-                wheelData wheelD;
+                std::cout << "Engine Temperature Packet ID: " << engineT.head().id() << std::endl;
+            }
+            else if (readType == WHEEL)
+            {
+                WheelData wheelD;
                 _serialInput.read( (char*)&wheelD, sizeof(wheelD));
-                std::cout << "Velocity Packet ID: " << wheelD->head()->id() << std::endl;
-                break;
-            case WIND:
-                windSpeed windS;
+                std::cout << "Velocity Packet ID: " << wheelD.head().id() << std::endl;
+            }
+            else if (readType == WIND)
+            {
+                WindSpeed windS;
                 _serialInput.read( (char*)&windS, sizeof(windS));
-                std::cout << "Wind Speed Packet ID: " << windS->head()->id() << std::endl;
-                break;
-            case GPS:
+                std::cout << "Wind Speed Packet ID: " << windS.head().id() << std::endl;
+            }
+            else if (readType == GPS)
+            {
                 GPSPosition GPS;
                 _serialInput.read( (char*)&GPS, sizeof(GPS));
-                std::cout << "GPS Packet ID: " << GPS->head()->id() << std::endl;
-                break;
-            default:
+                std::cout << "GPS Packet ID: " << GPS.head().id() << std::endl;
+            }
+            else
+            {
                 readType = NONE;
-                break;
             }
             _serialInput.read( (char*)&readType, sizeof(readType));
         }
