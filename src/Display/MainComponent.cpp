@@ -59,8 +59,7 @@ MainComponent::MainComponent() :
         _tilt.setCurrentTilt(tlt->angle());
     }));
 
-   _rfThread = std::thread(&NewSerialClient::serialWrite, _client, _manager);
-
+    _rfThread = std::thread(&NewSerialClient::serialWrite, _client, std::ref(_manager));
 }
 
 MainComponent::~MainComponent()
