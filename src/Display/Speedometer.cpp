@@ -5,9 +5,10 @@
 #include "Display/Speedometer.h"
 #include "Display/Constants.h"
 
-Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
-	_name(name), _dataMin(minData), _dataMax(maxData), 
-	_color(color), _lineWidth(lineWidth), _subdivisions(subdivisions), _lc(nullptr)
+Speedometer::Speedometer(std::string_view name, float minData, float maxData, float maxSafe,
+						 int subdivisions, int lineWidth) :
+	_name(name), _dataMin(minData), _dataMax(maxData), _dataSafe(maxSafe),
+	_lineWidth(lineWidth), _subdivisions(subdivisions), _lc(nullptr)
 {
 	FUNCTION_PROFILE();
 	setData(_dataMin);
@@ -69,7 +70,8 @@ void Speedometer::paint(juce::Graphics& g)
 	/**/
 	
 	//Draw main arc
-	float redZone = (3 * PI / 4) - ((3 * PI) / (2 * _subdivisions));
+
+	float redZone = (-3 * PI / 4) + ((3 * PI * _dataSafe) / (2 * _dataMax));
 	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, redZone, true);
 	g.strokePath(arc, stroke);
 
@@ -116,8 +118,7 @@ void Speedometer::paint(juce::Graphics& g)
 	g.drawText(readout, readoutArea, Justification::centred);
 
 	//Draw hand
-	float maxSafeValue = _dataMax - ((_dataMax - _dataMin) / _subdivisions);
-	if (_data >= maxSafeValue) { g.setColour(Colours::red); }
+	if (_data >= _dataSafe) { g.setColour(Colours::red); }
 
 	constexpr float baseWidth = 20.0f;
 	float length = 9.0f * diameter / 16.0f;

@@ -7,8 +7,8 @@
 
 //==============================================================================
 MainComponent::MainComponent() :
-    _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
-    _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
+    _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
+    _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
     _map("Tracks/ShellTrack.svg", 1.0f),
     _tilt(3.1415f/12.0f),
     _timer(),
