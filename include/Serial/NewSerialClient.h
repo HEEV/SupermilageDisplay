@@ -12,7 +12,7 @@ constexpr int BAUDRATE = 115200; //9600
 
 class NewSerialClient {
 public:
-	NewSerialClient();
+	NewSerialClient(CommunicationManager &m);
 	~NewSerialClient();
 	bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
 
