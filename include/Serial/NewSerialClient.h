@@ -23,8 +23,8 @@ public:
 
 private:
 
-	std::ifstream serialInput;
-	std::ofstream serialOutput;
+	std::ifstream _serialInput;
+	std::ofstream _serialOutput;
 
 	bool _activeSerial;
 };
