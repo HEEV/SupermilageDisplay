@@ -3,7 +3,6 @@
 #include <JuceHeader.h>
 #include <fstream>
 #include <CommunicationManager.h>
-#include <thread>
 
 #include "Speedometer.h"
 #include "ColorLight.h"
@@ -50,7 +49,6 @@ private:
     VerticleGauge _engTemp;
     VerticleGauge _volt;
     CommunicationManager _manager;
-    std::thread _rfThread;
     NewSerialClient _client;
 
 

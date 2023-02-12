@@ -1,4 +1,9 @@
 #define NewSerial
+#define HardcodedSeiral
+
+#define FASTDDS
+//#define Test
+
 #ifdef NewSerial
 
 #include "Serial/NewSerialClient.h"
@@ -6,142 +11,188 @@
 
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
-NewSerialClient::NewSerialClient()
+NewSerialClient::NewSerialClient(CommunicationManager &manager) : _comManager(manager)
 {
-    Initalize();
+    _activeSerial = Initalize();
 }
 
 NewSerialClient::~NewSerialClient()
 {
-    serialOutput.close();
-    serialInput.close();
+    _serialOutput.close();
+    _serialInput.close();
 }
 
-#ifdef DynamicSerial
-bool Initalize(std::string port, int BaudRate)
+bool NewSerialClient::Initalize(std::string port, int BaudRate)
 {
-
-    system("stty -F /dev/" + port + " cs8 " + to_string(Baudrate) + " ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
-    ifstream serialInput(("/dev/" + port));//Opens the tty connection as an ifstream
-    ofstream serialOutput(("/dev/" + port));//Opens the tty connection as an ofstream, not used in this example
-
-    return true;
-}
-#endif
-
-bool NewSerialClient::Initalize()
-{
-    system("stty -F /dev/ttyACM0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
-    serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
-    serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
-
-    return true;
+    #ifdef HardcodedSeiral
+    int establishedSerial = system("stty -F /dev/ttyACM0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke -noflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
+    if (establishedSerial == 0)
+    {
+        _serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
+        _serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
+        return true;
+    }
+    else 
+    {
+        return false;
+    }
+    #endif
+    #ifdef DynamicSerial
+    system("stty -F /dev/" + port + " cs8 " + std::to_string(BaudRate) + " ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
+    _serialInput = std::ifstream(("/dev/" + port));//Opens the tty connection as an ifstream
+    _serialOutput = std::ofstream(("/dev/" + port));//Opens the tty connection as an ofstream, not used in this example
+    #endif
 }
 
 void NewSerialClient::serialWrite()
 {
-    PACKET_TYPE temp;
-    
-    _manager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = VOLTAGE);
-        serialOutput.write( ((char*)&(*battV)), sizeof(battV));
-        totalBytes += (sizeof(battV) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
-    _manager.addDataReader<CarTilt>("tilt", [this](CarTilt* carT)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = TILT);
-        serialOutput.write( ((char*)&(*carT)), sizeof(carT));
-        totalBytes += (sizeof(carT) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
-    _manager.addDataReader<engineTemp>("enTemp", [this](engineTemp* engineT)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = TEMP);
-        serialOutput.write( ((char*)&(*engineT)), sizeof(engineT));
-        totalBytes += (sizeof(engineT) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
-    _manager.addDataReader<wheelData>("vel", [this](wheelData* wheelD)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = WHEEL);
-        serialOutput.write( ((char*)&(*wheelD)), sizeof(wheelD));
-        totalBytes += (sizeof(wheelD) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
-    _manager.addDataReader<windSpeed>("wind", [this](windSpeed* windS)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = WIND);
-        serialOutput.write( ((char*)&(*windS)), sizeof(windS));
-        totalBytes += (sizeof(windS) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
-    _manager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPS)
-    {
-        int totalBytes = 0;
-        serialOutput << (temp = GPS);
-        serialOutput.write( ((char*)&(*GPS)), sizeof(GPS));
-        totalBytes += (sizeof(GPS) + 4);
-        for (int i = totalBytes; i < 255; i++){serialOutput << 0x00;}
-    });
+    if (_activeSerial) 
+    {       
+        #ifdef FASTDDS
+        _comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
+        {
+            int totalBytes = 0;
+            _serialOutput << VOLTAGE;
+            _serialOutput.write( ((char*)&(*battV)), sizeof(battV));
+            totalBytes += (sizeof(battV) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        _comManager.addDataReader<CarTilt>("tilt", [this](CarTilt* tlt)
+        {
+            int totalBytes = 0;
+            _serialOutput << TILT;
+            _serialOutput.write( ((char*)&(*tlt)), sizeof(tlt));
+            totalBytes += (sizeof(tlt) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        _comManager.addDataReader<EngineTemp>("enTemp", [this](EngineTemp* temp)
+        {
+            int totalBytes = 0;
+            _serialOutput << TEMP;
+            _serialOutput.write( ((char*)&(*temp)), sizeof(temp));
+            totalBytes += (sizeof(temp) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        _comManager.addDataReader<WheelData>("vel", [this](WheelData* wheelD)
+        {
+            int totalBytes = 0;
+            _serialOutput << WHEEL;
+            _serialOutput.write( ((char*)&(*wheelD)), sizeof(wheelD));
+            totalBytes += (sizeof(wheelD) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        _comManager.addDataReader<WindSpeed>("wind", [this](WindSpeed* windS)
+        {
+            int totalBytes = 0;
+            _serialOutput << WIND;
+            _serialOutput.write( ((char*)&(*windS)), sizeof(windS));
+            totalBytes += (sizeof(windS) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        _comManager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPSPos)
+        {
+            int totalBytes = 0;
+            _serialOutput << GPS;
+            _serialOutput.write( ((char*)&(*GPSPos)), sizeof(GPSPos));
+            totalBytes += (sizeof(GPSPos) + 4);
+            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+        });
+        #endif
 
+        #ifdef Test
+        int TestSendPackets = 100;
+
+        int totalBytes = 0;
+        for (int i = 0; i < TestSendPackets; i++)
+        {
+            _serialOutput << i;
+            totalBytes += sizeof(i);
+            _serialOutput << (char)0x00;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x00;
+            totalBytes += 10;
+            _serialOutput << i;
+            totalBytes += sizeof(i);
+
+            for (int j = totalBytes; j < 251 - 1; j++)
+            {
+                _serialOutput << (char)0x00;
+            }
+            std::cout << totalBytes << " = : " << i << "   : ";
+            totalBytes = 0;
+        }
+        #endif
+
+    }
+    else
+    {
+        std::cerr << "Failed to Initialize Serial" << '\n';
+    }    
 }
 
 void NewSerialClient::serialRead()
 {
-    PACKET_TYPE readType;
-    serialInput.read( (char*)&readType, sizeof(readType));
-
-    // We will always send a PACKET_TYPE = NONE [0] at the end of every packet
-    while (readType != 0)
+    if (_activeSerial)
     {
-        switch (readType)
+        PACKET_TYPE readType;
+        _serialInput.read( (char*)&readType, sizeof(readType));
+
+        // We will always send a PACKET_TYPE = NONE [0] at the end of every packet
+        while (readType != NONE)
         {
-        case 1:
-            BatteryVoltage battV;
-            serialInput.read( (char*)&battV, sizeof(battV));
-            cout << battV->head()->id() << endl;
-            break;
-        case 2:
-            CarTilt carT;
-            serialInput.read( (char*)&carT, sizeof(carT));
-            cout << carT->head()->id() << endl;
-            break;
-        case 3:
-            engineTemp engineT;
-            serialInput.read( (char*)&engineT, sizeof(engineT));
-            cout << engineT->head()->id() << endl;
-            // WIP add new data "poster"
-            break;
-        case 4:
-            wheelData wheelD;
-            serialInput.read( (char*)&wheelD, sizeof(wheelD));
-            cout << wheelD->head()->id() << endl;
-            // WIP add new data "poster"
-            break;
-        case 5:
-            windSpeed windS;
-            serialInput.read( (char*)&windS, sizeof(windS));
-            cout << windS->head()->id() << endl;
-            // WIP add new data "poster"
-            break;
-        case 6:
-            GPSPosition GPS;
-            serialInput.read( (char*)&GPS, sizeof(GPS));
-            cout << GPS->head()->id() << endl;
-            // WIP add new data "poster"
-            break;
-        default:
-            readType = NONE;
-            break;
+            if (readType == VOLTAGE) 
+            {
+                BatteryVoltage battV;
+                _serialInput.read( (char*)&battV, sizeof(battV));
+                std::cout << "Battery Packet ID: " << battV.head().id() << std::endl;
+            }
+            else if (readType == TILT)
+            {
+                CarTilt carT;
+                _serialInput.read( (char*)&carT, sizeof(carT));
+                std::cout << "Car Tilt Packet ID: " << carT.head().id() << std::endl;
+            }
+            else if (readType == TEMP)
+            {
+                EngineTemp engineT;
+                _serialInput.read( (char*)&engineT, sizeof(engineT));
+                std::cout << "Engine Temperature Packet ID: " << engineT.head().id() << std::endl;
+            }
+            else if (readType == WHEEL)
+            {
+                WheelData wheelD;
+                _serialInput.read( (char*)&wheelD, sizeof(wheelD));
+                std::cout << "Velocity Packet ID: " << wheelD.head().id() << std::endl;
+            }
+            else if (readType == WIND)
+            {
+                WindSpeed windS;
+                _serialInput.read( (char*)&windS, sizeof(windS));
+                std::cout << "Wind Speed Packet ID: " << windS.head().id() << std::endl;
+            }
+            else if (readType == GPS)
+            {
+                GPSPosition GPS;
+                _serialInput.read( (char*)&GPS, sizeof(GPS));
+                std::cout << "GPS Packet ID: " << GPS.head().id() << std::endl;
+            }
+            else
+            {
+                readType = NONE;
+            }
+            _serialInput.read( (char*)&readType, sizeof(readType));
         }
-        serialInput.read( (char*)&readType, sizeof(readType));
     }
+    else
+    {
+        std::cerr << "Failed to Initialize Serial" << '\n';
+    }    
 }
 #endif
