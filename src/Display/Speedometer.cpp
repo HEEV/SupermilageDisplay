@@ -56,9 +56,6 @@ void Speedometer::paint(juce::Graphics& g)
 	Point start = bounds.getTopLeft().toFloat();
 	start.addXY(LINE_WEIGHT / 2.0f, LINE_WEIGHT / 2.0f);
 	float diameter = bounds.getWidth() - LINE_WEIGHT;
-<<<<<<< HEAD
-	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
-=======
 
 	// debug rectangles
 	/*g.setColour(Colours::red);
@@ -71,7 +68,6 @@ void Speedometer::paint(juce::Graphics& g)
 	//g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
 	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
 	//arc.addArc(start.x, start.y, diameter, diameter, -PI, PI, true);
->>>>>>> comms
 	g.strokePath(arc, stroke);
 
 	//Draw labels
