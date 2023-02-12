@@ -19,7 +19,7 @@ MainComponent::MainComponent() :
     _engTemp(0.0f, 300.0f, 10),
     _volt(10.0f, 13.0f, 3),
     _manager("10.13.108.7:25565"),
-    _client()
+    _client(_manager)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -59,7 +59,7 @@ MainComponent::MainComponent() :
         _tilt.setCurrentTilt(tlt->angle());
     }));
 
-    _rfThread = std::thread(&NewSerialClient::serialWrite, _client, std::ref(_manager));
+    _rfThread = std::thread(&NewSerialClient::serialWrite, &_client);
 }
 
 MainComponent::~MainComponent()

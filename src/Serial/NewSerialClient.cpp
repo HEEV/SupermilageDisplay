@@ -8,7 +8,7 @@
 
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
-NewSerialClient::NewSerialClient()
+NewSerialClient::NewSerialClient(CommunicationManager &manager) : _comManager(manager)
 {
     _activeSerial = Initalize();
 }
@@ -35,11 +35,11 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
     return true;
 }
 
-void NewSerialClient::serialWrite(CommunicationManager &comManager)
+void NewSerialClient::serialWrite()
 {
     if (_activeSerial) 
     {        
-        comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
+        _comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
         {
             int totalBytes = 0;
             _serialOutput << VOLTAGE;
@@ -47,7 +47,7 @@ void NewSerialClient::serialWrite(CommunicationManager &comManager)
             totalBytes += (sizeof(battV) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
-        comManager.addDataReader<CarTilt>("tilt", [this](CarTilt* tlt)
+        _comManager.addDataReader<CarTilt>("tilt", [this](CarTilt* tlt)
         {
             int totalBytes = 0;
             _serialOutput << TILT;
@@ -55,7 +55,7 @@ void NewSerialClient::serialWrite(CommunicationManager &comManager)
             totalBytes += (sizeof(tlt) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
-        comManager.addDataReader<EngineTemp>("enTemp", [this](EngineTemp* temp)
+        _comManager.addDataReader<EngineTemp>("enTemp", [this](EngineTemp* temp)
         {
             int totalBytes = 0;
             _serialOutput << TEMP;
@@ -63,7 +63,7 @@ void NewSerialClient::serialWrite(CommunicationManager &comManager)
             totalBytes += (sizeof(temp) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
-        comManager.addDataReader<WheelData>("vel", [this](WheelData* wheelD)
+        _comManager.addDataReader<WheelData>("vel", [this](WheelData* wheelD)
         {
             int totalBytes = 0;
             _serialOutput << WHEEL;
@@ -71,7 +71,7 @@ void NewSerialClient::serialWrite(CommunicationManager &comManager)
             totalBytes += (sizeof(wheelD) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
-        comManager.addDataReader<WindSpeed>("wind", [this](WindSpeed* windS)
+        _comManager.addDataReader<WindSpeed>("wind", [this](WindSpeed* windS)
         {
             int totalBytes = 0;
             _serialOutput << WIND;
@@ -79,7 +79,7 @@ void NewSerialClient::serialWrite(CommunicationManager &comManager)
             totalBytes += (sizeof(windS) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
-        comManager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPSPos)
+        _comManager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPSPos)
         {
             int totalBytes = 0;
             _serialOutput << GPS;

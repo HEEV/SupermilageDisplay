@@ -13,15 +13,16 @@ constexpr int BAUDRATE = 115200; //9600
 
 class NewSerialClient {
 public:
-	NewSerialClient();
+	NewSerialClient(CommunicationManager &manager);
 	~NewSerialClient();
 	bool Initalize(std::string port = PORT, int BaudRate = BAUDRATE);
 
 	// Serial IO
-	void serialWrite(CommunicationManager &comManager);
+	void serialWrite();
 	void serialRead();
 
 private:
+	CommunicationManager &_comManager;
 
 	std::ifstream _serialInput;
 	std::ofstream _serialOutput;
