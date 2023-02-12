@@ -1,6 +1,9 @@
 #define NewSerial
 #define HardcodedSeiral
 
+#define FASTDDS
+//#define Test
+
 #ifdef NewSerial
 
 #include "Serial/NewSerialClient.h"
@@ -44,7 +47,8 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
 void NewSerialClient::serialWrite()
 {
     if (_activeSerial) 
-    {        
+    {       
+        #ifdef FASTDDS
         _comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
         {
             int totalBytes = 0;
@@ -93,6 +97,39 @@ void NewSerialClient::serialWrite()
             totalBytes += (sizeof(GPSPos) + 4);
             for (int i = totalBytes; i < 255; i++){_serialOutput << 0x00;}
         });
+        #endif
+
+        #ifdef Test
+        int TestSendPackets = 100;
+
+        int totalBytes = 0;
+        for (int i = 0; i < TestSendPackets; i++)
+        {
+            _serialOutput << i;
+            totalBytes += sizeof(i);
+            _serialOutput << (char)0x00;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x0A;
+            _serialOutput << (char)0x00;
+            totalBytes += 10;
+            _serialOutput << i;
+            totalBytes += sizeof(i);
+
+            for (int j = totalBytes; j < 251 - 1; j++)
+            {
+                _serialOutput << (char)0x00;
+            }
+            std::cout << totalBytes << " = : " << i << "   : ";
+            totalBytes = 0;
+        }
+        #endif
+
     }
     else
     {
