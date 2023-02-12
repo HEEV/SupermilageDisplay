@@ -27,6 +27,11 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
     {
         _serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
         _serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
+        return true;
+    }
+    else 
+    {
+        return false;
     }
     #endif
     #ifdef DynamicSerial
@@ -34,8 +39,6 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
     _serialInput = std::ifstream(("/dev/" + port));//Opens the tty connection as an ifstream
     _serialOutput = std::ofstream(("/dev/" + port));//Opens the tty connection as an ofstream, not used in this example
     #endif
-
-    return true;
 }
 
 void NewSerialClient::serialWrite()
