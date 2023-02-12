@@ -144,11 +144,8 @@ void Speedometer::setData(float value) {
 
 	value = std::min(_dataMax, std::max(_dataMin, value));
 
-<<<<<<< HEAD
-=======
 	//value = 15;
 
->>>>>>> comms
 	_data = value;
 
 	// Range the data around 0
