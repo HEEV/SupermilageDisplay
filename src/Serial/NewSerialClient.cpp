@@ -9,6 +9,8 @@
 #include "Serial/NewSerialClient.h"
 #include "Packets.h"
 
+constexpr int RF_MAX_PACKET_SIZE = 251;
+
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
 NewSerialClient::NewSerialClient(CommunicationManager &manager) : _comManager(manager)
@@ -54,48 +56,48 @@ void NewSerialClient::serialWrite()
             int totalBytes = 0;
             _serialOutput << VOLTAGE;
             _serialOutput.write( ((char*)&(*battV)), sizeof(battV));
-            totalBytes += (sizeof(battV) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes += (sizeof(battV) + sizeof(VOLTAGE));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         _comManager.addDataReader<CarTilt>("tilt", [this](CarTilt* tlt)
         {
             int totalBytes = 0;
             _serialOutput << TILT;
             _serialOutput.write( ((char*)&(*tlt)), sizeof(tlt));
-            totalBytes += (sizeof(tlt) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes = (sizeof(tlt) + sizeof(TILT));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         _comManager.addDataReader<EngineTemp>("enTemp", [this](EngineTemp* temp)
         {
             int totalBytes = 0;
             _serialOutput << TEMP;
             _serialOutput.write( ((char*)&(*temp)), sizeof(temp));
-            totalBytes += (sizeof(temp) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes = (sizeof(temp) + sizeof(TEMP));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         _comManager.addDataReader<WheelData>("vel", [this](WheelData* wheelD)
         {
             int totalBytes = 0;
             _serialOutput << WHEEL;
             _serialOutput.write( ((char*)&(*wheelD)), sizeof(wheelD));
-            totalBytes += (sizeof(wheelD) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes = (sizeof(wheelD) + sizeof(WHEEL));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         _comManager.addDataReader<WindSpeed>("wind", [this](WindSpeed* windS)
         {
             int totalBytes = 0;
             _serialOutput << WIND;
             _serialOutput.write( ((char*)&(*windS)), sizeof(windS));
-            totalBytes += (sizeof(windS) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes = (sizeof(windS) + sizeof(WIND));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         _comManager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPSPos)
         {
             int totalBytes = 0;
             _serialOutput << GPS;
             _serialOutput.write( ((char*)&(*GPSPos)), sizeof(GPSPos));
-            totalBytes += (sizeof(GPSPos) + 4);
-            for (int i = totalBytes; i < 255; i++){_serialOutput << (char)0x00;}
+            totalBytes += (sizeof(GPSPos) + sizeof(GPS));
+            for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         #endif
 
