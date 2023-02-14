@@ -27,18 +27,9 @@ NewSerialClient::~NewSerialClient()
 bool NewSerialClient::Initalize(std::string port, int BaudRate)
 {
     #ifdef HardcodedSeiral
-    int establishedSerial = system("stty -F /dev/ttyACM0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke -noflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
-    if (establishedSerial == 0)
-    {
-        _serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
-        _serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
-        return true;
-    }
-    else 
-    {
-        return false;
-    }
-    #endif
+    _serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
+    _serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
+    return true;
     #ifdef DynamicSerial
     system("stty -F /dev/" + port + " cs8 " + std::to_string(BaudRate) + " ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echokenoflsh -ixon -crtscts");	//Activates the tty connection with the Arduino
     _serialInput = std::ifstream(("/dev/" + port));//Opens the tty connection as an ifstream
