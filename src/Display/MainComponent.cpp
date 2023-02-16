@@ -18,7 +18,7 @@ MainComponent::MainComponent() :
     _counter(1.0, 4),
     _engTemp(0.0f, 300.0f, 10),
     _volt(10.0f, 13.0f, 3),
-    _manager("10.13.108.7:5001"),
+    _manager("10.13.106.93:5001"),
     _client(_manager)
 {
     FUNCTION_PROFILE();
@@ -48,6 +48,7 @@ MainComponent::MainComponent() :
     }));
     _manager.addDataReader("bat", std::function([this](BatteryVoltage* bat){
         _volt.setData(bat->volt());
+        std::cout << bat->head().id() << std::endl;
     }));
     _manager.addDataReader("enTemp", std::function([this](EngineTemp* temp) {
         _engTemp.setData(temp->temp());
