@@ -13,6 +13,21 @@ constexpr int RF_MAX_PACKET_SIZE = 251;
 
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
+template <typename T>
+T addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable, unsigned long totalLength)
+{
+    if (isAvailable)
+    {
+        _serialOutput.write( (char*)&singlePacket, sizeof(singlePacket));
+        _serialOutput.write( ((char*)&(*type)), sizeof(type));
+    }
+    else 
+    {
+        for (int i = 0; i < totalLength; i++){_serialOutput << (char)0x00;}
+    }
+}
+
+
 NewSerialClient::NewSerialClient(CommunicationManager &manager) : _comManager(manager)
 {
     _activeSerial = Initalize();
@@ -99,43 +114,55 @@ void NewSerialClient::serialWrite()
             for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
         });
         #endif
-
-        #ifdef Test
-        int TestSendPackets = 100;
-
-        int totalBytes = 0;
-        for (int i = 0; i < TestSendPackets; i++)
-        {
-            _serialOutput << i;
-            totalBytes += sizeof(i);
-            _serialOutput << (char)0x00;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x0A;
-            _serialOutput << (char)0x00;
-            totalBytes += 10;
-            _serialOutput << i;
-            totalBytes += sizeof(i);
-
-            for (int j = totalBytes; j < 251 - 1; j++)
-            {
-                _serialOutput << (char)0x00;
-            }
-            std::cout << totalBytes << " = : " << i << "   : ";
-            totalBytes = 0;
-        }
-        #endif
-
     }
     else
     {
         std::cerr << "Failed to Initialize Serial" << '\n';
     }    
+}
+
+void NewSerialClient::SmooshNSend()
+{
+    PACKET_TYPE tempPacketType = NONE;
+    totalBytes = 0;
+
+    BatteryVoltage* tempBat = _BatteryPackets.front();
+    tempPacketType = VOLTAGE;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempBat)), sizeof(tempBat));
+    totalBytes += (sizeof(tempBat) + sizeof(VOLTAGE));
+
+    CarTilt* tempTilt = _CarTiltPackets.front();
+    tempPacketType = TILT;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempTilt)), sizeof(tempTilt));
+    totalBytes += (sizeof(tempTilt) + sizeof(TILT));
+
+    EngineTemp* tempEngine = _EngineTempPackets.front();
+    tempPacketType = TEMP;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempEngine)), sizeof(tempEngine));
+    totalBytes += (sizeof(tempEngine) + sizeof(TEMP));
+    
+    WheelData* tempWheelD = _WheelDataPackets.front();
+    tempPacketType = WHEEL;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempWheelD)), sizeof(tempWheelD));
+    totalBytes += (sizeof(tempWheelD) + sizeof(WHEEL));
+
+    WindSpeed* tempWindS = _WindSpeedPackets.front();
+    tempPacketType = WIND;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempWindS)), sizeof(tempWindS));
+    totalBytes += (sizeof(tempWindS) + sizeof(WIND));
+
+    GPSPosition* tempGPSPos = _GPSPositionPackets.front();
+    tempPacketType = GPS;
+    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
+    _serialOutput.write( ((char*)&(*tempGPSPos)), sizeof(tempGPSPos));
+    totalBytes += (sizeof(tempGPSPos) + sizeof(GPS));
+
+    for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
 }
 
 void NewSerialClient::serialRead()
