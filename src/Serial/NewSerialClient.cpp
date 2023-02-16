@@ -3,7 +3,6 @@
 
 #define FASTDDS_NEW
 //#define FASTDDS_OLD
-//#define Test
 
 #ifdef NewSerial
 
@@ -170,7 +169,6 @@ void NewSerialClient::SmooshNSend()
     addPacket<WheelData*>(_WheelDataPackets.front(), WHEEL, !_WheelDataPackets.empty());
     _WheelDataPackets.pop();
 
-    WindSpeed* tempWindS = _WindSpeedPackets.front();
     addPacket<WindSpeed*>(_WindSpeedPackets.front(), WIND, !_WindSpeedPackets.empty());
     _WindSpeedPackets.pop();
 
