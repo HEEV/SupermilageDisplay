@@ -1,7 +1,8 @@
 #define NewSerial
 #define HardcodedSeiral
 
-#define FASTDDS
+#define FASTDDS_NEW
+//#define FASTDDS_OLD
 //#define Test
 
 #ifdef NewSerial
@@ -14,19 +15,20 @@ constexpr int RF_MAX_PACKET_SIZE = 251;
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
 template <typename T>
-T addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable, unsigned long totalLength)
+T NewSerialClient::addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable)
 {
+    unsigned long totalLength = (sizeof(singlePacket) + sizeof(type));
     if (isAvailable)
     {
         _serialOutput.write( (char*)&singlePacket, sizeof(singlePacket));
         _serialOutput.write( ((char*)&(*type)), sizeof(type));
     }
-    else 
+    else
     {
         for (int i = 0; i < totalLength; i++){_serialOutput << (char)0x00;}
     }
+    totalBytes += (sizeof(singlePacket) + sizeof(type));
 }
-
 
 NewSerialClient::NewSerialClient(CommunicationManager &manager) : _comManager(manager)
 {
@@ -37,6 +39,7 @@ NewSerialClient::~NewSerialClient()
 {
     _serialOutput.close();
     _serialInput.close();
+    _rfThread.join();
 }
 
 bool NewSerialClient::Initalize(std::string port, int BaudRate)
@@ -56,8 +59,37 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
 void NewSerialClient::serialWrite()
 {
     if (_activeSerial) 
-    {       
-        #ifdef FASTDDS
+    {      
+        #ifdef FASTDDS_NEW
+        _comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
+        {
+            _BatteryPackets.push(battV);
+        });
+        _comManager.addDataReader<CarTilt>("tilt", [this](CarTilt* tlt)
+        {
+            _CarTiltPackets.push(tlt);
+        });
+        _comManager.addDataReader<EngineTemp>("enTemp", [this](EngineTemp* temp)
+        {
+            _EngineTempPackets.push(temp);
+        });
+        _comManager.addDataReader<WheelData>("vel", [this](WheelData* wheelD)
+        {
+            _WheelDataPackets.push(wheelD);
+        });
+        _comManager.addDataReader<WindSpeed>("wind", [this](WindSpeed* windS)
+        {
+            _WindSpeedPackets.push(windS);
+        });
+        _comManager.addDataReader<GPSPosition>("gps", [this](GPSPosition* GPSPos)
+        {
+            _GPSPositionPackets.push(GPSPos);
+        });
+
+        _rfThread = std::thread(NewSerialClient::SmooshNSend, this);
+
+        #endif 
+        #ifdef FASTDDS_OLD
         _comManager.addDataReader<BatteryVoltage>("bat", [this](BatteryVoltage* battV)
         {
             int totalBytes = 0;
@@ -126,41 +158,24 @@ void NewSerialClient::SmooshNSend()
     PACKET_TYPE tempPacketType = NONE;
     totalBytes = 0;
 
-    BatteryVoltage* tempBat = _BatteryPackets.front();
-    tempPacketType = VOLTAGE;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempBat)), sizeof(tempBat));
-    totalBytes += (sizeof(tempBat) + sizeof(VOLTAGE));
+    addPacket<BatteryVoltage*>(_BatteryPackets.front(), VOLTAGE, !_BatteryPackets.empty());
+    _BatteryPackets.pop();
 
-    CarTilt* tempTilt = _CarTiltPackets.front();
-    tempPacketType = TILT;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempTilt)), sizeof(tempTilt));
-    totalBytes += (sizeof(tempTilt) + sizeof(TILT));
+    addPacket<CarTilt*>(_CarTiltPackets.front(), TILT, !_CarTiltPackets.empty());
+    _CarTiltPackets.pop();
 
-    EngineTemp* tempEngine = _EngineTempPackets.front();
-    tempPacketType = TEMP;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempEngine)), sizeof(tempEngine));
-    totalBytes += (sizeof(tempEngine) + sizeof(TEMP));
-    
-    WheelData* tempWheelD = _WheelDataPackets.front();
-    tempPacketType = WHEEL;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempWheelD)), sizeof(tempWheelD));
-    totalBytes += (sizeof(tempWheelD) + sizeof(WHEEL));
+    addPacket<EngineTemp*>(_EngineTempPackets.front(), TEMP, !_EngineTempPackets.empty());
+    _EngineTempPackets.pop();
+
+    addPacket<WheelData*>(_WheelDataPackets.front(), WHEEL, !_WheelDataPackets.empty());
+    _WheelDataPackets.pop();
 
     WindSpeed* tempWindS = _WindSpeedPackets.front();
-    tempPacketType = WIND;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempWindS)), sizeof(tempWindS));
-    totalBytes += (sizeof(tempWindS) + sizeof(WIND));
+    addPacket<WindSpeed*>(_WindSpeedPackets.front(), WIND, !_WindSpeedPackets.empty());
+    _WindSpeedPackets.pop();
 
-    GPSPosition* tempGPSPos = _GPSPositionPackets.front();
-    tempPacketType = GPS;
-    _serialOutput.write( (char*)&tempPacketType, sizeof(tempPacketType));
-    _serialOutput.write( ((char*)&(*tempGPSPos)), sizeof(tempGPSPos));
-    totalBytes += (sizeof(tempGPSPos) + sizeof(GPS));
+    addPacket<GPSPosition*>(_GPSPositionPackets.front(), GPS, !_GPSPositionPackets.empty());
+    _GPSPositionPackets.pop();
 
     for (int i = 0; i < RF_MAX_PACKET_SIZE - totalBytes; i++){_serialOutput << (char)0x00;}
 }

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <queue>
+#include <thread>
 #include <CommunicationManager.h>
 
 //constexpr char const* PORT = "ttyUSB0"; //"/dev/ttyUSB0"
@@ -24,6 +25,9 @@ public:
 	void SmooshNSend();
 
 private:
+	template <typename T>
+	T addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable);
+
 	CommunicationManager &_comManager;
 
 	std::ifstream _serialInput;
@@ -31,12 +35,13 @@ private:
 
 	int totalBytes;
 
-	std::queue<BatteryVoltage*>   _BatteryPackets;
-	std::queue<CarTilt*>          _CarTiltPackets;
-	std::queue<EngineTemp*>       _EngineTempPackets;
-	std::queue<WheelData*>        _WheelDataPackets;
-	std::queue<WindSpeed*>        _WindSpeedPackets;
-	std::queue<GPSPosition*>      _GPSPositionPackets;
+	std::queue<BatteryVoltage*> _BatteryPackets;
+	std::queue<CarTilt*> _CarTiltPackets;
+	std::queue<EngineTemp*> _EngineTempPackets;
+	std::queue<WheelData*> _WheelDataPackets;
+	std::queue<WindSpeed*> _WindSpeedPackets;
+	std::queue<GPSPosition*> _GPSPositionPackets;
 
+	std::thread _rfThread;
 	bool _activeSerial;
 };
