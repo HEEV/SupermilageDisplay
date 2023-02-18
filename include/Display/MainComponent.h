@@ -47,6 +47,7 @@ private:
     LapCounter _counter;
     VerticleGauge _engTemp;
     VerticleGauge _volt;
+    ColorLight _light;
 
 
     class MouseEvents : public MouseListener

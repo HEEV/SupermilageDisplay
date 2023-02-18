@@ -7,7 +7,7 @@
 
 //=========== TODO LIST (yaay...) ==============================================
 //  1. Coolant temp
-//  2. Engine bay temp
+//  2. Engine bay / Intake temp
 //  3. Count down bar
 //  4. Compass
 //  5. Pendulum gyroscope
@@ -15,7 +15,7 @@
 //  7. Driver bay temp
 //  8. Wind direction arrow
 //  9. Red/Yellow/Green burn lights
-// 10. Left/Right brake lights
+// 10. Kill switch lights
 // 11. Whole background fades to red when any guage reaches extreme
 // 12. Bigger / more labels
 // 13. Fix bug with label truncating on temp bars
@@ -28,11 +28,13 @@ MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
     _map("Tracks/ShellTrack.svg", 1.0f),
-    _tilt(3.1415f/12.0f),
+    _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(1.0, 4),
     _engTemp(0.0f, 90.0f, 9),
-    _volt(10.0f, 13.0f, 3)
+    _volt(10.0f, 13.0f, 3),
+    _light("Test Light", Colours::red)
+
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -43,6 +45,7 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_counter);
     addAndMakeVisible(_engTemp);
     addAndMakeVisible(_volt);
+    addAndMakeVisible(_light);
 
     _speed.setData(15.0f);
     _wind.setData(20.0f);
@@ -114,6 +117,7 @@ void MainComponent::resized()
 
     vert1.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
     vert1.items.add(FlexItem(_timer).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
+    vert1.items.add(FlexItem(_light).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
 
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
