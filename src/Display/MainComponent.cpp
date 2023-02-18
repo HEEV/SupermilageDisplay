@@ -5,6 +5,24 @@
 
 #include "Profiler/Profiler.h"
 
+//=========== TODO LIST (yaay...) ==============================================
+//  1. Coolant temp
+//  2. Engine bay temp
+//  3. Count down bar
+//  4. Compass
+//  5. Pendulum gyroscope
+//  6. Map points north up
+//  7. Driver bay temp
+//  8. Wind direction arrow
+//  9. Red/Yellow/Green burn lights
+// 10. Left/Right brake lights
+// 11. Whole background fades to red when any guage reaches extreme
+// 12. Bigger / more labels
+// 13. Fix bug with label truncating on temp bars
+// 14. Fix bug with map updating wrong and excepting
+// 15. Figure out how on Earth we are gonna fit all of this on the screen
+//============================================================================== 
+
 //==============================================================================
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
