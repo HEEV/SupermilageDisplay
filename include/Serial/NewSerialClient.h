@@ -7,11 +7,14 @@
 #include <queue>
 #include <thread>
 #include <CommunicationManager.h>
+#include "Packets.h" // If we can remove this that would be great, put this back in the cpp file
 
 //constexpr char const* PORT = "ttyUSB0"; //"/dev/ttyUSB0"
 constexpr char const* PORT = "ttyACM0"; //"/dev/ttyACM0"
-
 constexpr int BAUDRATE = 115200; //9600
+
+enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
+
 
 class NewSerialClient {
 public:
@@ -26,7 +29,7 @@ public:
 
 private:
 	template <typename T>
-	T addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable);
+	void addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable);
 
 	CommunicationManager &_comManager;
 

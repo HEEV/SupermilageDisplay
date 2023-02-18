@@ -7,20 +7,17 @@
 #ifdef NewSerial
 
 #include "Serial/NewSerialClient.h"
-#include "Packets.h"
 
 constexpr int RF_MAX_PACKET_SIZE = 251;
 
-enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
-
 template <typename T>
-T NewSerialClient::addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable)
+void NewSerialClient::addPacket(T singlePacket, PACKET_TYPE type, bool isAvailable)
 {
     unsigned long totalLength = (sizeof(singlePacket) + sizeof(type));
     if (isAvailable)
     {
-        _serialOutput.write( (char*)&singlePacket, sizeof(singlePacket));
-        _serialOutput.write( ((char*)&(*type)), sizeof(type));
+        _serialOutput.write( (char*)&type, sizeof(type));
+        _serialOutput.write( ((char*)&(*singlePacket)), sizeof(singlePacket));
     }
     else
     {
@@ -46,6 +43,7 @@ bool NewSerialClient::Initalize(std::string port, int BaudRate)
     #ifdef HardcodedSeiral
     _serialInput = std::ifstream("/dev/ttyACM0");//Opens the tty connection as an ifstream
     _serialOutput = std::ofstream("/dev/ttyACM0");//Opens the tty connection as an ofstream, not used in this example
+    std::cout << "Serial was Initalized" << std::endl;
     return true;
     #endif
     #ifdef DynamicSerial         
@@ -85,7 +83,7 @@ void NewSerialClient::serialWrite()
             _GPSPositionPackets.push(GPSPos);
         });
 
-        _rfThread = std::thread(NewSerialClient::SmooshNSend, this);
+        _rfThread = std::thread(&NewSerialClient::SmooshNSend, this);
 
         #endif 
         #ifdef FASTDDS_OLD
