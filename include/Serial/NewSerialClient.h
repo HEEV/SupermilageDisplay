@@ -13,6 +13,14 @@
 constexpr char const* PORT = "ttyACM0"; //"/dev/ttyACM0"
 constexpr int BAUDRATE = 115200; //9600
 
+#ifdef libusb
+constexpr int EARTHMATE_GPS_VENDOR = 0x1163;
+constexpr int EARTHMATE_GPS_PRODUCT = 0x0200;
+
+constexpr int ADAFRUIT_RF_VENDOR = 0x239A;
+constexpr int ADAFRUIT_RF_PRODUCT = 0x800C;
+#endif
+
 enum PACKET_TYPE {NONE, VOLTAGE, TILT, TEMP, WHEEL, WIND, GPS};
 
 
