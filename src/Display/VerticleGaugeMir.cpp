@@ -1,16 +1,16 @@
-#include "Display/VerticleGauge.h"
+#include "Display/VerticleGaugeMir.h"
 #include <fmt/format.h>
 #include <utility>
 
 #include "Profiler/Profiler.h"
 
-VerticleGauge::VerticleGauge(float dataMin, float dataMax, int step) : 
+VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step) : 
 	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin)
 {
 	FUNCTION_PROFILE();
 }
 
-void VerticleGauge::paint(juce::Graphics& g)
+void VerticleGaugeMir::paint(juce::Graphics& g)
 {
 	FUNCTION_PROFILE();
 	constexpr unsigned lineOverlap = 2;
@@ -32,7 +32,7 @@ void VerticleGauge::paint(juce::Graphics& g)
 
 	g.setColour(mainBC.darker());
 
-	bounds.removeFromRight(width);
+	bounds.removeFromLeft(width);
 	bounds.removeFromLeft(lineOverlap);
 	bounds.removeFromRight(lineOverlap);
 	bounds.removeFromBottom(height);
@@ -50,17 +50,17 @@ void VerticleGauge::paint(juce::Graphics& g)
 		int yPos = bounds.getHeight() - bounds.getHeight() / _step * i;
 		std::string label = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
 		g.drawText(label, xPos, yPos + height / 2, width + 20, height, Justification::centredLeft, false);
-		g.drawLine(0, yPos + height, xPos, yPos + height);
+		g.drawLine(xPos, yPos + height, xPos + width, yPos + height);
 	}
 	
 }
 
-void VerticleGauge::resized()
+void VerticleGaugeMir::resized()
 {
 	FUNCTION_PROFILE();	
 }
 
-void VerticleGauge::update()
+void VerticleGaugeMir::update()
 {
 	FUNCTION_PROFILE();
 }

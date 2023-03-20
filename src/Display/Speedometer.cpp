@@ -110,11 +110,12 @@ void Speedometer::paint(juce::Graphics& g)
 
 
 	//Draw digital readout
+	g.setFont(40.0f);
 	Rectangle<float> readoutArea;
 	String readout = fmt::format("{:.1f}", _data);
 	float readoutWidth = f.getStringWidthFloat(readout);
-	readoutArea.setSize(readoutWidth, FONT_HEIGHT);
-	readoutArea.setCentre(labelCenter.x, labelCenter.y + FONT_HEIGHT);
+	readoutArea.setSize(readoutWidth + 30, FONT_HEIGHT);
+	readoutArea.setCentre(labelCenter.x, labelCenter.y + 60.0f);
 	g.drawText(readout, readoutArea, Justification::centred);
 
 	//Draw hand

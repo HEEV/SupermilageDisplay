@@ -10,6 +10,9 @@ set(
     Speedometer.cpp
     Tiltmeter.cpp
     VerticleGauge.cpp
+    VerticleGaugeMir.cpp
+    TripleLight.cpp
+    BurnLight.cpp
 )
 
 target_sources(SuperMileageDisplay PRIVATE ${DisplaySources})
