@@ -70,6 +70,7 @@ public:
     void shutdown() override
     {
         FUNCTION_PROFILE();
+        std::cout << "Shutting down\n";
         mainWindow = nullptr;
         #ifdef TESTING_ENABLED
         int testResult = _testResult.get();
