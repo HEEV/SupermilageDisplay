@@ -73,6 +73,7 @@ public:
         mainWindow = nullptr;
         #ifdef TESTING_ENABLED
         int testResult = _testResult.get();
+        std::cout << "GTest succesfully finished\n";
         juce::JUCEApplicationBase::setApplicationReturnValue(testResult);
         #endif
     }
@@ -117,8 +118,6 @@ public:
 #endif
 
             getContentComponent()->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-
-            // Desktop::getInstance().setScreenSaverEnabled(false);
 
             //Set locale for our formatting lib
             std::locale::global(std::locale("en_US.UTF-8"));
