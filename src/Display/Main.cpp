@@ -58,11 +58,11 @@ public:
         ::testing::InitGoogleTest(&argc, args);
         _testResult = std::async([&]()
             {
-                std::cout << "Starting Tests\n"
+                std::cout << "Starting Tests\n";
                 int retValue = RUN_ALL_TESTS();
                 std::cout << "Tests completed. Quitting...\n";
                 juce::JUCEApplicationBase::quit();
-                std::cout << "JUCE exited"
+                std::cout << "JUCE exited\n";
                 return retValue;
             }
         );
