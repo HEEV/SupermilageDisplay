@@ -118,7 +118,7 @@ public:
 
             getContentComponent()->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 
-            Desktop::getInstance().setScreenSaverEnabled(false);
+            // Desktop::getInstance().setScreenSaverEnabled(false);
 
             //Set locale for our formatting lib
             std::locale::global(std::locale("en_US.UTF-8"));
