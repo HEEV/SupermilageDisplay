@@ -61,8 +61,8 @@ public:
                 std::cout << "Starting Tests\n";
                 int retValue = RUN_ALL_TESTS();
                 std::cout << "Tests completed. Quitting...\n";
-                juce::JUCEApplicationBase::quit();
-                std::cout << "JUCE exited\n";
+                systemRequestedQuit();
+                std::cout << "JUCE quit event posted\n";
                 return retValue;
             }
         );

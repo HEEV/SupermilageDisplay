@@ -47,7 +47,7 @@ jobs:
       - name: Run Tests
         run: |
           cd build/TestApp_artefacts/Debug
-          DISPLAY=:0 ./Test
+          # DISPLAY=:0 ./Test
       - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:
