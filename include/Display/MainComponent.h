@@ -49,7 +49,7 @@ private:
     VerticleGauge _engTemp;
     VerticleGauge _volt;
     CommunicationManager _manager;
-    NewSerialClient _client;
+    //NewSerialClient _client;
 
 
     class MouseEvents : public MouseListener

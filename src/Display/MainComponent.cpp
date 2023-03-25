@@ -18,8 +18,8 @@ MainComponent::MainComponent() :
     _counter(1.0, 4),
     _engTemp(0.0f, 300.0f, 10),
     _volt(10.0f, 13.0f, 3),
-    _manager("163.11.237.241:5001"),
-    _client(_manager)
+    _manager("163.11.237.241:5001")
+    //_client(_manager)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -60,7 +60,7 @@ MainComponent::MainComponent() :
         _tilt.setCurrentTilt(tlt->angle());
     }));
 
-    _client.serialWrite();
+    //_client.serialWrite();
 }
 
 MainComponent::~MainComponent()
