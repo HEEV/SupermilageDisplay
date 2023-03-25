@@ -5,9 +5,10 @@
 #include "Display/Speedometer.h"
 #include "Display/Constants.h"
 
-Speedometer::Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions, int lineWidth) :
-	_name(name), _dataMin(minData), _dataMax(maxData), 
-	_color(color), _lineWidth(lineWidth), _subdivisions(subdivisions), _lc(nullptr)
+Speedometer::Speedometer(std::string_view name, float minData, float maxData, float maxSafe,
+						 int subdivisions, int lineWidth) :
+	_name(name), _dataMin(minData), _dataMax(maxData), _dataSafe(maxSafe),
+	_lineWidth(lineWidth), _subdivisions(subdivisions), _lc(nullptr)
 {
 	FUNCTION_PROFILE();
 	setData(_dataMin);
@@ -59,17 +60,27 @@ void Speedometer::paint(juce::Graphics& g)
 	float diameter = bounds.getWidth() - LINE_WEIGHT;
 
 	// debug rectangles
-	/*g.setColour(Colours::red);
+	/**
+	g.setColour(Colours::red);
 	
 	g.drawRect(start.x, start.y, diameter, diameter, 3.0f);
 	g.drawLine(start.x, start.y + diameter / 2, start.x + diameter, start.y + diameter / 2, 3.0f);
 	g.drawLine(start.x + diameter / 2, start.y, start.x + diameter / 2, start.y + diameter, 3.0f);
-	g.setColour(Colours::black);*/
+	g.setColour(Colours::black);
+	/**/
 	
-	//g.drawEllipse(start.x, start.y, diameter, diameter, LINE_WEIGHT / 2);
-	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, 3 * PI / 4, true);
-	//arc.addArc(start.x, start.y, diameter, diameter, -PI, PI, true);
+	//Draw main arc
+
+	float redZone = (-3 * PI / 4) + ((3 * PI * _dataSafe) / (2 * _dataMax));
+	arc.addArc(start.x, start.y, diameter, diameter, -3 * PI / 4, redZone, true);
 	g.strokePath(arc, stroke);
+
+	//Draw red zone area at end of arc
+	g.setColour(Colour(130, 0, 0));
+	Path arc2;
+	arc2.addArc(start.x, start.y, diameter, diameter, redZone, (3 * PI / 4), true);
+	g.strokePath(arc2, stroke);
+	g.setColour(Colours::black);
 
 	//Draw labels
 	String largestLabel = fmt::format("{:.1f}", _dataMax);
@@ -82,8 +93,8 @@ void Speedometer::paint(juce::Graphics& g)
 	for(int i = 0; i < _subdivisions + 1; i++)
 	{
 		Point<float> p(
-			labelDiameter / 2.0f * cos(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.x,
-			labelDiameter / 2.0f * sin(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.y
+			labelDiameter / 2.1f * cos(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.x,
+			labelDiameter / 2.1f * sin(i * (3 * PI / 2) / _subdivisions + 3 * PI / 4) + labelCenter.y
 		);
 		
 		String label = fmt::format("{:.0f}", i * labelMultiple + _dataMin);
@@ -99,14 +110,17 @@ void Speedometer::paint(juce::Graphics& g)
 
 
 	//Draw digital readout
+	g.setFont(40.0f);
 	Rectangle<float> readoutArea;
 	String readout = fmt::format("{:.1f}", _data);
 	float readoutWidth = f.getStringWidthFloat(readout);
-	readoutArea.setSize(readoutWidth, FONT_HEIGHT);
-	readoutArea.setCentre(labelCenter.x, labelCenter.y + FONT_HEIGHT);
+	readoutArea.setSize(readoutWidth + 30, FONT_HEIGHT);
+	readoutArea.setCentre(labelCenter.x, labelCenter.y + 60.0f);
 	g.drawText(readout, readoutArea, Justification::centred);
 
 	//Draw hand
+	if (_data >= _dataSafe) { g.setColour(Colours::red); }
+
 	constexpr float baseWidth = 20.0f;
 	float length = 9.0f * diameter / 16.0f;
 	Path hand;
@@ -121,6 +135,8 @@ void Speedometer::paint(juce::Graphics& g)
 	hand.closeSubPath();
 	hand.applyTransform(AffineTransform::rotation(_rotation, center.x, center.y));
 	g.fillPath(hand);
+
+	g.setColour(Colours::red);
 
 }
 
@@ -147,18 +163,13 @@ void Speedometer::setData(float value) {
 	FUNCTION_PROFILE();
 
 	value = std::min(_dataMax, std::max(_dataMin, value));
-
-	//value = 15;
-
 	_data = value;
 
 	// Range the data around 0
 	float weight = _dataMax - _dataMin;
-	value = value - _dataMin;
 
 	// Set the rotation
 	_rotation = _data / weight * (3 * PI / 2) - 3 * PI / 4;
-	
 }
 
 float Speedometer::getData() const {

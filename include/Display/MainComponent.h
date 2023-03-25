@@ -8,8 +8,11 @@
 #include "RaceTimer.h"
 #include "LapCounter.h"
 #include "VerticleGauge.h"
+#include "VerticleGaugeMir.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
+#include "TripleLight.h"
+#include "BurnLight.h"
 
 enum SensorType {
     Speed = '1',
@@ -46,8 +49,13 @@ private:
     RaceTimer _timer;
     LapCounter _counter;
     VerticleGauge _engTemp;
-    VerticleGauge _volt;
+    VerticleGaugeMir _volt;
+    VerticleGauge _coolTemp;
+    VerticleGaugeMir _intakeTemp;
+    BurnLight _burnLight;
+    TripleLight _killLight;
 
+    bool countStarted = false;
 
     class MouseEvents : public MouseListener
     {
