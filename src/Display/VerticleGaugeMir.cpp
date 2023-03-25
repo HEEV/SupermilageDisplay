@@ -49,8 +49,9 @@ void VerticleGaugeMir::paint(juce::Graphics& g)
 	{
 		int yPos = bounds.getHeight() - bounds.getHeight() / _step * i;
 		std::string label = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
-		g.drawText(label, xPos, yPos + height / 2, width + 20, height, Justification::centredLeft, false);
-		g.drawLine(xPos, yPos + height, xPos + width, yPos + height);
+		width = font.getStringWidth(label);
+		g.drawText(label, 0, yPos + height / 2, width, height, Justification::centredRight, false);
+		g.drawLine(width, yPos + height, xPos + width, yPos + height);
 	}
 	
 }
