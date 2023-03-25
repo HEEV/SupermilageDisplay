@@ -73,8 +73,12 @@ public:
         std::cout << "Shutting down\n";
         mainWindow = nullptr;
         #ifdef TESTING_ENABLED
-        int testResult = _testResult.get();
-        std::cout << "GTest succesfully finished\n";
+        int testResult = 0;
+        if(_testResult.valid())
+        {
+            testResult = _testResult.get();
+            std::cout << "GTest succesfully finished\n";
+        }
         juce::JUCEApplicationBase::setApplicationReturnValue(testResult);
         #endif
     }
