@@ -58,8 +58,11 @@ public:
         ::testing::InitGoogleTest(&argc, args);
         _testResult = std::async([&]()
             {
+                std::cout << "Starting Tests\n"
                 int retValue = RUN_ALL_TESTS();
+                std::cout << "Tests completed. Quitting...\n";
                 juce::JUCEApplicationBase::quit();
+                std::cout << "JUCE exited"
                 return retValue;
             }
         );
@@ -70,7 +73,6 @@ public:
     void shutdown() override
     {
         FUNCTION_PROFILE();
-        std::cout << "Shutting down\n";
         mainWindow = nullptr;
         #ifdef TESTING_ENABLED
         int testResult = 0;
