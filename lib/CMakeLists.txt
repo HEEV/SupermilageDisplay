@@ -8,3 +8,4 @@ include(GoogleTest)
 add_subdirectory(googletest)
 
 add_subdirectory(Fast-DDS-Communication-Manager)
+
