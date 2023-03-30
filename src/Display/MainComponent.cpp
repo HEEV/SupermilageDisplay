@@ -82,6 +82,7 @@ MainComponent::MainComponent() :
     _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
         _tilt.setCurrentTilt(tlt->angle());
     }));
+}
 
     //_client.serialWrite();
 
