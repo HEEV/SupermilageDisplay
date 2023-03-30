@@ -16,3 +16,4 @@
 [submodule "lib/Fast-DDS-Communication-Manager"]
 	path = lib/Fast-DDS-Communication-Manager
 	url = git@github.com:HEEV/Fast-DDS-Communication-Manager.git
+	branch = master
