@@ -7,19 +7,39 @@
 #include "Profiler/Profiler.h"
 
 constexpr float TRACK_DIST = 1000.0f;
+//=========== TODO LIST (yaay...) ==============================================
+//  1. Coolant temp
+//  2. Engine bay / Intake temp
+//  3. Count down bar
+//  4. Compass
+//  5. Pendulum gyroscope
+//  6. Map points north up
+//  7. Driver bay temp
+//  8. Wind direction arrow
+//  X. Red/Yellow/Green burn lights
+//  X. Kill switch lights
+// 11. Whole background fades to red when any guage reaches extreme
+//  X. Bigger / more labels
+//  X. Fix bug with label truncating on temp bars
+// 14. Fix bug with map updating wrong and excepting
+// 15. Figure out how on Earth we are gonna fit all of this on the screen
+//============================================================================== 
 
 //==============================================================================
 MainComponent::MainComponent() :
-    _speed("Vehicle MPH", 0.0f, 30.0f, Colour(253, 185, 19), 6),
-    _wind("Wind MPH", 0.0f, 40.0f, Colour(253, 185, 19)),
+    _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
+    _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
     _map("Tracks/ShellTrack.svg", TRACK_DIST),
-    _tilt(3.1415f/12.0f),
+    _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(1.0, 4),
-    _engTemp(0.0f, 300.0f, 10),
+    _engTemp(0.0f, 90.0f, 9),
+    _coolTemp(0.0f, 110.0f, 9),
+    _intakeTemp(0.0f, 110.0f, 9),
     _volt(10.0f, 13.0f, 3),
+    _burnLight(),
+    _killLight(),
     _manager("163.11.237.241:5001")
-    //_client(_manager)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -29,8 +49,11 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_timer);
     addAndMakeVisible(_counter);
     addAndMakeVisible(_engTemp);
+    addAndMakeVisible(_coolTemp);
+    addAndMakeVisible(_intakeTemp);
     addAndMakeVisible(_volt);
-
+    addAndMakeVisible(_burnLight);
+    addAndMakeVisible(_killLight);
     addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
@@ -61,7 +84,6 @@ MainComponent::MainComponent() :
     }));
 
     //_client.serialWrite();
-}
 
 MainComponent::~MainComponent()
 {
@@ -104,8 +126,10 @@ void MainComponent::resized()
     vert1.justifyContent = FlexBox::JustifyContent::center;
     vert1.flexDirection = FlexBox::Direction::column;
 
+    vert1.items.add(FlexItem(_burnLight).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
     vert1.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
     vert1.items.add(FlexItem(_timer).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
+    vert1.items.add(FlexItem(_killLight).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
 
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
@@ -123,7 +147,7 @@ void MainComponent::resized()
     horz1.alignItems = FlexBox::AlignItems::center;
     horz1.justifyContent = FlexBox::JustifyContent::center;
 
-    horz1.items.add(FlexItem(_map).withMinWidth(250.0f).withMinHeight(200.0f).withMargin(50.0f));
+    horz1.items.add(FlexItem(_map).withMinWidth(250.0f).withMinHeight(200.0f).withMargin(10.0f));
     horz1.items.add(FlexItem(_counter).withMinWidth(getWidth() - 500.0f).withMinHeight(100.0f));
 
     FlexBox vert2;
@@ -142,8 +166,10 @@ void MainComponent::resized()
     horz2.justifyContent = FlexBox::JustifyContent::center;
 
     horz2.items.add(FlexItem(_engTemp).withMinHeight(getHeight()).withMinWidth(50.0f));
+    horz2.items.add(FlexItem(_coolTemp).withMinHeight(getHeight()).withMinWidth(50.0f));
     horz2.items.add(FlexItem(vert2).withFlex(1.0f).withMinHeight(getHeight()));
     horz2.items.add(FlexItem(_volt).withMinHeight(getHeight()).withMinWidth(50.0f));
+    horz2.items.add(FlexItem(_intakeTemp).withMinHeight(getHeight()).withMinWidth(50.0f));
 
     horz2.performLayout(getLocalBounds());
 }

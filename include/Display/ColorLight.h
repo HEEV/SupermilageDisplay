@@ -15,7 +15,7 @@ class ColorLight : public Component
 {
 public:
 
-	ColorLight(std::string name, Colour color);
+	ColorLight(std::string name = "test", Colour color = Colours::blue);
 	~ColorLight();
 
 	// # JUCE METHODS
@@ -48,6 +48,8 @@ public:
 	 */
 	void setName(const std::string& name);
 
+	void toggle();
+
 private:
 
 	// # DISPLAY DATA
@@ -61,6 +63,9 @@ private:
 	 * The data displaying on the speedometer.
 	 */
 	std::string _name;
+
+	bool _enabled;
+
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ColorLight)
 };

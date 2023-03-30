@@ -80,23 +80,6 @@ void Tiltmeter::resized()
 	_travelLine.setHeight(bounds.getHeight() - 10);
 	_travelLine.setCentre(center);
 
-	/*_leftArea.setRight(_travelLine.getX());
-	_leftArea.setWidth(labelWidth);
-	_leftArea.setHeight(FONT_HEIGHT);
-	_leftArea.setCentre(_leftArea.getCentreX(), _travelLine.getY());
-
-	_rightArea.setX(_travelLine.getRight());
-	_rightArea.setWidth(labelWidth);
-	_rightArea.setHeight(FONT_HEIGHT);
-	_rightArea.setCentre(_rightArea.getCentreX(), _travelLine.getY());
-
-	_grad = ColourGradient::horizontal
-		(
-			Colour(128, 128, 128), _travelLine.getX(),
-			Colour(128, 128, 128), _travelLine.getRight()
-		);
-	_grad.addColour(0.5, Colour(0, 0, 0));*/
-
 	setCurrentTilt(_curTilt);
 }
 

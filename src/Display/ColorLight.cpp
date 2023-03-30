@@ -7,6 +7,8 @@
 ColorLight::ColorLight(std::string name, Colour color) : _name(name), _color(color)
 {
 	FUNCTION_PROFILE();
+
+	_enabled = false;
 }
 
 ColorLight::~ColorLight() {
@@ -26,12 +28,18 @@ void ColorLight::paint(juce::Graphics& g)
 	juce::Font f("Consolas", 20.0f, juce::Font::bold);
 	g.setFont(f);
 
-	g.setColour(_color);
+	g.setColour(Colours::black);
 	auto circle = bounds.removeFromTop(bounds.getHeight() - f.getHeight());
 	circle.setWidth(circle.getHeight());
 	circle.setCentre(bounds.getCentreX(), circle.getCentreY());
 	g.fillEllipse(circle.toFloat());
-	
+
+	if (_enabled) {
+		g.setColour(_color);
+		//g.drawRect(circle.toFloat(), 1.0f);
+		g.fillEllipse(circle.getX() + 1.5f, circle.getY() + 1.5f, circle.getWidth() - 3.0f, circle.getHeight() - 3.0f);
+	}
+
 	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
 	g.drawText(_name, bounds, juce::Justification::centred, false);
 }
@@ -51,4 +59,9 @@ const juce::Colour& ColorLight::getColor() const {
 void ColorLight::setName(const std::string& name) {
 	FUNCTION_PROFILE();
 	_name = name;
+}
+
+void ColorLight::toggle()
+{
+	_enabled = !_enabled;
 }

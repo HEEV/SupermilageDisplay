@@ -16,7 +16,7 @@
 class Speedometer : public AnimatedAppComponent
 {
 public:
-	Speedometer(std::string_view name, float minData, float maxData, juce::Colour color, int subdivisions = 8, int lineWidth = 5);
+	Speedometer(std::string_view name, float minData, float maxData, float maxSafe, int subdivisions = 8, int lineWidth = 5);
 	~Speedometer();
 
 	// # JUCE METHODS
@@ -87,6 +87,11 @@ private:
 	 * The maximum of the data range of the speedometer.
 	 */
 	float _dataMax;
+
+	/*
+	 * The maximum safe value for the speedometer.
+	 */
+	float _dataSafe;
 
 	/*
 	 * The data displaying on the speedometer.
