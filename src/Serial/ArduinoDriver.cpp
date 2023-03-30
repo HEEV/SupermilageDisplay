@@ -14,8 +14,8 @@
 
 using namespace std::chrono_literals;
 
-//#define DEBUG_TO_TERMINAL
-//#define DEBUG_TO_CB
+// #define DEBUG_TO_TERMINAL
+// #define DEBUG_TO_CB
 #define DEBUG_CTRL_CB
 #define DEBUG_SEND_CB
 #define DEBUG_RECV_CB
@@ -26,6 +26,7 @@ using namespace std::chrono_literals;
 #define CTRL_OUT (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT)
 
 #define DEFAULT_BAUD_RATE 9600
+#define NUM_INTERFACES 1
 
 static struct libusb_device_handle *devh = NULL;
 static struct libusb_context * hp_ctx = NULL;
@@ -43,9 +44,13 @@ enum
     VENDOR_VERSION			= 0x5F  // Unused
 };
 
+// Ch34x (ie fake arduino's)
 uint16_t vendorID = 0x1A86;
 uint16_t productID = 0x7523;
 
+// Adafruit Feather 32u4
+// uint16_t vendorID = 0x239A;
+// uint16_t productID = 0x800C;
 
 // VENDOR DEFINED ATTACH (Also we init serial slightly differently)
 	// ch34x_vendor_read( VENDOR_VERSION, 0x0000, 0x0000,
@@ -110,7 +115,7 @@ static void LIBUSB_CALL ctrl_setup_cb(struct libusb_transfer *transfer)
     int r = libusb_submit_transfer(transfer);
     if (r < 0)
     {
-        fprintf(stderr, "LIBUSB_SUBMIT_TRANSFER_ERROR ERROR: %s   :   ctrl_setup_cb 2\n", libusb_error_name(r));
+        //fprintf(stderr, "LIBUSB_SUBMIT_TRANSFER_ERROR ERROR: %s   :   ctrl_setup_cb 2\n", libusb_error_name(r));
         ctrl_exit = 0;
     }
     else
@@ -483,19 +488,23 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
         return -1;
     }
 
-    rc = libusb_claim_interface(devh, 0);
-    if (rc < 0)
+    for (int iface = 0; iface < NUM_INTERFACES; iface++)
     {
-        #ifdef DEBUG_TO_TERMINAL
-        fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %s\n", libusb_error_name(rc));
-        #endif
-        while (rc != 0)
+        rc = libusb_claim_interface(devh, iface);
+        if (rc < 0)
         {
-            std::this_thread::sleep_for(1s);
             #ifdef DEBUG_TO_TERMINAL
-            printf("Trying to claim IFACE again\n");
+            fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %s\n", libusb_error_name(rc));
             #endif
-            rc = libusb_claim_interface(devh, 0);
+            while (rc != 0)
+            {
+                std::this_thread::sleep_for(1s);
+                #ifdef DEBUG_TO_TERMINAL
+                printf("Trying to claim IFACE again\n");
+                #endif
+                rc = libusb_claim_interface(devh, iface);
+                fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %s\n", libusb_error_name(rc));
+            }
         }
     }
 
@@ -527,7 +536,10 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
             printf("Send Data failed.\n");
             #endif
 
-            libusb_release_interface(devh, 0);
+            for (int iface = 0; iface < NUM_INTERFACES; iface++)
+            {
+                libusb_release_interface(devh, iface);
+            }
             do_exit = 2;
             return 0;
         }
@@ -539,7 +551,10 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
             printf("Recv Data failed.\n");
             #endif
 
-            libusb_release_interface(devh, 0);
+            for (int iface = 0; iface < NUM_INTERFACES; iface++)
+            {
+                libusb_release_interface(devh, iface);
+            }
             do_exit = 2;
             return 0;
         }
