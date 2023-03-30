@@ -84,7 +84,15 @@ target_compile_definitions(TestApp
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
-find_package(libusb REQUIRED)
+if(WIN32)
+    find_package(libusb REQUIRED)
+else(WIN32)
+    find_path(LIBUSB_INCLUDE_DIRS
+        NAMES "libusb-1.0/libusb.h"
+        PATHS /usr/include/)
+    find_library(LIBUSB_LIBRARIES
+        NAMES usb-1.0)
+endif()
 target_include_directories(SuperMileageDisplay PRIVATE ${LIBUSB_INCLUDE_DIRS})
 target_include_directories(TestApp PRIVATE ${LIBUSB_INCLUDE_DIRS})
 
