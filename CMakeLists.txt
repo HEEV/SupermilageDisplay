@@ -84,11 +84,16 @@ target_compile_definitions(TestApp
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
+find_package(libusb REQUIRED)
+target_include_directories(SuperMileageDisplay PRIVATE ${LIBUSB_INCLUDE_DIRS})
+target_include_directories(TestApp PRIVATE ${LIBUSB_INCLUDE_DIRS})
+
 target_link_libraries(SuperMileageDisplay
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
         CommunicationManager
+        ${LIBUSB_LIBRARIES}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -100,6 +105,7 @@ target_link_libraries(TestApp
         CommunicationManager
         GTest::gtest
         GTest::gmock
+        ${LIBUSB_LIBRARIES}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
