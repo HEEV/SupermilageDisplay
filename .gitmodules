@@ -7,9 +7,6 @@
 [submodule "openssl"]
 	path = openssl
 	url = git://git.openssl.org/openssl.git
-[submodule "RS-232"]
-	path = lib/RS-232
-	url = https://gitlab.com/Teuniz/RS-232.git
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = git@github.com:google/googletest.git
