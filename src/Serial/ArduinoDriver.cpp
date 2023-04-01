@@ -408,8 +408,8 @@ static void LIBUSB_CALL send_cb(struct libusb_transfer *transfer)
     printf("Send callback[");
     for (int i = 0; i < transfer->actual_length; ++i)
     {
-        //printf("%.2X ", recvbuf[i]);
-        putchar(transfer->buffer[i]);
+        printf("%.2X ", recvbuf[i]);
+        // putchar(transfer->buffer[i]);
         printf(" ");
 
     }
