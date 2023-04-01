@@ -16,8 +16,6 @@
 //TODO: Remove include
 #include <CommunicationManager.h>
 #include <Packets.h>
-CommunicationManager* man;
-int wheelID, windID, engID, tiltID, gpsID;
 
 using namespace std::chrono_literals;
 
@@ -306,28 +304,30 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         printf("%d : ", data->sensor);
         printf("%f : ", data->data);
         printf("%ld\n", data->time);
+        ComData* comData = (ComData*)(transfer->user_data);
+        auto& man = comData->man;
         switch(data->sensor)
         {
         case 0:
             wd.velocity(data->data);
             wd.distTravelled(data->time * data->data);
             wd.head().timeOcc(data->time);
-            man->writeData(wheelID, &wd);
+            man->writeData(comData->wheelID, &wd);
             break;
         case 1:
             ws.headSpeed(data->data);
             ws.head().timeOcc(data->time);
-            man->writeData(windID, &ws);
+            man->writeData(comData->windID, &ws);
             break;
         case 2:
             et.temp(data->data);
             et.head().timeOcc(data->time);
-            man->writeData(engID, &et);
+            man->writeData(comData->engID, &et);
             break;
         case 3:
             ct.angle(data->data);
             ct.head().timeOcc(data->time);
-            man->writeData(tiltID, &ct);
+            man->writeData(comData->tiltID, &ct);
             break;
         }
 
@@ -350,7 +350,7 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
     }
 }
 
-int recvData(libusb_context * ctx = NULL)
+int recvData(libusb_context * ctx = NULL, ComData* data = nullptr)
 {
     int r;
     #ifdef DEBUG_TO_CB
@@ -364,7 +364,7 @@ int recvData(libusb_context * ctx = NULL)
     }
 
     libusb_fill_bulk_transfer(recv_bulk_transfer, devh, EP_DATA_IN, recvbuf,
-                            sizeof(recvbuf), recv_cb, NULL, 0);
+                            sizeof(recvbuf), recv_cb, data, 0);
 
     r = libusb_submit_transfer(recv_bulk_transfer);
     if (r < 0)
@@ -597,7 +597,7 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
             return 0;
         }
         did_recv = 0;
-        rc = recvData(gen_ctx);
+        rc = recvData(gen_ctx, (ComData*)user_data);
         if (rc < 0)
         {
             #ifdef DEBUG_TO_TERMINAL
@@ -672,23 +672,9 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 	return 0;
 }
 
-int runHotplug()
-{
-    // TODO: REMOVE CODE
-    man = new CommunicationManager("163.11.237.241:5001");
-    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", (*man));
-    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", (*man));
-    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", (*man));
-    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", (*man));
-    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", (*man));
-
-    wheelID = man->addDataWriter("vel");
-    windID = man->addDataWriter("wind");
-    engID = man->addDataWriter("enTemp");
-    tiltID = man->addDataWriter("tilt");
-    gpsID = man->addDataWriter("gps");
-    // ----------------------
-
+int runHotplug(ComData* data)
+{   
+    
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
     int classID   =  LIBUSB_HOTPLUG_MATCH_ANY;
@@ -706,15 +692,15 @@ int runHotplug()
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, 0, vendorID,
-		productID, classID, hotplug_callback, NULL, &hp[0]);
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
+		productID, classID, hotplug_callback, data, &hp[0]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 0 : %s\n", libusb_error_name(rc));
 		libusb_exit (hp_ctx);
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, 0, vendorID,
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
 		productID,classID, hotplug_callback_detach, NULL, &hp[1]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 1 : %s\n", libusb_error_name(rc));

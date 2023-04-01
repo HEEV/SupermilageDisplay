@@ -14,6 +14,7 @@
 #include "Tiltmeter.h"
 #include "TripleLight.h"
 #include "BurnLight.h"
+#include "Serial/ArduinoDriver.h"
 
 enum SensorType {
     Speed = '1',
@@ -56,6 +57,7 @@ private:
     VerticleGaugeMir _intakeTemp;
     BurnLight _burnLight;
     TripleLight _killLight;
+    ComData _cd;
 
     bool countStarted = false;
 
