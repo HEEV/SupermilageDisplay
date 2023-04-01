@@ -540,6 +540,9 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
 
     for (int iface = 0; iface < NUM_INTERFACES; iface++)
     {
+        if (libusb_kernel_driver_active(devh, iface)) {
+            libusb_detach_kernel_driver(devh, iface);
+        }
         rc = libusb_claim_interface(devh, iface);
         if (rc < 0)
         {
