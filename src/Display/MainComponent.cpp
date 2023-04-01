@@ -5,6 +5,7 @@
 #include <Packets.h>
 
 #include "Profiler/Profiler.h"
+#include "Serial/USB.h"
 
 constexpr float TRACK_DIST = 1000.0f;
 //=========== TODO LIST (yaay...) ==============================================

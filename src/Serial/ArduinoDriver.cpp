@@ -1,6 +1,7 @@
 // Compile like g++ ArduinoDriver.cpp -o ArduinoDriver.o -lusb-1.0 [Outside of full project]
 
 // Runs transfers in async mode, and has hotplug support
+#include "Serial/ArduinoDriver.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -12,13 +13,17 @@
 
 #include <libusb-1.0/libusb.h>
 
+//TODO: Remove include
+#include <CommunicationManager.h>
+#include <Packets.h>
+
 using namespace std::chrono_literals;
 
 // #define DEBUG_TO_TERMINAL
 // #define DEBUG_TO_CB
-#define DEBUG_CTRL_CB
-#define DEBUG_SEND_CB
-#define DEBUG_RECV_CB
+// #define DEBUG_CTRL_CB
+// #define DEBUG_SEND_CB
+// #define DEBUG_RECV_CB
 
 #define CH34x
 // #define ATMEGA32u4
@@ -59,6 +64,8 @@ enum
 
 uint8_t dtr = 0;
 uint8_t rts = 0;
+CommunicationManager man("163.11.237.241:5001");
+int wheelID, windID, engID, tiltID, gpsID;
 
 #define NUM_INTERFACES 1
 #define DEFAULT_BAUD_RATE 9600
@@ -354,6 +361,46 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
     else
     {
         did_recv = 2;
+
+        // TODO: Remove Following Code
+        struct Data
+        {
+            int sensor;
+            float data;
+            int64_t time;
+        };
+        Data* data = (Data*)recvbuf;
+        WheelData wd;
+        WindSpeed ws;
+        EngineTemp et;
+        CarTilt ct;
+        switch(data->sensor)
+        {
+        case 0:
+            wd.velocity(data->data);
+            wd.distTravelled(data->time * data->data);
+            wd.head().timeOcc(data->time);
+            man.writeData(wheelID, &wd);
+            break;
+        case 1:
+            ws.headSpeed(data->data);
+            ws.head().timeOcc(data->time);
+            man.writeData(windID, &ws);
+            break;
+        case 2:
+            et.temp(data->data);
+            et.head().timeOcc(data->time);
+            man.writeData(engID, &et);
+            break;
+        case 3:
+            ct.angle(data->data);
+            ct.head().timeOcc(data->time);
+            man.writeData(tiltID, &ct);
+            break;
+        }
+
+        // ------------------------
+
         #ifdef DEBUG_RECV_CB
         printf("Data callback[");
         for (int i = 0; i < transfer->actual_length; ++i)
@@ -709,6 +756,20 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 
 int runHotplug()
 {
+    // TODO: REMOVE CODE
+    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", man);
+    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", man);
+    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", man);
+    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", man);
+    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", man);
+
+    wheelID = man.addDataWriter("vel");
+    windID = man.addDataWriter("wind");
+    engID = man.addDataWriter("enTemp");
+    tiltID = man.addDataWriter("tilt");
+    gpsID = man.addDataWriter("gps");
+    // ----------------------
+
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
     int classID   =  LIBUSB_HOTPLUG_MATCH_ANY;
@@ -726,7 +787,7 @@ int runHotplug()
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, 0, vendorID,
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
 		productID, classID, hotplug_callback, NULL, &hp[0]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 0 : %s\n", libusb_error_name(rc));
@@ -734,7 +795,7 @@ int runHotplug()
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, 0, vendorID,
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
 		productID,classID, hotplug_callback_detach, NULL, &hp[1]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 1 : %s\n", libusb_error_name(rc));
@@ -755,13 +816,4 @@ int runHotplug()
 	libusb_exit (hp_ctx);
 
 	return EXIT_SUCCESS;
-}
-
-int main(int argc, char **argv)
-{
-    //int test = runtest();
-    int test = runHotplug();
-    if (test != 0)
-        return test;
-    return 0;
 }
