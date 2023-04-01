@@ -6,8 +6,8 @@
 #include "Profiler/Profiler.h"
 
 //=========== TODO LIST (yaay...) ==============================================
-//  1. Coolant temp
-//  2. Engine bay / Intake temp
+//  X. Coolant temp
+//  X. Engine bay / Intake temp
 //  3. Count down bar
 //  4. Compass
 //  5. Pendulum gyroscope
@@ -31,10 +31,10 @@ MainComponent::MainComponent() :
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(1.0, 4),
-    _engTemp(0.0f, 90.0f, 9),
-    _coolTemp(0.0f, 110.0f, 9),
-    _intakeTemp(0.0f, 110.0f, 9),
-    _volt(10.0f, 13.0f, 3),
+    _engTemp(0.0f, 90.0f, 9, 'E'),
+    _coolTemp(0.0f, 110.0f, 9, 'C'),
+    _intakeTemp(0.0f, 110.0f, 9, 'I'),
+    _volt(10.0f, 13.0f, 3, 'V'),
     _burnLight(),
     _killLight()
 

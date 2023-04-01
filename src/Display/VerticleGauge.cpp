@@ -4,8 +4,8 @@
 
 #include "Profiler/Profiler.h"
 
-VerticleGauge::VerticleGauge(float dataMin, float dataMax, int step) : 
-	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin)
+VerticleGauge::VerticleGauge(float dataMin, float dataMax, int step, char label) : 
+	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin), _label(label)
 {
 	FUNCTION_PROFILE();
 }
@@ -26,13 +26,13 @@ void VerticleGauge::paint(juce::Graphics& g)
 	float stepSize = (_dataMax - _dataMin) / _step;
 	for (unsigned i = 0; i <= _step; i++)
 	{
-		std::string temp = fmt::format("%d", _dataMin + i * stepSize);
+		std::string temp = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
 		width = std::max(width, font.getStringWidth(temp));
 	}
 
 	g.setColour(mainBC.darker());
 
-	bounds.removeFromRight(width);
+	bounds.removeFromRight(bounds.getWidth() / 2);
 	bounds.removeFromLeft(lineOverlap);
 	bounds.removeFromRight(lineOverlap);
 	bounds.removeFromBottom(height);
@@ -52,7 +52,11 @@ void VerticleGauge::paint(juce::Graphics& g)
 		g.drawText(label, xPos, yPos + height / 2, width + 20, height, Justification::centredLeft, false);
 		g.drawLine(0, yPos + height, xPos, yPos + height);
 	}
-	
+
+	Font f("Consolas", height * 2, juce::Font::bold);
+	g.setFont(f);
+	std::string label = fmt::format("{:L}", _label);
+	g.drawText(label, bounds.getX(), bounds.getBottom() - height - 5.0f, bounds.getWidth(), height, Justification::centred, false);
 }
 
 void VerticleGauge::resized()

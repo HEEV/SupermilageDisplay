@@ -4,8 +4,8 @@
 
 #include "Profiler/Profiler.h"
 
-VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step) : 
-	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin)
+VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step, char label) : 
+	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin), _label(label)
 {
 	FUNCTION_PROFILE();
 }
@@ -26,13 +26,13 @@ void VerticleGaugeMir::paint(juce::Graphics& g)
 	float stepSize = (_dataMax - _dataMin) / _step;
 	for (unsigned i = 0; i <= _step; i++)
 	{
-		std::string temp = fmt::format("%d", _dataMin + i * stepSize);
+		std::string temp = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
 		width = std::max(width, font.getStringWidth(temp));
 	}
 
 	g.setColour(mainBC.darker());
 
-	bounds.removeFromLeft(width);
+	bounds.removeFromLeft(bounds.getWidth() / 2);
 	bounds.removeFromLeft(lineOverlap);
 	bounds.removeFromRight(lineOverlap);
 	bounds.removeFromBottom(height);
@@ -49,10 +49,14 @@ void VerticleGaugeMir::paint(juce::Graphics& g)
 	{
 		int yPos = bounds.getHeight() - bounds.getHeight() / _step * i;
 		std::string label = fmt::format("{:L}", (int)std::round(_dataMin + i * stepSize));
-		width = font.getStringWidth(label);
 		g.drawText(label, 0, yPos + height / 2, width, height, Justification::centredRight, false);
-		g.drawLine(width, yPos + height, xPos + width, yPos + height);
+		g.drawLine(bounds.getX() - 2.0f, yPos + height, bounds.getRight() + 2.0f, yPos + height);
 	}
+
+	Font f("Consolas", height * 2, juce::Font::bold);
+	g.setFont(f);
+	std::string label = fmt::format("{:L}", _label);
+	g.drawText(label, bounds.getX(), bounds.getBottom() - height - 5.0f, bounds.getWidth(), height, Justification::centred, false);
 	
 }
 
