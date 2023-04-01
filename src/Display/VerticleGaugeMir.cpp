@@ -4,8 +4,8 @@
 
 #include "Profiler/Profiler.h"
 
-VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step, char label) : 
-	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin), _label(label)
+VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step, char label, float safe) : 
+	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin), _label(label), _dataSafe(safe)
 {
 	FUNCTION_PROFILE();
 }
@@ -39,9 +39,11 @@ void VerticleGaugeMir::paint(juce::Graphics& g)
 	bounds.removeFromTop(height);
 	g.fillRoundedRectangle(bounds.toFloat(), 5.0f);
 	
-	g.setColour(Colours::red);
+	float redVal = ((_data - _dataMin) / (_dataSafe - _dataMin)) * (255.0f - 25.0f);
+	g.setColour(Colour(redVal, 0, 0));
 	int fillHeight = (_data - _dataMin) / (_dataMax - _dataMin) * bounds.getHeight();
 	g.fillRoundedRectangle(bounds.getX(), bounds.getBottom() - fillHeight, bounds.getWidth(), fillHeight, 5.0f);
+
 	
 	g.setColour(lf.findColour(DocumentWindow::ColourIds::textColourId));
 	int xPos = bounds.getWidth() + 2 * lineOverlap;
@@ -52,7 +54,10 @@ void VerticleGaugeMir::paint(juce::Graphics& g)
 		g.drawText(label, 0, yPos + height / 2, width, height, Justification::centredRight, false);
 		g.drawLine(bounds.getX() - 2.0f, yPos + height, bounds.getRight() + 2.0f, yPos + height);
 	}
-
+	/**
+	float safeHeight = bounds.getHeight() * ((_dataMax - _dataSafe) / (_dataMax - _dataMin)) + 20.0f;
+	g.drawLine(xPos, safeHeight, bounds.getRight() + 2.0f, safeHeight, 5.0f);
+	/**/
 	Font f("Consolas", height * 2, juce::Font::bold);
 	g.setFont(f);
 	std::string label = fmt::format("{:L}", _label);

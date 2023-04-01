@@ -31,10 +31,10 @@ MainComponent::MainComponent() :
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(1.0, 4),
-    _engTemp(0.0f, 90.0f, 9, 'E'),
-    _coolTemp(0.0f, 110.0f, 9, 'C'),
-    _intakeTemp(0.0f, 110.0f, 9, 'I'),
-    _volt(10.0f, 13.0f, 3, 'V'),
+    _engTemp(0.0f, 90.0f, 9, 'E', 80.0f),
+    _coolTemp(0.0f, 110.0f, 9, 'C', 100.0f),
+    _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
+    _volt(10.0f, 13.0f, 3, 'V', 12.5f),
     _burnLight(),
     _killLight()
 
@@ -55,10 +55,10 @@ MainComponent::MainComponent() :
 
     _speed.setData(15.0f);
     _wind.setData(20.0f);
-    _engTemp.setData(45.0f);
-    _coolTemp.setData(45.0f);
-    _intakeTemp.setData(45.0f);
-    _volt.setData(12.0f);
+    _engTemp.setData(80.0f);
+    _coolTemp.setData(100.0f);
+    _intakeTemp.setData(100.0f);
+    _volt.setData(12.5f);
 
     addMouseListener(&_mouse, true);
     

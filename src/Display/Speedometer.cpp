@@ -109,7 +109,7 @@ void Speedometer::paint(juce::Graphics& g)
 
 
 	//Draw digital readout
-	g.setFont(40.0f);
+	g.setFont(41.0f);
 	Rectangle<float> readoutArea;
 	String readout = fmt::format("{:.1f}", _data);
 	float readoutWidth = f.getStringWidthFloat(readout);
