@@ -6,6 +6,7 @@
 
 #include "Profiler/Profiler.h"
 #include "Serial/USB.h"
+#include "Serial/ArduinoDriver.h"
 
 constexpr float TRACK_DIST = 1000.0f;
 //=========== TODO LIST (yaay...) ==============================================
@@ -83,6 +84,8 @@ MainComponent::MainComponent() :
     _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
         _tilt.setCurrentTilt(tlt->angle());
     }));
+
+    std::thread(runHotplug).detach();
 }
 
     //_client.serialWrite();

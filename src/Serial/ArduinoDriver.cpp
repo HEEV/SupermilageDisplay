@@ -19,11 +19,11 @@
 
 using namespace std::chrono_literals;
 
-// #define DEBUG_TO_TERMINAL
+#define DEBUG_TO_TERMINAL
 // #define DEBUG_TO_CB
 // #define DEBUG_CTRL_CB
 // #define DEBUG_SEND_CB
-// #define DEBUG_RECV_CB
+#define DEBUG_RECV_CB
 
 #define CH34x
 // #define ATMEGA32u4
@@ -64,7 +64,7 @@ enum
 
 uint8_t dtr = 0;
 uint8_t rts = 0;
-CommunicationManager man("163.11.237.241:5001");
+CommunicationManager* man;
 int wheelID, windID, engID, tiltID, gpsID;
 
 #define NUM_INTERFACES 1
@@ -380,22 +380,22 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
             wd.velocity(data->data);
             wd.distTravelled(data->time * data->data);
             wd.head().timeOcc(data->time);
-            man.writeData(wheelID, &wd);
+            man->writeData(wheelID, &wd);
             break;
         case 1:
             ws.headSpeed(data->data);
             ws.head().timeOcc(data->time);
-            man.writeData(windID, &ws);
+            man->writeData(windID, &ws);
             break;
         case 2:
             et.temp(data->data);
             et.head().timeOcc(data->time);
-            man.writeData(engID, &et);
+            man->writeData(engID, &et);
             break;
         case 3:
             ct.angle(data->data);
             ct.head().timeOcc(data->time);
-            man.writeData(tiltID, &ct);
+            man->writeData(tiltID, &ct);
             break;
         }
 
@@ -757,17 +757,18 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 int runHotplug()
 {
     // TODO: REMOVE CODE
-    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", man);
-    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", man);
-    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", man);
-    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", man);
-    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", man);
+    man = new CommunicationManager("163.11.237.241:5001");
+    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", (*man));
+    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", (*man));
+    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", (*man));
+    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", (*man));
+    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", (*man));
 
-    wheelID = man.addDataWriter("vel");
-    windID = man.addDataWriter("wind");
-    engID = man.addDataWriter("enTemp");
-    tiltID = man.addDataWriter("tilt");
-    gpsID = man.addDataWriter("gps");
+    wheelID = man->addDataWriter("vel");
+    windID = man->addDataWriter("wind");
+    engID = man->addDataWriter("enTemp");
+    tiltID = man->addDataWriter("tilt");
+    gpsID = man->addDataWriter("gps");
     // ----------------------
 
 	libusb_hotplug_callback_handle hp[2];
