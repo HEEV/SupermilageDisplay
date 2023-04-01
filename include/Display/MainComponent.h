@@ -12,7 +12,6 @@
 #include "VerticleGaugeMir.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
-#include "Serial/NewSerialClient.h"
 #include "TripleLight.h"
 #include "BurnLight.h"
 
