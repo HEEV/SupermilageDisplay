@@ -1,6 +1,7 @@
 // Compile like g++ ArduinoDriver.cpp -o ArduinoDriver.o -lusb-1.0 [Outside of full project]
 
 // Runs transfers in async mode, and has hotplug support
+#include "Serial/ArduinoDriver.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -681,7 +682,7 @@ int runHotplug()
     tiltID = man->addDataWriter("tilt");
     gpsID = man->addDataWriter("gps");
     // ----------------------
-    
+
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
     int classID   =  LIBUSB_HOTPLUG_MATCH_ANY;
