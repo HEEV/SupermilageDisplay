@@ -292,17 +292,20 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         did_recv = 2;
 
         // TODO: Remove Following Code
-        struct Data
+        struct __attribute__ ((packed)) Data
         {
-            int sensor;
+            int16_t sensor;
             float data;
             int64_t time;
         };
-        Data* data = (Data*)recvbuf;
+        Data* data = &((Data*)recvbuf)[0];
         WheelData wd;
         WindSpeed ws;
         EngineTemp et;
         CarTilt ct;
+        printf("%d : ", data->sensor);
+        printf("%f : ", data->data);
+        printf("%ld\n", data->time);
         switch(data->sensor)
         {
         case 0:
@@ -334,13 +337,13 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         printf("Data callback[");
         for (int i = 0; i < transfer->actual_length; ++i)
         {
-            //printf("%.2X ", recvbuf[i]);
-            putchar(recvbuf[i]);
+            printf("%.2X ", recvbuf[i]);
+            // putchar(recvbuf[i]);
             printf(" ");
 
         }
-        printf("  -Test float: %f", ((float*)recvbuf)[0]);
-        printf("  -Test float: %f", ((float*)recvbuf)[1]);
+        // printf("  -Test float: %f", ((float*)recvbuf)[0]);
+        // printf("  -Test float: %f", ((float*)recvbuf)[1]);
         fflush(stdout);
         printf("]\n");
         #endif
@@ -408,8 +411,8 @@ static void LIBUSB_CALL send_cb(struct libusb_transfer *transfer)
     printf("Send callback[");
     for (int i = 0; i < transfer->actual_length; ++i)
     {
-        printf("%.2X ", recvbuf[i]);
-        // putchar(transfer->buffer[i]);
+        //printf("%.2X ", recvbuf[i]);
+        putchar(transfer->buffer[i]);
         printf(" ");
 
     }
