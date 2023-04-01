@@ -68,6 +68,11 @@ MainComponent::MainComponent() :
     REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", _manager);
     REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
 
+    int wheelID = _manager.addDataWriter("vel");
+    int engTempID = _manager.addDataWriter("enTemp");
+    int windID = _manager.addDataWriter("wind");
+    int tiltID = _manager.addDataWriter("tilt");
+
     _manager.addDataReader("vel", std::function([this](WheelData* v){
         _speed.setData(v->velocity() * 0.681818);
         _map.updateDistance(v->distTravelled());
@@ -86,7 +91,13 @@ MainComponent::MainComponent() :
         _tilt.setCurrentTilt(tlt->angle());
     }));
 
-    std::thread(runHotplug).detach();
+    _cd.man = &_manager;
+    _cd.wheelID = wheelID;
+    _cd.engID = engTempID;
+    _cd.windID = windID;
+    _cd.tiltID = tiltID;
+
+    std::thread(runHotplug, &_cd).detach();
 }
 
     //_client.serialWrite();
