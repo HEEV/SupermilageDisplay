@@ -533,8 +533,6 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
     if (devh == NULL)
     {
         fprintf(stderr, "Could not find/open device\n");
-        libusb_close(devh);
-        libusb_exit(gen_ctx);
         return -1;
     }
 
@@ -557,6 +555,8 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
                 #endif
                 rc = libusb_claim_interface(devh, iface);
                 fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %s\n", libusb_error_name(rc));
+                if (rc == -4)
+                    return -1;
             }
         }
     }
