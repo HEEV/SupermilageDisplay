@@ -2,9 +2,11 @@
 #include <string>
 #include <chrono>
 #include <iostream>
+#include <Packets.h>
 
 #include "Profiler/Profiler.h"
 
+constexpr float TRACK_DIST = 1000.0f;
 //=========== TODO LIST (yaay...) ==============================================
 //  X. Coolant temp
 //  X. Engine bay / Intake temp
@@ -27,7 +29,7 @@
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
-    _map("Tracks/ShellTrack.svg", 1.0f),
+    _map("Tracks/ShellTrack.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(1.0, 4),
@@ -36,8 +38,8 @@ MainComponent::MainComponent() :
     _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
     _volt(10.0f, 13.0f, 3, 'V', 12.5f),
     _burnLight(),
-    _killLight()
-
+    _killLight(),
+    _manager("163.11.237.241:5001")
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -53,40 +55,36 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_burnLight);
     addAndMakeVisible(_killLight);
 
-    _speed.setData(15.0f);
-    _wind.setData(20.0f);
-    _engTemp.setData(80.0f);
-    _coolTemp.setData(100.0f);
-    _intakeTemp.setData(100.0f);
-    _volt.setData(12.5f);
-
     addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
-    setFramesPerSecond(30);
-}
 
-void MainComponent::update()
-{
-    static float randSpeed = 0.0f;
-    static float randWind = 0.0f;
+    REGISTER_TYPE_TO_MANAGER(WheelData, "vel", _manager);
+    REGISTER_TYPE_TO_MANAGER(BatteryVoltage, "bat", _manager);
+    REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", _manager);
+    REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", _manager);
+    REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", _manager);
+    REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
 
-    _map.incDistance(0.01f);
-    _counter.incDistanceTraveled(0.01f);
-    _speed.setData(15.0f + randSpeed);
-    _wind.setData(20.0f + randWind);
+    _manager.addDataReader("vel", std::function([this](WheelData* v){
+        _speed.setData(v->velocity() * 0.681818);
+        _map.updateDistance(v->distTravelled());
+    }));
+    _manager.addDataReader("bat", std::function([this](BatteryVoltage* bat){
+        _volt.setData(bat->volt());
+        std::cout << bat->head().id() << std::endl;
+    }));
+    _manager.addDataReader("enTemp", std::function([this](EngineTemp* temp) {
+        _engTemp.setData(temp->temp());
+    }));
+    _manager.addDataReader("wind", std::function([this](WindSpeed* wind) {
+        _wind.setData(std::abs(wind->headSpeed() * 0.681818));
+    }));
+    _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
+        _tilt.setCurrentTilt(tlt->angle());
+    }));
 
-    Random& rand = Random::getSystemRandom();
-    randSpeed += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    randWind += rand.nextFloat() * -(rand.nextBool() * 2 - 1);
-    _tilt.setCurrentTilt(rand.nextFloat() / 2.0f);
-
-
-    if (!countStarted) {
-        _burnLight.burn(5000);
-        countStarted = true;
-    }
-}
+    //_client.serialWrite();
 
 MainComponent::~MainComponent()
 {

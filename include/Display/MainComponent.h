@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include <fstream>
+#include <CommunicationManager.h>
 
 #include "Speedometer.h"
 #include "ColorLight.h"
@@ -11,6 +12,7 @@
 #include "VerticleGaugeMir.h"
 #include "MapComponent.h"
 #include "Tiltmeter.h"
+#include "Serial/NewSerialClient.h"
 #include "TripleLight.h"
 #include "BurnLight.h"
 
@@ -27,7 +29,7 @@ enum SensorType {
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::AnimatedAppComponent
+class MainComponent  : public juce::Component
 {
 public:
     //==============================================================================
@@ -37,7 +39,6 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void update() override;
     
     //DataValues Storage;
 
@@ -49,6 +50,8 @@ private:
     RaceTimer _timer;
     LapCounter _counter;
     VerticleGauge _engTemp;
+    CommunicationManager _manager;
+    //NewSerialClient _client;
     VerticleGaugeMir _volt;
     VerticleGauge _coolTemp;
     VerticleGaugeMir _intakeTemp;

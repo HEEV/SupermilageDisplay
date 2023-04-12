@@ -58,8 +58,11 @@ public:
         ::testing::InitGoogleTest(&argc, args);
         _testResult = std::async([&]()
             {
+                std::cout << "Starting Tests\n";
                 int retValue = RUN_ALL_TESTS();
-                juce::JUCEApplicationBase::quit();
+                std::cout << "Tests completed. Quitting...\n";
+                systemRequestedQuit();
+                std::cout << "JUCE quit event posted\n";
                 return retValue;
             }
         );
@@ -72,7 +75,12 @@ public:
         FUNCTION_PROFILE();
         mainWindow = nullptr;
         #ifdef TESTING_ENABLED
-        int testResult = _testResult.get();
+        int testResult = 0;
+        if(_testResult.valid())
+        {
+            testResult = _testResult.get();
+            std::cout << "GTest succesfully finished\n";
+        }
         juce::JUCEApplicationBase::setApplicationReturnValue(testResult);
         #endif
     }
@@ -117,8 +125,6 @@ public:
 #endif
 
             getContentComponent()->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-
-            Desktop::getInstance().setScreenSaverEnabled(false);
 
             //Set locale for our formatting lib
             std::locale::global(std::locale("en_US.UTF-8"));

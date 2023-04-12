@@ -26,13 +26,17 @@ jobs:
           libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev \
           libxext-dev libxinerama-dev libxrandr-dev libxrender-dev \
           libwebkit2gtk-4.0-dev \
-          libglu1-mesa-dev mesa-common-dev xvfb
+          libglu1-mesa-dev mesa-common-dev xserver-xorg-video-dummy gcc ninja-build
+      - name: Configure XServer
+        run: |
+          sudo X -config \
+          /home/runner/work/SupermilageDisplay/SupermilageDisplay/XServer-Headless-Settings/dummy-1920x1080.conf &
       - name: Build project
         run: |
           cd /home/runner/work/SupermilageDisplay/SupermilageDisplay
           mkdir build && cd build
           cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
-          -DCMAKE_BUILD_TYPE:STRING=Debug -G "Unix Makefiles" ..
+          -DCMAKE_BUILD_TYPE:STRING=Debug -G "Ninja" -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 ..
           cmake --build . --config Debug --target all -j 2 --
       - if: ${{ failure() }}
         uses: ouzi-dev/commit-status-updater@v2
@@ -43,7 +47,7 @@ jobs:
       - name: Run Tests
         run: |
           cd build/TestApp_artefacts/Debug
-          xvfb-run ./SuperMileageDisplay
+          # DISPLAY=:0 ./Test
       - if: ${{failure()}}
         uses: ouzi-dev/commit-status-updater@v2
         with:

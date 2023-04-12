@@ -22,7 +22,7 @@ juce_add_gui_app(SuperMileageDisplay
     PRODUCT_NAME "SuperMileageDisplay")     # The name of the final executable, which can differ from the target name
 juce_add_gui_app(TestApp
     COMPANY_NAME "SuperMileage Computer/Electric Team"
-    PRODUCT_NAME "SuperMileageDisplay"
+    PRODUCT_NAME "Test"
 )
 
 add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
@@ -88,7 +88,7 @@ target_link_libraries(SuperMileageDisplay
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
-        fmt
+        CommunicationManager
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -97,13 +97,28 @@ target_link_libraries(TestApp
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
-        fmt
+        CommunicationManager
         GTest::gtest
         GTest::gmock
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
 )
+
+if(WIN32)
+    add_custom_command(
+        TARGET SuperMileageDisplay
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/bin
+                $<TARGET_FILE_DIR:SuperMileageDisplay>
+    )
+    add_custom_command(
+        TARGET TestApp
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/bin
+                $<TARGET_FILE_DIR:TestApp>
+    )
+endif()
 
 # Copy track data into program dir
 add_custom_command(
