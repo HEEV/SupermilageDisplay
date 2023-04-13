@@ -8,7 +8,7 @@
 #include "Serial/USB.h"
 #include "Serial/ArduinoDriver.h"
 
-constexpr float TRACK_DIST = 1000.0f;
+constexpr float TRACK_DIST = 2.35;
 //=========== TODO LIST (yaay...) ==============================================
 //  X. Coolant temp
 //  X. Engine bay / Intake temp
