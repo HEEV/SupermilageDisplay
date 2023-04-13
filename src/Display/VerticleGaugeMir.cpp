@@ -6,8 +6,9 @@
 
 VerticleGaugeMir::VerticleGaugeMir(float dataMin, float dataMax, int step) : 
 	_dataMin(dataMin), _dataMax(dataMax), _step(step), _data(dataMin)
-{
+{	
 	FUNCTION_PROFILE();
+	setFramesPerSecond(30);
 }
 
 void VerticleGaugeMir::paint(juce::Graphics& g)

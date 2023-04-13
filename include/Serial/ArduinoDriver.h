@@ -10,6 +10,7 @@ struct ComData
     int engID;
     int tiltID;
     int gpsID;
+    int batID;
 };
 
 int runHotplug(ComData* data);

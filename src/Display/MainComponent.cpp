@@ -8,7 +8,7 @@
 #include "Serial/USB.h"
 #include "Serial/ArduinoDriver.h"
 
-constexpr float TRACK_DIST = 1000.0f;
+constexpr float TRACK_DIST = 1.0f;
 //=========== TODO LIST (yaay...) ==============================================
 //  1. Coolant temp
 //  2. Engine bay / Intake temp
@@ -71,20 +71,21 @@ MainComponent::MainComponent() :
     int engTempID = _manager.addDataWriter("enTemp");
     int windID = _manager.addDataWriter("wind");
     int tiltID = _manager.addDataWriter("tilt");
+    int batID = _manager.addDataWriter("bat");
 
     _manager.addDataReader("vel", std::function([this](WheelData* v){
-        _speed.setData(v->velocity() * 0.681818);
-        _map.updateDistance(v->distTravelled());
+        _speed.setData(v->velocity());
+        _map.incDistance(v->distTravelled());
+	_counter.incDistanceTraveled(v->distTravelled());
     }));
     _manager.addDataReader("bat", std::function([this](BatteryVoltage* bat){
         _volt.setData(bat->volt());
-        std::cout << bat->head().id() << std::endl;
     }));
     _manager.addDataReader("enTemp", std::function([this](EngineTemp* temp) {
         _engTemp.setData(temp->temp());
     }));
     _manager.addDataReader("wind", std::function([this](WindSpeed* wind) {
-        _wind.setData(std::abs(wind->headSpeed() * 0.681818));
+        _wind.setData(std::abs(wind->headSpeed()));
     }));
     _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
         _tilt.setCurrentTilt(tlt->angle());
@@ -95,6 +96,7 @@ MainComponent::MainComponent() :
     _cd.engID = engTempID;
     _cd.windID = windID;
     _cd.tiltID = tiltID;
+    _cd.batID = batID;
 
     std::thread(runHotplug, &_cd).detach();
 }

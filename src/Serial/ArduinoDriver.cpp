@@ -297,10 +297,12 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
             int64_t time;
         };
         Data* data = &((Data*)recvbuf)[0];
+	static int64_t lastTime = 0;
         WheelData wd;
         WindSpeed ws;
         EngineTemp et;
         CarTilt ct;
+	BatteryVoltage bv;
         printf("%d : ", data->sensor);
         printf("%f : ", data->data);
         printf("%ld\n", data->time);
@@ -310,9 +312,10 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         {
         case 0:
             wd.velocity(data->data);
-            wd.distTravelled(data->time * data->data);
+            wd.distTravelled((data->time - lastTime) / 3600000.0f * data->data);
             wd.head().timeOcc(data->time);
             man->writeData(comData->wheelID, &wd);
+	    lastTime = data->time;
             break;
         case 1:
             ws.headSpeed(data->data);
@@ -329,6 +332,11 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
             ct.head().timeOcc(data->time);
             man->writeData(comData->tiltID, &ct);
             break;
+	case 5:
+	    bv.volt(data->data);
+	    bv.head().timeOcc(data->time);
+	    man->writeData(comData->batID, &bv);
+	    break;
         }
 
         // ------------------------
@@ -582,20 +590,6 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
     {
         iterate++;
 
-        rc = sendData(SEND_TEXT, gen_ctx);
-        if (rc < 0)
-        {
-            #ifdef DEBUG_TO_TERMINAL
-            printf("Send Data failed.\n");
-            #endif
-
-            for (int iface = 0; iface < NUM_INTERFACES; iface++)
-            {
-                libusb_release_interface(devh, iface);
-            }
-            do_exit = 2;
-            return 0;
-        }
         did_recv = 0;
         rc = recvData(gen_ctx, (ComData*)user_data);
         if (rc < 0)
@@ -613,7 +607,7 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
         }
         did_send = 0;
 
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(10ms);
 
         
         #ifdef DEBUG_TO_TERMINAL
