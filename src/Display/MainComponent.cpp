@@ -85,6 +85,7 @@ MainComponent::MainComponent() :
     }));
 
     //_client.serialWrite();
+}
 
 MainComponent::~MainComponent()
 {
