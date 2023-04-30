@@ -25,38 +25,14 @@ using namespace std::chrono_literals;
 #define DEBUG_SEND_CB
 #define DEBUG_RECV_CB
 
-#define EP_DATA_IN (0x2 | LIBUSB_ENDPOINT_IN)
-#define EP_DATA_OUT (0x2 | LIBUSB_ENDPOINT_OUT)
-#define CTRL_IN (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN)
-#define CTRL_OUT (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT)
-
-#define DEFAULT_BAUD_RATE 9600
-#define NUM_INTERFACES 1
-
-static struct libusb_device_handle *devh = NULL;
-static struct libusb_context * hp_ctx = NULL;
-static struct libusb_context * gen_ctx = NULL;
-static struct libusb_transfer *recv_bulk_transfer = NULL;
-static struct libusb_transfer *send_bulk_transfer = NULL;
-
-// Vendor defined -> see ch34x.c driver
-enum
+enum DEVICE
 {
-    VENDOR_READ				= 0x95, // Unused
-    VENDOR_WRITE			= 0x9A,
-    VENDOR_SERIAL_INIT		= 0xA1,
-    VENDOR_MODEM_OUT		= 0xA4, // Handshake
-    VENDOR_VERSION			= 0x5F  // Unused
+    CH34x_type,
+    ARDUINO_type
 };
 
-// Ch34x (ie fake arduino's)
-uint16_t vendorID = 0x1A86;
-uint16_t productID = 0x7523;
-
-// Adafruit Feather 32u4
-// uint16_t vendorID = 0x239A;
-// uint16_t productID = 0x800C;
-
+namespace CH34x
+{
 // VENDOR DEFINED ATTACH (Also we init serial slightly differently)
 	// ch34x_vendor_read( VENDOR_VERSION, 0x0000, 0x0000,
 	// 		serial, buf, 0x02 ); --- Dont do this 
@@ -73,9 +49,49 @@ uint16_t productID = 0x7523;
 	// 		serial, NULL, 0x00 );
 	// ch34x_vendor_write( VENDOR_MODEM_OUT, 0x009F, 0x0000,
 	// 		serial, NULL, 0x00 );
+// Vendor defined -> see ch34x.c driver
+    enum
+    {
+        VENDOR_READ				= 0x95,  // Unused
+        VENDOR_WRITE			= 0x9A,
+        VENDOR_SERIAL_INIT		= 0xA1,
+        VENDOR_MODEM_OUT		= 0xA4,  // Handshake
+        VENDOR_VERSION			= 0x5F,  // Unused
+    };
+    uint8_t EP_DATA_IN = (0x2 | LIBUSB_ENDPOINT_IN);
+    uint8_t EP_DATA_OUT = (0x2 | LIBUSB_ENDPOINT_OUT);
+    uint8_t CTRL_OUT = (LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT);
+    int NUM_INTERFACES = 1;
+    int DEFAULT_BAUD_RATE = 9600;
+    uint8_t dtr = 0;
+    uint8_t rts = 0;
+    uint16_t vendorID = 0x1A86;
+    uint16_t productID = 0x7523;
+} // namespace CH34x
 
-uint8_t dtr = 0;
-uint8_t rts = 0;
+namespace ARDUINO
+{
+    enum
+    {
+        EP_DATA_IN              = 0x83,
+        EP_DATA_OUT             = 0x02,
+        CTRL_OUT                = 0x21,
+        VENDOR_SERIAL_INIT		= 0x22,
+        VENDOR_WRITE			= 0x20,
+        NUM_INTERFACES          = 1,
+        DEFAULT_BAUD_RATE       = 9600
+    };
+    uint8_t dtr = 0x01;
+    uint8_t rts = 0x02;
+    uint16_t vendorID = 0x239A;
+    uint16_t productID = 0x800C;
+} // namespace ARDUINO
+
+static struct libusb_device_handle *devh = NULL;
+static struct libusb_context * hp_ctx = NULL;
+static struct libusb_context * gen_ctx = NULL;
+static struct libusb_transfer *recv_bulk_transfer = NULL;
+static struct libusb_transfer *send_bulk_transfer = NULL;
 
 #ifdef DEBUG_TO_TERMINAL
 int runSetup = 0;
@@ -87,10 +103,8 @@ uint8_t did_recv = 0;
 uint8_t did_send = 0;
 uint8_t hp_done = 0;
 
-uint8_t recvbuf[1024];
-int SEND_BUFFER_SIZE = 32;
-
-int iterations = 0;
+uint8_t recvbuf[256];
+int SEND_BUFFER_SIZE = 64;
 
 unsigned char SEND_TEXT[] = "HELLO WORLD!";
 
@@ -127,12 +141,12 @@ static void LIBUSB_CALL ctrl_setup_cb(struct libusb_transfer *transfer)
         ctrl_exit = 2;
 }
 
-int ctrl_transfer (libusb_transfer * transfer, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, libusb_context * ctx = NULL)
+int ctrl_transfer (libusb_transfer * transfer, uint8_t bmRequest, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, libusb_context * ctx = NULL, uint16_t wLength = 0, unsigned char * data = NULL)
 {
     unsigned char buf[LIBUSB_CONTROL_SETUP_SIZE + 1];
     transfer = libusb_alloc_transfer(0);
 
-	libusb_fill_control_setup(buf, CTRL_OUT, bRequest, wValue, wIndex, 0);
+	libusb_fill_control_setup(buf, bmRequest, bRequest, wValue, wIndex, wLength);
 
     #ifdef DEBUG_TO_TERMINAL
     runSetup++;
@@ -144,7 +158,7 @@ int ctrl_transfer (libusb_transfer * transfer, uint8_t bRequest, uint16_t wValue
     printf("\n");
     #endif
     
-    libusb_fill_control_transfer(transfer, devh, buf, ctrl_setup_cb, NULL, 1000);
+    libusb_fill_control_transfer(transfer, devh, buf, ctrl_setup_cb, data, 1000);
 
 	int r = libusb_submit_transfer(transfer);
     if (r < 0)
@@ -170,7 +184,7 @@ int ctrl_transfer (libusb_transfer * transfer, uint8_t bRequest, uint16_t wValue
     return 0;
 }
 
-int init_baudrate(struct libusb_transfer * transfer, int baudRate, libusb_context * ctx = NULL)
+int init_baudrate_ch34x(struct libusb_transfer * transfer, int baudRate, libusb_context * ctx = NULL)
 {
     static int baudEncoding[] = {2400, 0xd901, 0x0038, 4800, 0x6402,
                              0x001f, 9600, 0xb202, 0x0013, 19200, 0xd902, 0x000d, 38400,
@@ -183,7 +197,7 @@ int init_baudrate(struct libusb_transfer * transfer, int baudRate, libusb_contex
         {
             // Vendor looks to be using something close 19200, which leads to different encoding
             //int r = libusb_control_transfer(devh, CTRL_OUT, 0x9a, 0x1312, baudEncoding[i * 3 + 1], NULL, 0, 1000);
-	        r = ctrl_transfer(transfer, VENDOR_WRITE, 0x1312, baudEncoding[i * 3 + 1], ctx);
+	        r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_WRITE, 0x1312, baudEncoding[i * 3 + 1], ctx);
             if (r < 0)
             {
                 fprintf(stderr, "Failed control transfer VENDOR_WRITE,0x1312\n");
@@ -192,7 +206,7 @@ int init_baudrate(struct libusb_transfer * transfer, int baudRate, libusb_contex
             ctrl_exit = 0;
 
             //r = libusb_control_transfer(devh, CTRL_OUT, 0x9a, 0x0f2c, baudEncoding[i * 3 + 2], NULL, 0, 1000);
-	        r = ctrl_transfer(transfer, VENDOR_WRITE, 0x0f2c, baudEncoding[i * 3 + 2], ctx);
+	        r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_WRITE, 0x0f2c, baudEncoding[i * 3 + 2], ctx);
             if (r < 0)
             {
                 fprintf(stderr, "Failed control transfer VENDOR_WRITE,0x0f2c\n");
@@ -214,7 +228,7 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
 	struct libusb_transfer *transfer;
 
     //r = libusb_control_transfer(devh, CTRL_OUT, 0xa1, 0, 0, NULL, 0, 1000);
-    r = ctrl_transfer(transfer, VENDOR_SERIAL_INIT, 0, 0, ctx);
+    r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_SERIAL_INIT, 0, 0, ctx);
     if (r < 0)
     {
         fprintf(stderr, "Failed control transfer VENDOR_SERIAL_INIT\n");
@@ -224,7 +238,7 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
     ctrl_exit = 0;
 
     //r = libusb_control_transfer(devh, CTRL_OUT, 0x9a, 0x2518, 0x0050, NULL, 0, 1000);
-    r = ctrl_transfer(transfer, VENDOR_WRITE, 0x2518, 0x0050, ctx);
+    r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_WRITE, 0x2518, 0x0050, ctx);
     if (r < 0)
     {
         fprintf(stderr, "Failed control transfer VENDOR_WRITE,0x2518\n");
@@ -234,7 +248,7 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
     ctrl_exit = 0;
 
     //r = libusb_control_transfer(devh, CTRL_OUT, 0xa1, 0x501f, 0xd90a, NULL, 0, 1000);
-	r = ctrl_transfer(transfer, VENDOR_SERIAL_INIT, 0x501f, 0xd90a, ctx);
+	r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_SERIAL_INIT, 0x501f, 0xd90a, ctx);
     if (r < 0)
     {
         fprintf(stderr, "Failed control transfer VENDOR_SERIAL_INIT,0x501f\n");
@@ -244,14 +258,14 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
     ctrl_exit = 0;
     
     // --- BAUDRATE ---
-    r = init_baudrate(transfer, baudRate, ctx);
+    r = init_baudrate_ch34x(transfer, baudRate, ctx);
     if (r < 0)
         return r;
-    // Does ctrl_exit = 0; inside init_baudrate()
+    // Does ctrl_exit = 0; inside init_baudrate_ch34x()
 
     // --- HANDSHAKE ---
     //if (libusb_control_transfer(devh, CTRL_OUT, 0xa4, ~((dtr ? 1 << 5 : 0) | (rts ? 1 << 6 : 0)), 0, NULL, 0, 1000) < 0)
-	r = ctrl_transfer(transfer, VENDOR_MODEM_OUT, ~((dtr ? 1 << 5 : 0) | (rts ? 1 << 6 : 0)), 0, ctx);
+	r = ctrl_transfer(transfer, CH34x::CTRL_OUT, CH34x::VENDOR_MODEM_OUT, ~((CH34x::dtr ? 1 << 5 : 0) | (CH34x::rts ? 1 << 6 : 0)), 0, ctx);
     if (r < 0)
     {
         fprintf(stderr, "Failed to complete handshake [Handshake byte not set]\n");
@@ -267,22 +281,57 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
     return r;
 }
 
+int safe_init_ATmega32u4(int baudRate, libusb_context * ctx = NULL)
+{
+    int r;
+    unsigned char buf[LIBUSB_CONTROL_SETUP_SIZE + 1];
+	struct libusb_transfer *transfer;
+
+    // r = libusb_control_transfer(devh, CTRL_OUT, VENDOR_SERIAL_INIT, ACM_CTRL_DTR | ACM_CTRL_RTS, 0, NULL, 0, 0);
+    r = ctrl_transfer(transfer, ARDUINO::CTRL_OUT, ARDUINO::VENDOR_SERIAL_INIT, (ARDUINO::dtr | ARDUINO::rts), 0, ctx);
+    if (r < 0)
+    {
+        fprintf(stderr, "Failed control transfer VENDOR_SERIAL_INIT\n");
+        return r;
+    }
+
+    ctrl_exit = 0;
+
+
+    unsigned char encoding[] = { 0x80, 0x25, 0x00, 0x00, 0x00, 0x00, 0x08 };
+    // r = libusb_control_transfer(devh, CTRL_OUT, VENDOR_WRITE, 0, 0, encoding, sizeof(encoding), 0);
+    r = ctrl_transfer(transfer, ARDUINO::CTRL_OUT, ARDUINO::VENDOR_WRITE, 0, 0, ctx, sizeof(encoding), encoding);
+    if (r < 0)
+    {
+        fprintf(stderr, "Failed control transfer VENDOR_WRITE,0x2518\n");
+        return r;
+    }
+
+    ctrl_exit = 0;
+
+    #ifdef DEBUG_TO_TERMINAL
+    printf("Finished safe_init_ATmega32u4\n");
+    #endif
+
+    return r;
+}
+
 static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
 {
     if (do_exit == 2 | did_recv == 2)
         return;
     if (transfer->status != LIBUSB_TRANSFER_COMPLETED)
     {
+        printf("LIBUSB_TRANSFER_COMPLETED FAILED, %s\n", libusb_error_name(transfer->status) );
         did_recv = 2;
         libusb_free_transfer(transfer);
         return;
     }
 
-
     int r = libusb_submit_transfer(recv_bulk_transfer);
     if (r < 0)
     {
-        //fprintf(stderr, "LIBUSB_TRANSFER_ERROR ERROR: %s   :   recv_cb 2\n", libusb_error_name(r));
+        fprintf(stderr, "LIBUSB_TRANSFER_ERROR ERROR: %s   :   recv_cb 2\n", libusb_error_name(r));
         did_recv = 0;
     }
     else
@@ -334,27 +383,25 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         // ------------------------
 
         #ifdef DEBUG_RECV_CB
+        printf("Bytes recv: %d    ", transfer->actual_length);
         printf("Data callback[");
         for (int i = 0; i < transfer->actual_length; ++i)
         {
-            printf("%.2X ", recvbuf[i]);
-            // putchar(recvbuf[i]);
+            // printf("%.2X ", recvbuf[i]);
+            putchar(recvbuf[i]);
             printf(" ");
 
         }
-        // printf("  -Test float: %f", ((float*)recvbuf)[0]);
-        // printf("  -Test float: %f", ((float*)recvbuf)[1]);
-        fflush(stdout);
-        printf("]\n");
         #endif
     }
 }
 
-int recvData(libusb_context * ctx = NULL, ComData* data = nullptr)
+int recvData(uint8_t endpoint, libusb_context * ctx = NULL)
 {
     int r;
     #ifdef DEBUG_TO_CB
     printf("In recvData loop\n");
+    printf("Recv Endpoint: %d\n",endpoint);
     #endif
     recv_bulk_transfer = libusb_alloc_transfer(0);
     if (!recv_bulk_transfer)
@@ -362,9 +409,11 @@ int recvData(libusb_context * ctx = NULL, ComData* data = nullptr)
         fprintf(stderr, "LIBUSB_ALLOC_TRANSFER ERROR\n");
         return -1;
     }
+    printf("EP_DATA_IN: %d\n", endpoint);
 
-    libusb_fill_bulk_transfer(recv_bulk_transfer, devh, EP_DATA_IN, recvbuf,
-                            sizeof(recvbuf), recv_cb, data, 0);
+
+    libusb_fill_bulk_transfer(recv_bulk_transfer, devh, endpoint, recvbuf,
+                            sizeof(recvbuf), recv_cb, NULL, 1000);
 
     r = libusb_submit_transfer(recv_bulk_transfer);
     if (r < 0)
@@ -430,7 +479,7 @@ static void LIBUSB_CALL send_cb(struct libusb_transfer *transfer)
         did_send = 2;
 }
 
-int sendData(unsigned char * msg, libusb_context * ctx = NULL)
+int sendData(uint8_t endpoint, unsigned char * msg, libusb_context * ctx = NULL)
 {
     int r;
     unsigned char sendbuf[SEND_BUFFER_SIZE];
@@ -455,10 +504,11 @@ int sendData(unsigned char * msg, libusb_context * ctx = NULL)
 
         #ifdef DEBUG_TO_CB
         printf("Length: %d   Msg Size: %ld \n", len, sizeof(msg));
+        printf("Send Endpoint: %d\n",endpoint);
         #endif
 
         //r = libusb_bulk_transfer(devh, EP_DATA_OUT, sendbuf, len, &transferred, 200);
-        libusb_fill_bulk_transfer(send_bulk_transfer, devh, EP_DATA_OUT, sendbuf,
+        libusb_fill_bulk_transfer(send_bulk_transfer, devh, endpoint, sendbuf,
                                 len, send_cb, NULL, 200);
 
         r = libusb_submit_transfer(send_bulk_transfer);
@@ -503,6 +553,12 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
 	(void)event;
 	(void)user_data;
 
+    uint8_t tempNumIfaces;
+    uint8_t tempEP_IN;
+    uint8_t tempEP_OUT;
+    DEVICE devType;
+    
+
     #ifdef DEBUG_TO_TERMINAL
     printf("Init gen_ctx\n");
     #endif
@@ -536,7 +592,27 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
         return -1;
     }
 
-    for (int iface = 0; iface < NUM_INTERFACES; iface++)
+    if (desc.idVendor == ARDUINO::vendorID && desc.idProduct == ARDUINO::productID)
+    {
+        tempNumIfaces = ARDUINO::NUM_INTERFACES;
+        tempEP_IN     = ARDUINO::EP_DATA_IN;
+        tempEP_OUT    = ARDUINO::EP_DATA_OUT;
+        devType       = DEVICE::ARDUINO_type;
+    }
+    else if (desc.idVendor == CH34x::vendorID && desc.idProduct == CH34x::productID)
+    {
+        tempNumIfaces = CH34x::NUM_INTERFACES;
+        tempEP_IN     = CH34x::EP_DATA_IN;
+        tempEP_OUT    = CH34x::EP_DATA_OUT;
+        devType       = DEVICE::CH34x_type;
+    }
+    else
+    {
+        fprintf(stderr, "Could not find/open device\n");
+        return -1;
+    }
+
+    for (int iface = 0; iface < tempNumIfaces; iface++)
     {
         if (libusb_kernel_driver_active(devh, iface)) {
             libusb_detach_kernel_driver(devh, iface);
@@ -554,9 +630,11 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
                 printf("Trying to claim IFACE again\n");
                 #endif
                 rc = libusb_claim_interface(devh, iface);
-                fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %s\n", libusb_error_name(rc));
+                fprintf(stderr, "USB_CLAIM_INTERFACE ERROR: %d : %s\n", rc,  libusb_error_name(rc));
                 if (rc == -4)
+                {
                     return -1;
+                }
             }
         }
     }
@@ -565,10 +643,23 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
     printf("claimed interface\n");
     #endif
 
-    rc = safe_init_ch34x(DEFAULT_BAUD_RATE, gen_ctx); // If we return < 0 here a control transfer failed
+    if (devType == DEVICE::CH34x_type)
+        rc = safe_init_ch34x(CH34x::DEFAULT_BAUD_RATE, gen_ctx); // If we return < 0 here a control transfer failed
+    else if (devType == DEVICE::ARDUINO_type)
+        rc = safe_init_ATmega32u4(ARDUINO::DEFAULT_BAUD_RATE, gen_ctx); // If we return < 0 here a control transfer failed
+    else
+    {
+        fprintf(stderr, "Could not find/open device\n");
+        return -1;
+    }
+
     if (rc < 0)
     {
-        libusb_release_interface(devh, 0);
+        printf("Released\n");
+        for (int iface = 0; iface < tempNumIfaces; iface++)
+        {
+            libusb_release_interface(devh, iface);
+        }
         return -1;
     }
 
@@ -582,38 +673,29 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
     {
         iterate++;
 
-        rc = sendData(SEND_TEXT, gen_ctx);
-        if (rc < 0)
-        {
-            #ifdef DEBUG_TO_TERMINAL
-            printf("Send Data failed.\n");
-            #endif
-
-            for (int iface = 0; iface < NUM_INTERFACES; iface++)
-            {
-                libusb_release_interface(devh, iface);
-            }
-            do_exit = 2;
-            return 0;
-        }
+        // rc = sendData(tempEP_OUT, SEND_TEXT, gen_ctx);
+        // if (rc < 0)
+        // {
+        //     #ifdef DEBUG_TO_TERMINAL
+        //     printf("Send Data failed.\n");
+        //     #endif
+        //     do_exit = 2;
+        //     return 0;
+        // }
         did_recv = 0;
-        rc = recvData(gen_ctx, (ComData*)user_data);
+        rc = recvData(tempEP_IN, gen_ctx);
         if (rc < 0)
         {
             #ifdef DEBUG_TO_TERMINAL
             printf("Recv Data failed.\n");
             #endif
-
-            for (int iface = 0; iface < NUM_INTERFACES; iface++)
-            {
-                libusb_release_interface(devh, iface);
-            }
             do_exit = 2;
             return 0;
         }
         did_send = 0;
 
-        std::this_thread::sleep_for(100ms);
+        // std::this_thread::sleep_for(26ms); // Pretty much just ABCDE
+        std::this_thread::sleep_for(20ms);
 
         
         #ifdef DEBUG_TO_TERMINAL
@@ -672,9 +754,8 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 	return 0;
 }
 
-int runHotplug(ComData* data)
-{   
-    
+int runHotplug(uint16_t vendorID, uint16_t productID)
+{
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
     int classID   =  LIBUSB_HOTPLUG_MATCH_ANY;
@@ -692,15 +773,15 @@ int runHotplug(ComData* data)
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
-		productID, classID, hotplug_callback, data, &hp[0]);
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, 0, vendorID,
+		productID, classID, hotplug_callback, NULL, &hp[0]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 0 : %s\n", libusb_error_name(rc));
 		libusb_exit (hp_ctx);
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, 0, vendorID,
 		productID,classID, hotplug_callback_detach, NULL, &hp[1]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 1 : %s\n", libusb_error_name(rc));
