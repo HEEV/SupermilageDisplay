@@ -396,7 +396,7 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
     }
 }
 
-int recvData(uint8_t endpoint, libusb_context * ctx = NULL)
+int recvData(uint8_t endpoint, libusb_context * ctx = NULL, ComData* data = nullptr)
 {
     int r;
     #ifdef DEBUG_TO_CB
@@ -413,7 +413,7 @@ int recvData(uint8_t endpoint, libusb_context * ctx = NULL)
 
 
     libusb_fill_bulk_transfer(recv_bulk_transfer, devh, endpoint, recvbuf,
-                            sizeof(recvbuf), recv_cb, NULL, 1000);
+                            sizeof(recvbuf), recv_cb, data, 1000);
 
     r = libusb_submit_transfer(recv_bulk_transfer);
     if (r < 0)
@@ -683,7 +683,7 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
         //     return 0;
         // }
         did_recv = 0;
-        rc = recvData(tempEP_IN, gen_ctx);
+        rc = recvData(tempEP_IN, gen_ctx, (ComData*)user_data);
         if (rc < 0)
         {
             #ifdef DEBUG_TO_TERMINAL
@@ -754,7 +754,7 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 	return 0;
 }
 
-int runHotplug(uint16_t vendorID, uint16_t productID)
+int runHotplug(ComData* data, uint16_t vendorID, uint16_t productID)
 {
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
@@ -773,15 +773,15 @@ int runHotplug(uint16_t vendorID, uint16_t productID)
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, 0, vendorID,
-		productID, classID, hotplug_callback, NULL, &hp[0]);
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
+		productID, classID, hotplug_callback, data, &hp[0]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 0 : %s\n", libusb_error_name(rc));
 		libusb_exit (hp_ctx);
 		return EXIT_FAILURE;
 	}
 
-	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, 0, vendorID,
+	rc = libusb_hotplug_register_callback (hp_ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS, vendorID,
 		productID,classID, hotplug_callback_detach, NULL, &hp[1]);
 	if (LIBUSB_SUCCESS != rc) {
 		fprintf (stderr, "Error registering callback 1 : %s\n", libusb_error_name(rc));

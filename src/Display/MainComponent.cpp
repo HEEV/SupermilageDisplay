@@ -97,7 +97,7 @@ MainComponent::MainComponent() :
     _cd.windID = windID;
     _cd.tiltID = tiltID;
 
-    std::thread(runHotplug, &_cd).detach();
+    std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
 }
 
     //_client.serialWrite();

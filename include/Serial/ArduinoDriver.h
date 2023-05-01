@@ -12,4 +12,4 @@ struct ComData
     int gpsID;
 };
 
-int runHotplug(ComData* data);
+int runHotplug(ComData* data, unsigned short vendorID, unsigned short productID);
