@@ -25,6 +25,11 @@ using namespace std::chrono_literals;
 #define DEBUG_SEND_CB
 #define DEBUG_RECV_CB
 
+// --------------------------------------------------------------------
+// Once this is migrated fully to USB.cpp this will be unnec
+// Specifies contexts, handles, and separate namespaces for each device 
+// --------------------------------------------------------------------
+
 enum DEVICE
 {
     CH34x_type,
@@ -73,14 +78,14 @@ namespace ARDUINO
 {
     enum
     {
-        EP_DATA_IN              = 0x83,
-        EP_DATA_OUT             = 0x02,
-        CTRL_OUT                = 0x21,
         VENDOR_SERIAL_INIT		= 0x22,
-        VENDOR_WRITE			= 0x20,
-        NUM_INTERFACES          = 1,
-        DEFAULT_BAUD_RATE       = 9600
+        VENDOR_WRITE			= 0x20
     };
+    uint8_t EP_DATA_IN = 0x83;
+    uint8_t EP_DATA_OUT = 0x02;
+    uint8_t CTRL_OUT = 0x21;
+    int NUM_INTERFACES = 1;
+    int DEFAULT_BAUD_RATE = 9600;
     uint8_t dtr = 0x01;
     uint8_t rts = 0x02;
     uint16_t vendorID = 0x239A;
@@ -108,6 +113,14 @@ int SEND_BUFFER_SIZE = 64;
 
 unsigned char SEND_TEXT[] = "HELLO WORLD!";
 
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+
+/**
+ * This is the callback that is handled to send async control transfers
+ * 
+ * @param transfer The libusb transfer that will be sent as a control transfer
+*/
 static void LIBUSB_CALL ctrl_setup_cb(struct libusb_transfer *transfer)
 {
     if (ctrl_exit == 2)
@@ -141,6 +154,19 @@ static void LIBUSB_CALL ctrl_setup_cb(struct libusb_transfer *transfer)
         ctrl_exit = 2;
 }
 
+/**
+ * This is a helper function to abstract sending a async control transfer to the same
+ * parameters that a sync control transfer uses, it also handles the callback
+ * 
+ * @param transfer The libusb transfer that will be sent as a control transfer
+ * @param bmRequest The control endpoint for the device (ex. CTRL_OUT)
+ * @param bRequest The request type, usually a specific command, related to control transfers for the device (ex. SERIAL_WRITE)
+ * @param wValue The byte code that is sent to the device
+ * @param wIndex The address the byte code will be sent to for the device
+ * @param ctx The context the control transfer should be handled within
+ * @param wLength The number of bytes to transfer, specifically in the user_data field (used in ATmega32u4)
+ * @param data The user_data field (used in ATmega32u4)
+*/
 int ctrl_transfer (libusb_transfer * transfer, uint8_t bmRequest, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, libusb_context * ctx = NULL, uint16_t wLength = 0, unsigned char * data = NULL)
 {
     unsigned char buf[LIBUSB_CONTROL_SETUP_SIZE + 1];
@@ -184,6 +210,13 @@ int ctrl_transfer (libusb_transfer * transfer, uint8_t bmRequest, uint8_t bReque
     return 0;
 }
 
+/**
+ * This is a helper function that initializes the baudrate for ch34x family devices, it is used in safe_init_ch34x
+ * 
+ * @param transfer The libusb transfer that will be sent as a control transfer
+ * @param buadRate The baudrate that should be used for the device
+ * @param ctx The context the control transfer should be handled within
+*/
 int init_baudrate_ch34x(struct libusb_transfer * transfer, int baudRate, libusb_context * ctx = NULL)
 {
     static int baudEncoding[] = {2400, 0xd901, 0x0038, 4800, 0x6402,
@@ -221,6 +254,12 @@ int init_baudrate_ch34x(struct libusb_transfer * transfer, int baudRate, libusb_
     return -1;
 }
 
+/**
+ * This is a function that initializes the ch34x family devices, by sending all required control transfers
+ * 
+ * @param buadRate The baudrate that should be used for the device
+ * @param ctx The context the control transfer should be handled within
+*/
 int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
 {
     int r;
@@ -281,6 +320,13 @@ int safe_init_ch34x(int baudRate, libusb_context * ctx = NULL)
     return r;
 }
 
+/**
+ * This is a function that initializes the ATmega32u4 family devices, by sending all required control transfers
+ * (Has different control transfers than the ch34x family)
+ * 
+ * @param buadRate The baudrate that should be used for the device
+ * @param ctx The context the control transfer should be handled within
+*/
 int safe_init_ATmega32u4(int baudRate, libusb_context * ctx = NULL)
 {
     int r;
@@ -316,6 +362,13 @@ int safe_init_ATmega32u4(int baudRate, libusb_context * ctx = NULL)
     return r;
 }
 
+/**
+ * This is the callback that is handled to send async bulk transfers used to recieve from the device
+ * In this callback all data is recieved by the program
+ * ex. If we receive sensor data we upload it to FAST-DDS within this callback
+ * 
+ * @param transfer The libusb transfer that will be received as a bulk transfer
+*/
 static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
 {
     if (do_exit == 2 | did_recv == 2)
@@ -396,6 +449,14 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
     }
 }
 
+/**
+ * This is a helper function to abstract receiving data in an async manner
+ * This sends the bulk transfer in a receive format and handles the receive callback
+ * 
+ * @param endpoint This is the input endpoint of the device, because it is received by libusb (ex. EP_DATA_IN, `lsusb -vv`-> bEndpointAddress     0x83  EP 3 IN)
+ * @param ctx The context the control transfer should be handled within
+ * @param data A pointer to ComData, a struct which has the communication manager, as well as sensor id's
+*/
 int recvData(uint8_t endpoint, libusb_context * ctx = NULL, ComData* data = nullptr)
 {
     int r;
@@ -444,6 +505,13 @@ int recvData(uint8_t endpoint, libusb_context * ctx = NULL, ComData* data = null
     return 0;
 }
 
+/**
+ * This is the callback that is handled to send async send transfers used to send to the device
+ * In this callback all data is sent by the program to the device
+ * ex. We could send commands to the board or send say rf packets
+ * 
+ * @param transfer The libusb transfer that will be sent as a bulk transfer
+*/
 static void LIBUSB_CALL send_cb(struct libusb_transfer *transfer)
 {
     if (do_exit == 2 | did_send == 2)
@@ -479,6 +547,14 @@ static void LIBUSB_CALL send_cb(struct libusb_transfer *transfer)
         did_send = 2;
 }
 
+/**
+ * This is a helper function to abstract sending data in an async manner
+ * This sends the bulk transfer in a send format and handles the send callback
+ * 
+ * @param endpoint This is the output endpoint of the device, because it is received by libusb (ex. EP_DATA_OUT, `lsusb -vv`-> bEndpointAddress     0x02  EP 2 OUT)
+ * @param msg This is the message that will be sent to the device
+ * @param ctx The context the control transfer should be handled within
+*/
 int sendData(uint8_t endpoint, unsigned char * msg, libusb_context * ctx = NULL)
 {
     int r;
@@ -543,6 +619,14 @@ int sendData(uint8_t endpoint, unsigned char * msg, libusb_context * ctx = NULL)
     return 0; // Set up so it must recieve before ever sending, 1 -> didnt fail, though didnt send either
 }
 
+/**
+ * This is the hotplug attach callback which handles initializing the device and sending and recieving
+ * 
+ * @param ctx The context the control transfer should be handled within
+ * @param dev The device that was connected in the event
+ * @param event The hotplug event that happened (In this case it would be LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED)
+ * @param user_data Any user data that you would like to access within the callback (ComData)
+*/
 static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev, libusb_hotplug_event event, void *user_data)
 {
 	struct libusb_device_descriptor desc;
@@ -725,6 +809,14 @@ static int LIBUSB_CALL hotplug_callback(libusb_context *ctx, libusb_device *dev,
 	return 0;
 }
 
+/**
+ * This is the hotplug detach callback which handles deinitializing the device and closing the general context
+ * 
+ * @param ctx The context the control transfer should be handled within
+ * @param dev The device that was connected in the event
+ * @param event The hotplug event that happened (In this case it would be LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED)
+ * @param user_data Any user data that you would like to access within the callback (ComData)
+*/
 static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_device *dev, libusb_hotplug_event event, void *user_data)
 {
 	(void)ctx;
