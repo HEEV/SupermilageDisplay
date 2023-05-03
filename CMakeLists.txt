@@ -26,7 +26,8 @@ juce_add_gui_app(TestApp
 )
 
 add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
-target_compile_definitions(TestApp PRIVATE TESTING_ENABLED)
+target_compile_definitions(SuperMileageDisplay PRIVATE NOMINMAX)
+target_compile_definitions(TestApp PRIVATE TESTING_ENABLED NOMINMAX)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for

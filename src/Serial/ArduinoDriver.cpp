@@ -4,14 +4,18 @@
 #include "Serial/ArduinoDriver.h"
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <vector>
 
+#ifdef WIN32
+#include <libusb.h>
+#else
 #include <libusb-1.0/libusb.h>
+#endif
 
 //TODO: Remove include
 #include <CommunicationManager.h>
@@ -109,7 +113,7 @@ uint8_t did_send = 0;
 uint8_t hp_done = 0;
 
 uint8_t recvbuf[256];
-int SEND_BUFFER_SIZE = 64;
+constexpr int SEND_BUFFER_SIZE = 64;
 
 unsigned char SEND_TEXT[] = "HELLO WORLD!";
 
@@ -135,8 +139,9 @@ static void LIBUSB_CALL ctrl_setup_cb(struct libusb_transfer *transfer)
     #ifdef DEBUG_CTRL_CB
     printf("async cb_mode_changed length=%d actual_length=%d\n",
 		transfer->length, transfer->actual_length);
-    unsigned char test[transfer->length];
-    memcpy(test, transfer->buffer, transfer->length);
+    std::vector<unsigned char> test;
+    test.reserve(transfer->length);
+    memcpy(&test[0], transfer->buffer, transfer->length);
     for (int i = 0; i < transfer->length; ++i)
     {
         printf("%.2X ", test[i]);
@@ -392,12 +397,14 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         did_recv = 2;
 
         // TODO: Remove Following Code
-        struct __attribute__ ((packed)) Data
+        #pragma pack(push, 1)
+        struct Data
         {
             int16_t sensor;
             float data;
             int64_t time;
         };
+        #pragma pack(pop)
         Data* data = &((Data*)recvbuf)[0];
         WheelData wd;
         WindSpeed ws;
