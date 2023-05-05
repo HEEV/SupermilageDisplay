@@ -3,3 +3,5 @@ This purpose of this project is to create a system that collects data generated 
 - [Windows](Instructions/WindowsSetup.md)
 - [Linux (Debian)](Instructions/LinuxSetup.md)
 - MacOS (TODO)
+
+The docs for the project are available [here](https://heev.github.io/SupermilageDisplay/)
