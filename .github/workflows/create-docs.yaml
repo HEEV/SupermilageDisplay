@@ -1,8 +1,10 @@
 name: Create docs
 run-name: Updating docs
 on: [push]
+permissions:
+        content: write
 jobs:
-        Environment:
+        report:
                 name: Create documentation
                 runs-on: ubuntu-latest
                 steps:
@@ -17,4 +19,10 @@ jobs:
                           run: sudo apt update && sudo apt install doxygen graphviz
                         - name: Run doxygen
                           run: cd /home/runner/work/SupermilageDisplay/SupermilageDisplay && doxygen
+                        - name: Push commit
+                          run: |
+                                  git config --global user.name 'Doc Worker'
+                                  git config --global user.email 'Supermileage@cedarville.edu'
+                                  git commit -am "Automated doc generation"
+                                  git push
 
