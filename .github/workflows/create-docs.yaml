@@ -10,19 +10,20 @@ jobs:
                 steps:
                         - name: Checkout code
                           uses: actions/checkout@v3
+                        - name: Checkout code
+                          uses: actions/checkout@v3
+                          with:
+                                  ref: 'gh-pages'
+                                  path: 'docs'
                         - name: Get doxygen
                           run: sudo apt update && sudo apt install doxygen graphviz
                         - name: Run doxygen
                           run: cd /home/runner/work/SupermilageDisplay/SupermilageDisplay && doxygen
                         - name: Push commit
                           run: |
+                                  cd ../docs
                                   git config --global user.name 'Doc Worker'
                                   git config --global user.email 'Supermileage@cedarville.edu'
-                                  git pull
-                                  git stash
-                                  git switch gh-pages
-                                  git stash pop
-                                  git stage html/*
-                                  git commit -m "Automated doc generation"
+                                  git commit -am "Automated doc generation"
                                   git push
 
