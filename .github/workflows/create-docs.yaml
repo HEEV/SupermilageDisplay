@@ -2,7 +2,7 @@ name: Create docs
 run-name: Updating docs
 on: [push]
 permissions:
-        content: write
+        contents: write
 jobs:
         report:
                 name: Create documentation
