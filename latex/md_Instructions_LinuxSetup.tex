@@ -1,0 +1,27 @@
+Currently, the only tested I\+DE is V\+S\+Code. If you get another to work, please document the environment setup here. Note that this process can be followed on the Raspberry Pis if needed. \hypertarget{md_Instructions_LinuxSetup_autotoc_md1}{}\doxysection{Environment Setup}\label{md_Instructions_LinuxSetup_autotoc_md1}
+\hypertarget{md_Instructions_LinuxSetup_autotoc_md2}{}\doxysubsection{V\+S\+Code Plugins}\label{md_Instructions_LinuxSetup_autotoc_md2}
+The following plugins are needed for use with V\+S\+Code. These can be downloaded under the extensions tab.
+\begin{DoxyItemize}
+\item C/\+C++ Extension Pack
+\item C\+Make
+\item C\+Make Tools 
+\end{DoxyItemize}\hypertarget{md_Instructions_LinuxSetup_autotoc_md3}{}\doxysubsection{Register S\+S\+H Keys to Github Account}\label{md_Instructions_LinuxSetup_autotoc_md3}
+Follow \href{https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent}{\texttt{ these instructions}} to create an S\+SH key. When asked what to name the file, press enter. This will give the file the default name. When asked to create a password, press enter. You may stop when you reach the section titled \char`\"{}\+Generating a new S\+S\+H key for a hardware security key\char`\"{}. To add the key to your account, follow \href{https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account}{\texttt{ these directions}}, starting in the \char`\"{}\+Adding a new S\+S\+H key to your account\char`\"{} section. To validate this was successful, run the following command\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ssh git@github.com}
+\end{DoxyCode}
+
+
+When asked to confirm the key, type yes and press enter. \hypertarget{md_Instructions_LinuxSetup_autotoc_md4}{}\doxysubsection{Download the Project}\label{md_Instructions_LinuxSetup_autotoc_md4}
+To download the project, first navigate to the desired download location and open a terminal. After this, run the following command\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone git@github.com:HEEV/SupermilageDisplay.git -\/-\/recursive}
+\end{DoxyCode}
+\hypertarget{md_Instructions_LinuxSetup_autotoc_md5}{}\doxysubsection{Download libusb}\label{md_Instructions_LinuxSetup_autotoc_md5}
+To download libusb, run the following commands\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt update \&\& \(\backslash\)}
+\DoxyCodeLine{sudo apt install libusb-\/1.0-\/0-\/dev -\/y}
+\end{DoxyCode}
+\hypertarget{md_Instructions_LinuxSetup_autotoc_md6}{}\doxysection{Build the Project}\label{md_Instructions_LinuxSetup_autotoc_md6}
+The project is ready to be compiled! To do so, click on the play button at the bottom of the screen (V\+Scode) or at the top (Visual Studio). Note that the play button at the top right in V\+S\+Code will not work. 

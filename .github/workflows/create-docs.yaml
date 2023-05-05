@@ -1,0 +1,20 @@
+name: Create docs
+run-name: Updating docs
+on: [push]
+jobs:
+        Environment:
+                name: Create documentation
+                runs-on: ubuntu-latest
+                steps:
+                        - uses: ouzi-dev/commit-status-updater@v2
+                          with:
+                                  name: "Generate docs"
+                                  status: pending
+                                  url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                        - name: Checkout code
+                          uses: actions/checkout@v3
+                        - name: Get doxygen
+                          run: sudo apt update && sudo apt install doxygen graphviz
+                        - name: Run doxygen
+                          run: cd /home/runner/work/SupermileageDisplay/SupermileageDisplay && doxygen
+
