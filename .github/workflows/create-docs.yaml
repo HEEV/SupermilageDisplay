@@ -18,6 +18,8 @@ jobs:
                           run: |
                                   git config --global user.name 'Doc Worker'
                                   git config --global user.email 'Supermileage@cedarville.edu'
-                                  git commit -am "Automated doc generation"
+                                  git switch gh-pages
+                                  git stage html/*
+                                  git commit -m "Automated doc generation"
                                   git push
 
