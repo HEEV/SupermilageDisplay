@@ -1,6 +1,7 @@
 set(
     SerialSources
-    NewSerialClient.cpp
+    USB.cpp
+    ArduinoDriver.cpp
 )
 
 target_sources(SuperMileageDisplay PRIVATE ${SerialSources})

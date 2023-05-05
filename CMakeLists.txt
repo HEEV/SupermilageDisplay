@@ -26,7 +26,8 @@ juce_add_gui_app(TestApp
 )
 
 add_compile_definitions($<$<CONFIG:DEBUG>:JUCE_LOG_ASSERTIONS>)
-target_compile_definitions(TestApp PRIVATE TESTING_ENABLED)
+target_compile_definitions(SuperMileageDisplay PRIVATE NOMINMAX)
+target_compile_definitions(TestApp PRIVATE TESTING_ENABLED NOMINMAX)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -84,11 +85,24 @@ target_compile_definitions(TestApp
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
+if(WIN32)
+    find_package(libusb REQUIRED)
+else(WIN32)
+    find_path(LIBUSB_INCLUDE_DIRS
+        NAMES "libusb-1.0/libusb.h"
+        PATHS /usr/include/)
+    find_library(LIBUSB_LIBRARIES
+        NAMES usb-1.0)
+endif()
+target_include_directories(SuperMileageDisplay PRIVATE ${LIBUSB_INCLUDE_DIRS})
+target_include_directories(TestApp PRIVATE ${LIBUSB_INCLUDE_DIRS})
+
 target_link_libraries(SuperMileageDisplay
     PRIVATE
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         juce::juce_gui_extra
         CommunicationManager
+        ${LIBUSB_LIBRARIES}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
@@ -100,6 +114,7 @@ target_link_libraries(TestApp
         CommunicationManager
         GTest::gtest
         GTest::gmock
+        ${LIBUSB_LIBRARIES}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags

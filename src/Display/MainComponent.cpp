@@ -5,8 +5,10 @@
 #include <Packets.h>
 
 #include "Profiler/Profiler.h"
+#include "Serial/USB.h"
+#include "Serial/ArduinoDriver.h"
 
-constexpr float TRACK_DIST = 1000.0f;
+constexpr float TRACK_DIST = 2.35;
 //=========== TODO LIST (yaay...) ==============================================
 //  X. Coolant temp
 //  X. Engine bay / Intake temp
@@ -32,7 +34,7 @@ MainComponent::MainComponent() :
     _map("Tracks/ShellTrack.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
-    _counter(1.0, 4),
+    _counter(TRACK_DIST, 4),
     _engTemp(0.0f, 90.0f, 9, 'E', 80.0f),
     _coolTemp(0.0f, 110.0f, 9, 'C', 100.0f),
     _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
@@ -66,6 +68,11 @@ MainComponent::MainComponent() :
     REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", _manager);
     REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
 
+    int wheelID = _manager.addDataWriter("vel");
+    int engTempID = _manager.addDataWriter("enTemp");
+    int windID = _manager.addDataWriter("wind");
+    int tiltID = _manager.addDataWriter("tilt");
+
     _manager.addDataReader("vel", std::function([this](WheelData* v){
         _speed.setData(v->velocity() * 0.681818);
         _map.updateDistance(v->distTravelled());
@@ -83,6 +90,15 @@ MainComponent::MainComponent() :
     _manager.addDataReader("tilt", std::function([this](CarTilt* tlt){
         _tilt.setCurrentTilt(tlt->angle());
     }));
+
+    _cd.man = &_manager;
+    _cd.wheelID = wheelID;
+    _cd.engID = engTempID;
+    _cd.windID = windID;
+    _cd.tiltID = tiltID;
+
+    std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
+}
 
     //_client.serialWrite();
 
