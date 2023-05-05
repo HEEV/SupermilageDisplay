@@ -10,7 +10,9 @@ jobs:
                 steps:
                         - name: Checkout code
                           uses: actions/checkout@v3
-                        - name: Checkout code
+                          with:
+                                  path: 'code'
+                        - name: Checkout docs
                           uses: actions/checkout@v3
                           with:
                                   ref: 'gh-pages'
@@ -18,7 +20,7 @@ jobs:
                         - name: Get doxygen
                           run: sudo apt update && sudo apt install doxygen graphviz
                         - name: Run doxygen
-                          run: cd /home/runner/work/SupermilageDisplay/SupermilageDisplay && doxygen
+                          run: cd /home/runner/work/SupermilageDisplay/SupermilageDisplay/code && doxygen
                         - name: Push commit
                           run: |
                                   cd ../docs
