@@ -1,0 +1,54 @@
+\hypertarget{classVerticleGauge}{}\doxysection{Verticle\+Gauge Class Reference}
+\label{classVerticleGauge}\index{VerticleGauge@{VerticleGauge}}
+
+
+Inheritance diagram for Verticle\+Gauge\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classVerticleGauge__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Verticle\+Gauge\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classVerticleGauge__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classVerticleGauge_a4cf348c01c7e67d67be8ec21f88156b6}\label{classVerticleGauge_a4cf348c01c7e67d67be8ec21f88156b6}} 
+{\bfseries Verticle\+Gauge} (float data\+Min, float data\+Max, int step, char label, float safe)
+\item 
+void \mbox{\hyperlink{classVerticleGauge_a306f1e6e01e4dde619ec179638b13011}{paint}} (juce\+::\+Graphics \&g) override
+\item 
+\mbox{\Hypertarget{classVerticleGauge_a996e71447db069125ff93cecf1dfe7c2}\label{classVerticleGauge_a996e71447db069125ff93cecf1dfe7c2}} 
+void {\bfseries resized} () override
+\item 
+\mbox{\Hypertarget{classVerticleGauge_a5412d5b31669c274522b4b461aca3c1f}\label{classVerticleGauge_a5412d5b31669c274522b4b461aca3c1f}} 
+void {\bfseries update} () override
+\item 
+\mbox{\Hypertarget{classVerticleGauge_af349e4fe6928fcc2556e9a307509b160}\label{classVerticleGauge_af349e4fe6928fcc2556e9a307509b160}} 
+void {\bfseries set\+Data} (float data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classVerticleGauge_a306f1e6e01e4dde619ec179638b13011}\label{classVerticleGauge_a306f1e6e01e4dde619ec179638b13011}} 
+\index{VerticleGauge@{VerticleGauge}!paint@{paint}}
+\index{paint@{paint}!VerticleGauge@{VerticleGauge}}
+\doxysubsubsection{\texorpdfstring{paint()}{paint()}}
+{\footnotesize\ttfamily void Verticle\+Gauge\+::paint (\begin{DoxyParamCaption}\item[{juce\+::\+Graphics \&}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}}
+
+float safe\+Height = bounds.\+get\+Height() $\ast$ ((\+\_\+data\+Max -\/ \+\_\+data\+Safe) / (\+\_\+data\+Max -\/ \+\_\+data\+Min)) + 20.\+0f; g.\+draw\+Line(bounds.\+get\+X() -\/ 2.\+0f, safe\+Height, x\+Pos, safe\+Height, 5.\+0f); /$\ast$
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\+Display/Verticle\+Gauge.\+h\item 
+src/\+Display/Verticle\+Gauge.\+cpp\end{DoxyCompactItemize}
