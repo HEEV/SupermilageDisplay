@@ -8,6 +8,7 @@ public:
 
 	void paint(Graphics& g) override;
 	void update() override;
+	void reset();
 
 
 private:

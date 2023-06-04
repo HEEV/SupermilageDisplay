@@ -23,9 +23,10 @@ void RaceTimer::paint(Graphics& g)
 
 	short min = (_timeElapsed / 1000) / 60;
 	short sec = (_timeElapsed / 1000) % 60;
+	short hour = (_timeElapsed / 1000) / 3600;
 
 	std::stringstream ss;
-	ss << min << ":" << ((sec < 10) ? "0" : "") << sec;
+	ss << hour << ((min < 10) ? ":0" : ":") << min << ":" << ((sec < 10) ? "0" : "") << sec;
 	g.drawText(ss.str(), bounds, Justification::centredTop);
 }
 
@@ -33,4 +34,8 @@ void RaceTimer::update()
 {
 	FUNCTION_PROFILE();
 	_timeElapsed += getMillisecondsSinceLastUpdate();
+}
+
+void RaceTimer::reset() {
+	_timeElapsed = 0;
 }

@@ -10,7 +10,7 @@ public:
 	void resized() override;
 
 	void incDistanceTraveled(double dist);
-
+	void reset();
 
 
 private:
