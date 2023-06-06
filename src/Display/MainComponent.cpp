@@ -99,6 +99,7 @@ void MainComponent::paint(juce::Graphics& g)
     //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
     //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
     _counter.incDistanceTraveled(0.01);
+    _map.incDistance(1);
 }
 
 void MainComponent::resized()
@@ -186,5 +187,6 @@ void MainComponent::mouseDown(const MouseEvent& event)
 {
     _timer.reset();
     _counter.reset();
+    _map.reset();
 }
 
