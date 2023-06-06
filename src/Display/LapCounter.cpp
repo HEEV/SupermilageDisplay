@@ -76,6 +76,9 @@ void LapCounter::incDistanceTraveled(double dist)
 	}
 }
 
+/**
+ * Currently bugged and doesn't reset properly if the lap counters have been completed
+ */
 void LapCounter::reset()
 {
 	_lapCount = 0;
