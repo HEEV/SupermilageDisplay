@@ -23,7 +23,6 @@ Speedometer::~Speedometer() {
 void Speedometer::paint(juce::Graphics& g) 
 {
 	auto bounds = getLocalBounds();
-	//explicit background color for animated components
 	g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
 	Font f("Consolas", FONT_HEIGHT, juce::Font::bold);
 	g.setFont(f);
@@ -110,13 +109,19 @@ void Speedometer::paint(juce::Graphics& g)
 
 
 	//Draw digital readout
-	g.setFont(40.0f);
+	g.setFont(41.0f);
 	Rectangle<float> readoutArea;
 	String readout = fmt::format("{:.1f}", _data);
 	float readoutWidth = f.getStringWidthFloat(readout);
 	readoutArea.setSize(readoutWidth + 30, FONT_HEIGHT);
 	readoutArea.setCentre(labelCenter.x, labelCenter.y + 60.0f);
 	g.drawText(readout, readoutArea, Justification::centred);
+
+	//Draw the label
+	float height = 22.0f;
+	g.setFont(height);
+	float width = f.getStringWidth(_name);
+	g.drawText(_name, bounds.getCentreX() - width / 2, bounds.getBottom() - height, width, height, Justification::centredBottom);
 
 	//Draw hand
 	if (_data >= _dataSafe) { g.setColour(Colours::red); }

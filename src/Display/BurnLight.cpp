@@ -1,13 +1,13 @@
-#include "Display/BurnLight.h"
-
 #include <stdexcept>
 
 #include "Profiler/Profiler.h"
+#include "Display/BurnLight.h"
+
 
 BurnLight::BurnLight()
 {
 	FUNCTION_PROFILE();
-
+	
 	_lightL.setColor(Colours::red);
 	_lightM.setColor(Colours::yellow);
 	_lightR.setColor(Colours::green);
@@ -30,7 +30,6 @@ void BurnLight::paint(juce::Graphics& g)
 {
 	FUNCTION_PROFILE();
 
-
 }
 
 void BurnLight::resized()
@@ -38,8 +37,7 @@ void BurnLight::resized()
 	FUNCTION_PROFILE();
 
 	auto bounds = getLocalBounds();
-
-	int boundsThird = bounds.getWidth() / 3;
+	float boundsThird = bounds.getWidth() / 3;
 
 	_lightL.setBounds(bounds.getX(), bounds.getY(), boundsThird, bounds.getHeight());
 	_lightM.setBounds(bounds.getX() + boundsThird, bounds.getY(), boundsThird, bounds.getHeight());
@@ -64,9 +62,12 @@ void BurnLight::toggleRight()
 
 void BurnLight::burn(int burnTime)
 {
+	int readyTime = 1000;
+	int startTime = 1000;
+	
 	_lightL.toggle();
-	Timer::callAfterDelay(1000, [this]() { toggleMid(); });
-	Timer::callAfterDelay(2000, [this]() { toggleRight(); });
+	Timer::callAfterDelay(readyTime, [this]() { toggleMid(); });
+	Timer::callAfterDelay(readyTime + startTime, [this]() { toggleRight(); });
 
 	Timer::callAfterDelay(burnTime + 2000, [this]() { toggleRight(); });
 	Timer::callAfterDelay(burnTime + 3000, [this]() { toggleMid(); });

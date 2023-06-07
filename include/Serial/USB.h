@@ -1,5 +1,9 @@
 #pragma once
+#ifdef WIN32
+#include <libusb.h>
+#else
 #include <libusb-1.0/libusb.h>
+#endif
 #include <functional>
 #include <map>
 #include <thread>
@@ -44,8 +48,8 @@ private:
     libusb_device_handle* _devh;
     libusb_context* _hotPlugcx;
     libusb_context* _gencx;
-    libusb_transfer _recvBulkTransfer;
-    libusb_transfer _sendBulkTransfer;
+    libusb_transfer* _recvBulkTransfer;
+    libusb_transfer* _sendBulkTransfer;
 
     uint8_t _doExit;
     uint8_t _ctrlExit;
