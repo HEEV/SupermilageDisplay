@@ -2,7 +2,7 @@ var indexSectionsWithContent =
 {
   0: "bcfgiklmprstuv",
   1: "bcfiklmprstuv",
-  2: "gps",
+  2: "gprs",
   3: "s"
 };
 
