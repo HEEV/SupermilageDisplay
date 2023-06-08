@@ -39,7 +39,8 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    
+    void mouseDown(const MouseEvent& event) override;
+
     //DataValues Storage;
 
 private:

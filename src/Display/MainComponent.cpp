@@ -101,6 +101,7 @@ MainComponent::MainComponent() :
 }
 
     //_client.serialWrite();
+}
 
 MainComponent::~MainComponent()
 {
@@ -113,6 +114,8 @@ void MainComponent::paint(juce::Graphics& g)
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
     //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
     //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
+    _counter.incDistanceTraveled(0.01);
+    _map.incDistance(1);
 }
 
 void MainComponent::resized()
@@ -145,8 +148,8 @@ void MainComponent::resized()
 
     vert1.items.add(FlexItem(_burnLight).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
     vert1.items.add(FlexItem(_tilt).withMinWidth(200.0f).withMinHeight(140.0f));
-    vert1.items.add(FlexItem(_timer).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
     vert1.items.add(FlexItem(_killLight).withMinWidth(200.0f).withMinHeight(60.0f).withMargin(5.0f));
+    vert1.items.add(FlexItem(_timer).withMinWidth(220.0f).withMinHeight(60.0f).withMargin(5.0f));
 
     //speed.items.add(FlexItem(_speed).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
     //speed.items.add(FlexItem(_wind).withMinWidth(250.0f).withMinHeight(250.0f).withMargin(5.0f));
@@ -195,3 +198,11 @@ void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
 {
     JUCEApplicationBase::quit();
 }
+
+void MainComponent::mouseDown(const MouseEvent& event) 
+{
+    _timer.reset();
+    _counter.reset();
+    _map.reset();
+}
+

@@ -75,3 +75,17 @@ void LapCounter::incDistanceTraveled(double dist)
 		}
 	}
 }
+
+/**
+ * Currently bugged and doesn't reset properly if the lap counters have been completed
+ */
+void LapCounter::reset()
+{
+	_lapCount = 0;
+	_lapDist = 0;
+	
+	_lapCounter.setColour(_lapCounter.foregroundColourId, Colours::cornsilk);
+	_lapProgress.setColour(_lapCounter.foregroundColourId, Colours::cornsilk);
+
+	_lapCounter.setTextToDisplay("Lap 1");
+}

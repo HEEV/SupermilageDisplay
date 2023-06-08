@@ -12,6 +12,7 @@ public:
 
 	void updateDistance(float dist);
 	void incDistance(float deltaDist);
+	void reset();
 
 private:
 	Path _track;

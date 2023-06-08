@@ -87,3 +87,8 @@ void MapComponent::incDistance(float deltaDist)
     else
         updateDistance(_distanceAlong + deltaDist);
 }
+
+void MapComponent::reset()
+{
+    _distanceAlong = 0;
+}
