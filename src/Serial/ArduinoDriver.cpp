@@ -855,6 +855,11 @@ static int LIBUSB_CALL hotplug_callback_detach(libusb_context *ctx, libusb_devic
 
 int runHotplug(ComData* data, uint16_t vendorID, uint16_t productID)
 {
+    libusb_device ** devList;
+    libusb_device * singleDev;
+    ssize_t cnt;
+    int i = 0;
+
 	libusb_hotplug_callback_handle hp[2];
 	int rc;
     int classID   =  LIBUSB_HOTPLUG_MATCH_ANY;
@@ -888,6 +893,32 @@ int runHotplug(ComData* data, uint16_t vendorID, uint16_t productID)
 		return EXIT_FAILURE;
 	}
 
+    // Check the current list of devices then run a hotplug arrived call
+    // hotplug_callback(hp_ctx, libusb_device *dev, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, data);
+    printf ("Actual Info: %04x:%04x\n", vendorID, productID);
+    cnt = libusb_get_device_list(NULL, &devList);
+	if (cnt != 0){
+        while ((singleDev = devList[i++]) != NULL) {
+            struct libusb_device_descriptor desc;
+
+		    int r = libusb_get_device_descriptor(singleDev, &desc);
+            if (r < 0) 
+            {
+                // If it is unable to get the device descriptor we dont care, since it cant be the VID/PID we need
+                break;
+		    }
+
+            printf ("Debug: %04x:%04x\n", desc.idVendor, desc.idProduct);
+            
+            if (desc.idVendor == vendorID && desc.idProduct == productID)
+            {
+                printf ("Ran hotplug_cb\n");
+                hotplug_callback(hp_ctx, singleDev, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, data);
+                break;
+            }
+        }
+	}
+    
 	while (!hp_done) {
 		rc = libusb_handle_events (hp_ctx);
 		if (rc < 0)
