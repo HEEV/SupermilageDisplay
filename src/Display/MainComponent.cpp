@@ -8,7 +8,7 @@
 #include "Serial/USB.h"
 #include "Serial/ArduinoDriver.h"
 
-constexpr float TRACK_DIST = 2.35;
+constexpr float TRACK_DIST = 0.390842;
 //=========== TODO LIST (yaay...) ==============================================
 //  X. Coolant temp
 //  X. Engine bay / Intake temp
@@ -31,7 +31,7 @@ constexpr float TRACK_DIST = 2.35;
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
-    _map("Tracks/ShellTrack.svg", TRACK_DIST),
+    _map("Tracks/Slalom.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(TRACK_DIST, 4),
@@ -101,7 +101,7 @@ MainComponent::MainComponent() :
 }
 
     //_client.serialWrite();
-}
+
 
 MainComponent::~MainComponent()
 {
@@ -114,8 +114,9 @@ void MainComponent::paint(juce::Graphics& g)
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
     //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
     //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
-    _counter.incDistanceTraveled(0.01);
-    _map.incDistance(1);
+    //_counter.incDistanceTraveled(0.01);
+
+    _map.incDistance(0.001f);
 }
 
 void MainComponent::resized()
