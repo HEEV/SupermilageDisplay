@@ -410,6 +410,7 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
         WindSpeed ws;
         EngineTemp et;
         CarTilt ct;
+        BatteryVoltage bt;
         printf("%d : ", data->sensor);
         printf("%f : ", data->data);
         printf("%ld\n", data->time);
@@ -437,6 +438,14 @@ static void LIBUSB_CALL recv_cb(struct libusb_transfer *transfer)
             ct.angle(data->data);
             ct.head().timeOcc(data->time);
             man->writeData(comData->tiltID, &ct);
+            break;
+        case 4: // New
+            // Not sure what type this is
+            break;
+        case 5:
+            bt.volt(data->data);
+            bt.head().timeOcc(data->time);
+            man->writeData(comData->batID, &bt);
             break;
         }
 
