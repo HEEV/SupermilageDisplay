@@ -9,6 +9,7 @@ struct ComData
     int windID;
     int engID;
     int tiltID;
+    int batID;
     int gpsID;
 };
 

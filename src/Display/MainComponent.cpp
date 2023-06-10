@@ -97,6 +97,7 @@ MainComponent::MainComponent() :
     _cd.engID = engTempID;
     _cd.windID = windID;
     _cd.tiltID = tiltID;
+    _cd.batID = batID;
 
     std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
 }
