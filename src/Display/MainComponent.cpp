@@ -72,6 +72,7 @@ MainComponent::MainComponent() :
     int engTempID = _manager.addDataWriter("enTemp");
     int windID = _manager.addDataWriter("wind");
     int tiltID = _manager.addDataWriter("tilt");
+    int batID = _manager.addDataWriter("bat");
 
     _manager.addDataReader("vel", std::function([this](WheelData* v){
         _speed.setData(v->velocity() * 0.681818);
@@ -96,6 +97,7 @@ MainComponent::MainComponent() :
     _cd.engID = engTempID;
     _cd.windID = windID;
     _cd.tiltID = tiltID;
+    _cd.batID = batID;
 
     std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
 }
