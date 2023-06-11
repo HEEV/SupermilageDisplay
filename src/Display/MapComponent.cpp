@@ -41,6 +41,24 @@ void MapComponent::paint(juce::Graphics& g)
 
     g.setColour(Colours::green);
     auto start = _track.getPointAlongPath(0.0f);
+    auto nextPoint = _track.getPointAlongPath(0.5f);
+
+    float rise = nextPoint.getY() - start.getY();
+    float run = nextPoint.getX() - start.getX();
+
+    float s = rise / run;
+    float a = 0.0f;
+
+    if (s >= -1 && s <= 1) {
+        a = s - (pow(s,3) / 3) + (pow(s,5) / 5);
+    }
+    else if (s > 1) {
+        a = (PI/2) - (1/s) + (1/3*pow(s,3)) - (1/5*pow(s,5));
+    }
+    else if (s < -1) {
+        a = (-PI/2) - (1/s) + (1/3*pow(s,3)) - (1/5*pow(s,5));
+    }
+
     Rectangle<float> startLine;
     startLine.setWidth(width);
     startLine.setHeight(width * 5.0f);

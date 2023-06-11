@@ -31,7 +31,7 @@ constexpr float TRACK_DIST = 0.390842;
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
-    _map("Tracks/Slalom.svg", TRACK_DIST),
+    _map("Tracks/EnduranceFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(TRACK_DIST, 1),
@@ -193,6 +193,15 @@ void MainComponent::resized()
     horz2.items.add(FlexItem(_intakeTemp).withMinHeight(getHeight()).withMinWidth(50.0f));
 
     horz2.performLayout(getLocalBounds());
+
+    /*FlexBox top;
+    top.alignContent = FlexBox::AlignContent::center;
+    top.alignItems = FlexBox::AlignItems::center;
+    top.justifyContent = FlexBox::JustifyContent::center;
+
+    top.items.add(FlexItem(_test).withMinHeight(getHeight()).withMinWidth(getWidth()));
+
+    top.performLayout(getLocalBounds());*/
 }
 
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
