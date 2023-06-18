@@ -46,25 +46,19 @@ void MapComponent::paint(juce::Graphics& g)
     float rise = nextPoint.getY() - start.getY();
     float run = nextPoint.getX() - start.getX();
 
-    float s = rise / run;
-    float a = 0.0f;
+    float angle = atan(rise / run);
 
-    if (s >= -1 && s <= 1) {
-        a = s - (pow(s,3) / 3) + (pow(s,5) / 5);
-    }
-    else if (s > 1) {
-        a = (PI/2) - (1/s) + (1/3*pow(s,3)) - (1/5*pow(s,5));
-    }
-    else if (s < -1) {
-        a = (-PI/2) - (1/s) + (1/3*pow(s,3)) - (1/5*pow(s,5));
-    }
-
-    Rectangle<float> startLine;
-    startLine.setWidth(width);
-    startLine.setHeight(width * 5.0f);
-    startLine.setCentre(start);
-    g.fillRect(startLine);
-
+    
+    Rectangle<float> startRect;
+    startRect.setWidth(width);
+    startRect.setHeight(width * 5.0f);
+    startRect.setCentre(start);
+    
+    Path startLine;
+    startLine.addRectangle(startRect);
+    startLine.applyTransform(AffineTransform::rotation(angle, start.getX(), start.getY()));
+    g.fillPath(startLine);
+    
     g.setColour(Colours::black);
 }
 
