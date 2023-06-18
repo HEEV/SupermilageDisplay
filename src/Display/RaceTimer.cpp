@@ -21,7 +21,7 @@ void RaceTimer::paint(Graphics& g)
 	g.setFont(f);
 	g.setColour(getLookAndFeel().findColour(DocumentWindow::ColourIds::textColourId));
 
-	short min = (_timeElapsed / 1000) / 60;
+	short min = ((_timeElapsed / 1000) / 60) % 60;
 	short sec = (_timeElapsed / 1000) % 60;
 	short hour = (_timeElapsed / 1000) / 3600;
 
