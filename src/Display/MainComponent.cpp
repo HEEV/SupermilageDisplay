@@ -34,14 +34,15 @@ MainComponent::MainComponent() :
     _map("Tracks/EnduranceFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
-    _counter(TRACK_DIST, 1),
+    _counter(TRACK_DIST, 1, true),
     _engTemp(0.0f, 90.0f, 9, 'E', 80.0f),
     _coolTemp(0.0f, 110.0f, 9, 'C', 100.0f),
     _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
     _volt(10.0f, 13.0f, 3, 'V', 12.5f),
     _burnLight(),
     _killLight(),
-    _manager("163.11.237.241:5001")
+    _manager("163.11.237.241:5001"),
+    _click(&_timer, &_counter, &_map)
 {
     FUNCTION_PROFILE();
     addAndMakeVisible(_speed);
@@ -56,8 +57,9 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_volt);
     addAndMakeVisible(_burnLight);
     addAndMakeVisible(_killLight);
+    addAndMakeVisible(_click);
 
-    addMouseListener(&_mouse, true);
+    //addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
 
@@ -118,7 +120,7 @@ void MainComponent::paint(juce::Graphics& g)
     //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
     //_counter.incDistanceTraveled(0.01);
 
-    //_map.incDistance(0.001f);
+    _map.incDistance(0.001f);
 }
 
 void MainComponent::resized()
@@ -196,16 +198,16 @@ void MainComponent::resized()
 
     horz2.performLayout(getLocalBounds());
 
-    /*FlexBox top;
+    FlexBox top;
     top.alignContent = FlexBox::AlignContent::center;
     top.alignItems = FlexBox::AlignItems::center;
     top.justifyContent = FlexBox::JustifyContent::center;
 
-    top.items.add(FlexItem(_test).withMinHeight(getHeight()).withMinWidth(getWidth()));
+    top.items.add(FlexItem(_click).withMinHeight(getHeight()).withMinWidth(getWidth()));
 
-    top.performLayout(getLocalBounds());*/
+    top.performLayout(getLocalBounds());
 }
-
+/*
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
 {
     JUCEApplicationBase::quit();
@@ -217,4 +219,4 @@ void MainComponent::mouseDown(const MouseEvent& event)
     _counter.reset();
     _map.reset();
 }
-
+*/

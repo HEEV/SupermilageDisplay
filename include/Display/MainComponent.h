@@ -15,6 +15,7 @@
 #include "TripleLight.h"
 #include "BurnLight.h"
 #include "Serial/ArduinoDriver.h"
+#include "ClickLayer.h"
 
 enum SensorType {
     Speed = '1',
@@ -29,7 +30,7 @@ enum SensorType {
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::Component
+class MainComponent : public juce::Component
 {
 public:
     //==============================================================================
@@ -39,7 +40,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void mouseDown(const MouseEvent& event) override;
+    //void mouseDown(const MouseEvent& event) override;
 
     //DataValues Storage;
 
@@ -59,14 +60,15 @@ private:
     BurnLight _burnLight;
     TripleLight _killLight;
     ComData _cd;
+    ClickLayer _click;
 
     bool countStarted = false;
-
+/*
     class MouseEvents : public MouseListener
     {
     public:
         void mouseDoubleClick(const MouseEvent& e) override;
-    } _mouse;
+    } _mouse;*/
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 
