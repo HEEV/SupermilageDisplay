@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['speedometer_49',['Speedometer',['../classSpeedometer.html',1,'']]],
-  ['supermileageapp_50',['SuperMileageApp',['../classSuperMileageApp.html',1,'']]]
+  ['speedometer_51',['Speedometer',['../classSpeedometer.html',1,'']]],
+  ['supermileageapp_52',['SuperMileageApp',['../classSuperMileageApp.html',1,'']]]
 ];

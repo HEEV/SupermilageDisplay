@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['centimeters_34',['Centimeters',['../classCentimeters.html',1,'']]],
-  ['colorlight_35',['ColorLight',['../classColorLight.html',1,'']]],
-  ['comdata_36',['ComData',['../structComData.html',1,'']]]
+  ['centimeters_35',['Centimeters',['../classCentimeters.html',1,'']]],
+  ['clicklayer_36',['ClickLayer',['../classClickLayer.html',1,'']]],
+  ['colorlight_37',['ColorLight',['../classColorLight.html',1,'']]],
+  ['comdata_38',['ComData',['../structComData.html',1,'']]]
 ];
