@@ -12,6 +12,7 @@ set(
     VerticleGaugeMir.cpp
     TripleLight.cpp
     BurnLight.cpp
+    ClickLayer.cpp
 )
 
 target_sources(SuperMileageDisplay PRIVATE ${DisplaySources})
