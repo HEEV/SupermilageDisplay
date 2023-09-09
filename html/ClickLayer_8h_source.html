@@ -75,25 +75,19 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;Display/LapCounter.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;Display/MapComponent.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span><a class="code" href="classMainComponent.html">MainComponent</a>;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">using namespace </span>std;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classClickLayer.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classClickLayer.html">ClickLayer</a> : <span class="keyword">public</span> Component </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="classClickLayer.html">ClickLayer</a>(<a class="code" href="classRaceTimer.html">RaceTimer</a>* timer, <a class="code" href="classLapCounter.html">LapCounter</a>* lap, <a class="code" href="classMapComponent.html">MapComponent</a>* map);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="classClickLayer.html">ClickLayer</a>(<span class="keyword">function</span>&lt;<span class="keywordtype">void</span>()&gt; rf);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> mouseDown(<span class="keyword">const</span> MouseEvent&amp; event) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> mouseDoubleClick(<span class="keyword">const</span> MouseEvent&amp; e) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="classRaceTimer.html">RaceTimer</a>* _timer;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classLapCounter.html">LapCounter</a>* _lapCount;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="classMapComponent.html">MapComponent</a>* _mapComp;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">function</span>&lt;void()&gt; _resetFunc;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;};</div>
 <div class="ttc" id="aclassClickLayer_html"><div class="ttname"><a href="classClickLayer.html">ClickLayer</a></div><div class="ttdef"><b>Definition:</b> ClickLayer.h:10</div></div>
-<div class="ttc" id="aclassLapCounter_html"><div class="ttname"><a href="classLapCounter.html">LapCounter</a></div><div class="ttdef"><b>Definition:</b> LapCounter.h:5</div></div>
-<div class="ttc" id="aclassMainComponent_html"><div class="ttname"><a href="classMainComponent.html">MainComponent</a></div><div class="ttdef"><b>Definition:</b> MainComponent.h:34</div></div>
-<div class="ttc" id="aclassMapComponent_html"><div class="ttname"><a href="classMapComponent.html">MapComponent</a></div><div class="ttdef"><b>Definition:</b> MapComponent.h:5</div></div>
-<div class="ttc" id="aclassRaceTimer_html"><div class="ttname"><a href="classRaceTimer.html">RaceTimer</a></div><div class="ttdef"><b>Definition:</b> RaceTimer.h:5</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
