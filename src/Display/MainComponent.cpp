@@ -10,28 +10,23 @@
 
 constexpr float TRACK_DIST = 0.390842;
 //=========== TODO LIST (yaay...) ==============================================
-//  X. Coolant temp
-//  X. Engine bay / Intake temp
-//  3. Count down bar
-//  4. Compass
-//  5. Pendulum gyroscope
-//  6. Map points north up
-//  7. Driver bay temp
-//  8. Wind direction arrow
-//  X. Red/Yellow/Green burn lights
-//  X. Kill switch lights
-// 11. Whole background fades to red when any guage reaches extreme
-//  X. Bigger / more labels
-//  X. Fix bug with label truncating on temp bars
-// 14. Fix bug with map updating wrong and excepting
-// 15. Figure out how on Earth we are gonna fit all of this on the screen
+//  1. Compass
+//  2. Wind direction arrow
+//  2.5? Wind direction relative to car direction
+//  3. Fix bug with map updating wrong and excepting
+//  4. Fix bug preventing program from closing
+//  5. Add track selection
+//  6. Connect more sensors
+//  7. Add data collection
+//  8. Connect to sever and ground crew display
+//  9. 
 //============================================================================== 
 
 //==============================================================================
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
-    _map("Tracks/EnduranceFixed.svg", TRACK_DIST),
+    _map("Tracks/ShellTrackFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
     _counter(TRACK_DIST, 1, true),
@@ -42,9 +37,10 @@ MainComponent::MainComponent() :
     _burnLight(),
     _killLight(),
     _manager("163.11.237.241:5001"),
-    _click(&_timer, &_counter, &_map)
+    _click([this](){ reset(); })
 {
     FUNCTION_PROFILE();
+
     addAndMakeVisible(_speed);
     addAndMakeVisible(_wind);
     addAndMakeVisible(_map);
@@ -211,12 +207,12 @@ void MainComponent::resized()
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
 {
     JUCEApplicationBase::quit();
-}
+}*/
 
-void MainComponent::mouseDown(const MouseEvent& event) 
+void MainComponent::reset() 
 {
     _timer.reset();
     _counter.reset();
     _map.reset();
 }
-*/
+

@@ -2,18 +2,14 @@
 
 #include "Profiler/Profiler.h"
 
-ClickLayer::ClickLayer(RaceTimer* time, LapCounter* lap, MapComponent* map) : 
-    _timer(time), _lapCount(lap), _mapComp(map)
+ClickLayer::ClickLayer(function<void()> rf) : _resetFunc(rf)
 {
-
+    setWantsKeyboardFocus(true);
 }
 
 void ClickLayer::mouseDown(const MouseEvent& event)
 {
-    _timer->reset();
-    _lapCount->reset();
-    _mapComp->reset();
-    
+    if (_resetFunc) { _resetFunc(); }
 }
 
 void ClickLayer::mouseDoubleClick(const MouseEvent& e)
