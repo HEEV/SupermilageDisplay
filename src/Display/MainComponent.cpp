@@ -29,7 +29,7 @@ MainComponent::MainComponent() :
     _map("Tracks/ShellTrackFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
-    _counter(TRACK_DIST, 1, true),
+    _counter(TRACK_DIST, 1),
     _engTemp(0.0f, 90.0f, 9, 'E', 80.0f),
     _coolTemp(0.0f, 110.0f, 9, 'C', 100.0f),
     _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
