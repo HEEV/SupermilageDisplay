@@ -23,5 +23,11 @@ To download libusb, run the following commands:
 sudo apt update && \
 sudo apt install libusb-1.0-0-dev -y
 ```
+
+### Install toolchains
+Install GCC or clang as well as cmake. Note that the compiler must support C++20. Currently, the version of clang installed by apt is not supported. CMake must be at least version 3.15.
+### Install Dependencies
+Follow the instructions in [this JUCE documentation](https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md). Depending on your distribution, OpenSSL mat also be required. Ubuntu comes with this be default.
+
 ## Build the Project
 The project is ready to be compiled! To do so, click on the play button at the bottom of the screen (VScode) or at the top (Visual Studio). Note that the play button at the top right in VSCode will not work.
