@@ -1,37 +1,37 @@
 Currently, the only two tested editors on Windows are \href{https://code.visualstudio.com/}{\texttt{ VSCode}} and \href{https://visualstudio.microsoft.com/}{\texttt{ Visual Studio}}. If you are succesful in setting up another environment, please document the process here. If you have no experience in either, VSCode is recommended. \begin{quote}
 {\itshape {\bfseries{TIP}}} To open a terminal in a directory, click on the file address box at the top of the File Explorer, type cmd, and press enter. \end{quote}
-\#\# Environment Setup \hypertarget{md_Instructions_WindowsSetup_autotoc_md8}{}\doxysubsection{Install Plugins}\label{md_Instructions_WindowsSetup_autotoc_md8}
-\hypertarget{md_Instructions_WindowsSetup_autotoc_md9}{}\doxysubsubsection{VSCode Plugins}\label{md_Instructions_WindowsSetup_autotoc_md9}
+\#\# Environment Setup \hypertarget{md_Instructions_WindowsSetup_autotoc_md10}{}\doxysubsection{Install Plugins}\label{md_Instructions_WindowsSetup_autotoc_md10}
+\hypertarget{md_Instructions_WindowsSetup_autotoc_md11}{}\doxysubsubsection{VSCode Plugins}\label{md_Instructions_WindowsSetup_autotoc_md11}
 The following plugins are needed for use with VSCode. These can be downloaded under the extensions tab.
 \begin{DoxyItemize}
 \item C/\+C++ Extension Pack
 \item CMake
 \item CMake Tools 
-\end{DoxyItemize}\hypertarget{md_Instructions_WindowsSetup_autotoc_md10}{}\doxysubsubsection{Visual Studio Plugins}\label{md_Instructions_WindowsSetup_autotoc_md10}
+\end{DoxyItemize}\hypertarget{md_Instructions_WindowsSetup_autotoc_md12}{}\doxysubsubsection{Visual Studio Plugins}\label{md_Instructions_WindowsSetup_autotoc_md12}
 If downloading Visual Studio for the first time, make sure to select these plugins. If already downloaded, reopen the installer and click modify to select them.
 \begin{DoxyItemize}
 \item Desktop development with C++
 \item Linux and embedded development with C++ (optional) 
-\end{DoxyItemize}\hypertarget{md_Instructions_WindowsSetup_autotoc_md11}{}\doxysubsection{Download Git}\label{md_Instructions_WindowsSetup_autotoc_md11}
-\href{https://git-scm.com/download/win}{\texttt{ Download the standalone installer}} and follow the directions. Accept all of the recommended settings except for the default editor. Select whichever is your prefrence (VSCode is a good option). \hypertarget{md_Instructions_WindowsSetup_autotoc_md12}{}\doxysubsection{Register SSH Keys to Github Account}\label{md_Instructions_WindowsSetup_autotoc_md12}
+\end{DoxyItemize}\hypertarget{md_Instructions_WindowsSetup_autotoc_md13}{}\doxysubsection{Download Git}\label{md_Instructions_WindowsSetup_autotoc_md13}
+\href{https://git-scm.com/download/win}{\texttt{ Download the standalone installer}} and follow the directions. Accept all of the recommended settings except for the default editor. Select whichever is your prefrence (VSCode is a good option). \hypertarget{md_Instructions_WindowsSetup_autotoc_md14}{}\doxysubsection{Register SSH Keys to Github Account}\label{md_Instructions_WindowsSetup_autotoc_md14}
 Follow \href{https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent}{\texttt{ these instructions}} to create an SSH key. When asked what to name the file, press enter. This will give the file the default name. {\bfseries{When asked to create a password, press enter.}} Currently, there is a glitch with the Windows implementation of SSH that causes an authentication error with git submodules when a password is set. You may stop when you reach the section titled \char`\"{}\+Generating a new SSH key for a hardware security key\char`\"{}. To add the key to your account, follow \href{https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account}{\texttt{ these directions}}, starting in the \char`\"{}\+Adding a new SSH key to your account\char`\"{} section. To validate this was successful, run the following command\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{ssh git@github.com}
 
 \end{DoxyCode}
- When asked to confirm the key, type yes and press enter. \hypertarget{md_Instructions_WindowsSetup_autotoc_md13}{}\doxysubsection{Download the Project}\label{md_Instructions_WindowsSetup_autotoc_md13}
+ When asked to confirm the key, type yes and press enter. \hypertarget{md_Instructions_WindowsSetup_autotoc_md15}{}\doxysubsection{Download the Project}\label{md_Instructions_WindowsSetup_autotoc_md15}
 To download the project, first navigate to the desired download location and open a terminal. After this, run the following command\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{git clone git@github.com:HEEV/SupermilageDisplay.git -\/-\/recursive}
 
 \end{DoxyCode}
- \hypertarget{md_Instructions_WindowsSetup_autotoc_md14}{}\doxysubsection{Download VCPKG and libusb}\label{md_Instructions_WindowsSetup_autotoc_md14}
+ \hypertarget{md_Instructions_WindowsSetup_autotoc_md16}{}\doxysubsection{Download VCPKG and libusb}\label{md_Instructions_WindowsSetup_autotoc_md16}
 \href{https://vcpkg.io/en/getting-started.html}{\texttt{ Follow these instructions}} to install VCPKG through step 2 (the integration step is not necessary). Once installed, navigate to the VCPKG directory and open a terminal. Run the following command to install libusb\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{./vcpkg install libusb}
 
 \end{DoxyCode}
- Once this has finished, follow the instructions for your chosen IDE to allow it to use VCPKG libraries. \hypertarget{md_Instructions_WindowsSetup_autotoc_md15}{}\doxysubsubsection{VSCode}\label{md_Instructions_WindowsSetup_autotoc_md15}
+ Once this has finished, follow the instructions for your chosen IDE to allow it to use VCPKG libraries. \hypertarget{md_Instructions_WindowsSetup_autotoc_md17}{}\doxysubsubsection{VSCode}\label{md_Instructions_WindowsSetup_autotoc_md17}
 Open the project in VSCode and create the file .vscode/settings.\+json. In this file, paste the following, but replace \mbox{[}vcpkg root\mbox{]} with the download location of VCPKG. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
@@ -41,11 +41,11 @@ Open the project in VSCode and create the file .vscode/settings.\+json. In this 
 \DoxyCodeLine{\}}
 
 \end{DoxyCode}
- \hypertarget{md_Instructions_WindowsSetup_autotoc_md16}{}\doxysubsubsection{Visual Studio}\label{md_Instructions_WindowsSetup_autotoc_md16}
+ \hypertarget{md_Instructions_WindowsSetup_autotoc_md18}{}\doxysubsubsection{Visual Studio}\label{md_Instructions_WindowsSetup_autotoc_md18}
 Under the project tab, click on \char`\"{}\+CMake Settings for Super\+Mileage\+Display\char`\"{}. Under the CMake toolchain file setting, paste the following code but replace \mbox{[}vcpkg root\mbox{]} with the download location of VCPKG. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{[vcpkg root]/scripts/buildsystems/vcpkg.cmake}
 
 \end{DoxyCode}
- \hypertarget{md_Instructions_WindowsSetup_autotoc_md17}{}\doxysection{Build the Project}\label{md_Instructions_WindowsSetup_autotoc_md17}
+ \hypertarget{md_Instructions_WindowsSetup_autotoc_md19}{}\doxysection{Build the Project}\label{md_Instructions_WindowsSetup_autotoc_md19}
 The project is ready to be compiled! To do so, click on the play button at the bottom of the screen (VScode) or at the top (Visual Studio). Note that the play button at the top right in VSCode will not work. 

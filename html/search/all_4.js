@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['inches_7',['Inches',['../classInches.html',1,'']]]
+  ['inches_6',['Inches',['../classInches.html',1,'']]]
 ];
