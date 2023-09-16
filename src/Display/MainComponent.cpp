@@ -8,42 +8,39 @@
 #include "Serial/USB.h"
 #include "Serial/ArduinoDriver.h"
 
-constexpr float TRACK_DIST = 2.35;
+constexpr float TRACK_DIST = 0.390842;
 //=========== TODO LIST (yaay...) ==============================================
-//  X. Coolant temp
-//  X. Engine bay / Intake temp
-//  3. Count down bar
-//  4. Compass
-//  5. Pendulum gyroscope
-//  6. Map points north up
-//  7. Driver bay temp
-//  8. Wind direction arrow
-//  X. Red/Yellow/Green burn lights
-//  X. Kill switch lights
-// 11. Whole background fades to red when any guage reaches extreme
-//  X. Bigger / more labels
-//  X. Fix bug with label truncating on temp bars
-// 14. Fix bug with map updating wrong and excepting
-// 15. Figure out how on Earth we are gonna fit all of this on the screen
+//  1. Compass
+//  2. Wind direction arrow
+//  2.5? Wind direction relative to car direction
+//  3. Fix bug with map updating wrong and excepting
+//  4. Fix bug preventing program from closing
+//  5. Add track selection
+//  6. Connect more sensors
+//  7. Add data collection
+//  8. Connect to sever and ground crew display
+//  9. 
 //============================================================================== 
 
 //==============================================================================
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
     _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
-    _map("Tracks/ShellTrack.svg", TRACK_DIST),
+    _map("Tracks/ShellTrackFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
-    _counter(TRACK_DIST, 4),
+    _counter(TRACK_DIST, 1),
     _engTemp(0.0f, 90.0f, 9, 'E', 80.0f),
     _coolTemp(0.0f, 110.0f, 9, 'C', 100.0f),
     _intakeTemp(0.0f, 110.0f, 9, 'I', 100.0f),
     _volt(10.0f, 13.0f, 3, 'V', 12.5f),
     _burnLight(),
     _killLight(),
-    _manager("163.11.237.241:5001")
+    _manager("163.11.237.241:5001"),
+    _click([this](){ reset(); })
 {
     FUNCTION_PROFILE();
+
     addAndMakeVisible(_speed);
     addAndMakeVisible(_wind);
     addAndMakeVisible(_map);
@@ -56,8 +53,9 @@ MainComponent::MainComponent() :
     addAndMakeVisible(_volt);
     addAndMakeVisible(_burnLight);
     addAndMakeVisible(_killLight);
+    addAndMakeVisible(_click);
 
-    addMouseListener(&_mouse, true);
+    //addMouseListener(&_mouse, true);
     
     setSize(getParentWidth(), getParentHeight());
 
@@ -72,6 +70,7 @@ MainComponent::MainComponent() :
     int engTempID = _manager.addDataWriter("enTemp");
     int windID = _manager.addDataWriter("wind");
     int tiltID = _manager.addDataWriter("tilt");
+    int batID = _manager.addDataWriter("bat");
 
     _manager.addDataReader("vel", std::function([this](WheelData* v){
         _speed.setData(v->velocity() * 0.681818);
@@ -96,12 +95,13 @@ MainComponent::MainComponent() :
     _cd.engID = engTempID;
     _cd.windID = windID;
     _cd.tiltID = tiltID;
+    _cd.batID = batID;
 
     std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
 }
 
     //_client.serialWrite();
-}
+
 
 MainComponent::~MainComponent()
 {
@@ -114,8 +114,9 @@ void MainComponent::paint(juce::Graphics& g)
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
     //g.fillAll(getLookAndFeel().setColour(juce::Colours::darkgrey.withAlpha(0.5f));
     //g.fillAll(juce::Colours::cornflowerblue.withAlpha(0.5f));
-    _counter.incDistanceTraveled(0.01);
-    _map.incDistance(1);
+    //_counter.incDistanceTraveled(0.01);
+
+    _map.incDistance(0.001f);
 }
 
 void MainComponent::resized()
@@ -192,14 +193,23 @@ void MainComponent::resized()
     horz2.items.add(FlexItem(_intakeTemp).withMinHeight(getHeight()).withMinWidth(50.0f));
 
     horz2.performLayout(getLocalBounds());
-}
 
+    FlexBox top;
+    top.alignContent = FlexBox::AlignContent::center;
+    top.alignItems = FlexBox::AlignItems::center;
+    top.justifyContent = FlexBox::JustifyContent::center;
+
+    top.items.add(FlexItem(_click).withMinHeight(getHeight()).withMinWidth(getWidth()));
+
+    top.performLayout(getLocalBounds());
+}
+/*
 void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
 {
     JUCEApplicationBase::quit();
-}
+}*/
 
-void MainComponent::mouseDown(const MouseEvent& event) 
+void MainComponent::reset() 
 {
     _timer.reset();
     _counter.reset();

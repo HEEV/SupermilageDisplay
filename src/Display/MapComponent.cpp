@@ -41,12 +41,24 @@ void MapComponent::paint(juce::Graphics& g)
 
     g.setColour(Colours::green);
     auto start = _track.getPointAlongPath(0.0f);
-    Rectangle<float> startLine;
-    startLine.setWidth(width);
-    startLine.setHeight(width * 5.0f);
-    startLine.setCentre(start);
-    g.fillRect(startLine);
+    auto nextPoint = _track.getPointAlongPath(0.5f);
 
+    float rise = nextPoint.getY() - start.getY();
+    float run = nextPoint.getX() - start.getX();
+
+    float angle = atan(rise / run);
+
+    
+    Rectangle<float> startRect;
+    startRect.setWidth(width);
+    startRect.setHeight(width * 5.0f);
+    startRect.setCentre(start);
+    
+    Path startLine;
+    startLine.addRectangle(startRect);
+    startLine.applyTransform(AffineTransform::rotation(angle, start.getX(), start.getY()));
+    g.fillPath(startLine);
+    
     g.setColour(Colours::black);
 }
 
