@@ -86,7 +86,13 @@ Download the Project</h2>
 Download libusb</h2>
 <p>To download libusb, run the following commands: </p><div class="fragment"><div class="line">sudo apt update &amp;&amp; \</div>
 <div class="line">sudo apt install libusb-1.0-0-dev -y</div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+Install toolchains</h2>
+<p>Install GCC or clang as well as cmake. Note that the compiler must support C++20. Currently, the version of clang installed by apt is not supported. CMake must be at least version 3.15. </p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Install Dependencies</h2>
+<p>Follow the instructions in <a href="https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md">this JUCE documentation</a>. Depending on your distribution, OpenSSL mat also be required. Ubuntu comes with this be default.</p>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Build the Project</h1>
 <p>The project is ready to be compiled! To do so, click on the play button at the bottom of the screen (VScode) or at the top (Visual Studio). Note that the play button at the top right in VSCode will not work. </p>
 </div></div><!-- contents -->
