@@ -37,8 +37,9 @@ MainComponent::MainComponent() :
     _burnLight(),
     _killLight(),
     _manager("163.11.237.241:5001"),
-    _click([this](){ reset(); })
+    _click([this](){ toggleData(); })
 {
+    bool dataCollectOn = false;
     FUNCTION_PROFILE();
 
     addAndMakeVisible(_speed);
@@ -209,10 +210,8 @@ void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
     JUCEApplicationBase::quit();
 }*/
 
-void MainComponent::reset() 
+void MainComponent::toggleData() 
 {
-    _timer.reset();
-    _counter.reset();
-    _map.reset();
+dataCollectionOn = !dataCollectionOn;
 }
 
