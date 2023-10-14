@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['burnlight_34',['BurnLight',['../classBurnLight.html',1,'']]]
+  ['burnlight_35',['BurnLight',['../classBurnLight.html',1,'']]]
 ];
