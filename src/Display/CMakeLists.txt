@@ -13,6 +13,7 @@ set(
     TripleLight.cpp
     BurnLight.cpp
     ClickLayer.cpp
+    WindDir.cpp
 )
 
 target_sources(SuperMileageDisplay PRIVATE ${DisplaySources})
