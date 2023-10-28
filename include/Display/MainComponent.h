@@ -41,6 +41,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void toggleData();
+    long timeMilli() const;
     //void mouseDown(const MouseEvent& event) override;
 
     //DataValues Storage;
@@ -62,8 +63,11 @@ private:
     TripleLight _killLight;
     ComData _cd;
     ClickLayer _click;
-
+    
+    fstream dataOutput;
+    long timeZero;
     bool countStarted = false;
+    bool dataCollectionOn = false;
 /*
     class MouseEvents : public MouseListener
     {

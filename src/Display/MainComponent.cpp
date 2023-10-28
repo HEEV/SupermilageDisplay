@@ -3,10 +3,12 @@
 #include <chrono>
 #include <iostream>
 #include <Packets.h>
+#include <chrono>
 
 #include "Profiler/Profiler.h"
 #include "Serial/USB.h"
 #include "Serial/ArduinoDriver.h"
+#include "Display/TripleLight.h"
 
 constexpr float TRACK_DIST = 0.390842;
 //=========== TODO LIST (yaay...) ==============================================
@@ -18,7 +20,7 @@ constexpr float TRACK_DIST = 0.390842;
 //  5. Add track selection
 //  6. Connect more sensors
 //  7. Add data collection
-//  8. Connect to sever and ground crew display
+//  8. Connect to server and ground crew display
 //  9. 
 //============================================================================== 
 
@@ -39,7 +41,6 @@ MainComponent::MainComponent() :
     _manager("163.11.237.241:5001"),
     _click([this](){ toggleData(); })
 {
-    bool dataCollectOn = false;
     FUNCTION_PROFILE();
 
     addAndMakeVisible(_speed);
@@ -99,17 +100,20 @@ MainComponent::MainComponent() :
     _cd.batID = batID;
 
     std::thread(runHotplug, &_cd, 0x1A86, 0x7523).detach();
+
+    dataOutput.open("/dataDump/speed.csv");
+    timeZero = timeMilli();
 }
 
     //_client.serialWrite();
 
-
 MainComponent::~MainComponent()
 {
+    dataOutput.close();
 }
 
 //==============================================================================
-//Function exicuts every frame
+//Function executes every frame
 void MainComponent::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(DocumentWindow::backgroundColourId));
@@ -118,6 +122,10 @@ void MainComponent::paint(juce::Graphics& g)
     //_counter.incDistanceTraveled(0.01);
 
     _map.incDistance(0.001f);
+    //if dataCollection is on send the time zero in milliseconds to speed.csv
+    if (dataCollectionOn) {
+        dataOutput << _speed.getData() << ", " << (timeMilli() - timeZero) << "\n";
+    }
 }
 
 void MainComponent::resized()
@@ -210,8 +218,14 @@ void MainComponent::MouseEvents::mouseDoubleClick(const MouseEvent& e)
     JUCEApplicationBase::quit();
 }*/
 
+//turns data collecton on and off and signals it using the middle light.
 void MainComponent::toggleData() 
 {
-dataCollectionOn = !dataCollectionOn;
+    dataCollectionOn = !dataCollectionOn;
+    TripleLight tl;
+    tl.toggleMid();
 }
-
+//gets the current time in milliseconds
+long MainComponent::timeMilli() const {
+    return chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+}
