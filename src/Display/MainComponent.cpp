@@ -25,7 +25,7 @@ constexpr float TRACK_DIST = 0.390842;
 //==============================================================================
 MainComponent::MainComponent() :
     _speed("Vehicle MPH", 0.0f, 30.0f, 25.0f, 6),
-    _wind("Wind MPH", 0.0f, 40.0f, 35.0f),
+    _wind("Wind MPH", 40.0f, 35.0f),
     _map("Tracks/ShellTrackFixed.svg", TRACK_DIST),
     _tilt(3.1415f / 12.0f),
     _timer(),
@@ -64,6 +64,7 @@ MainComponent::MainComponent() :
     REGISTER_TYPE_TO_MANAGER(EngineTemp, "enTemp", _manager);
     REGISTER_TYPE_TO_MANAGER(GPSPosition, "gps", _manager);
     REGISTER_TYPE_TO_MANAGER(WindSpeed, "wind", _manager);
+    REGISTER_TYPE_TO_MANAGER(WindDir, "windDirection", _manager);
     REGISTER_TYPE_TO_MANAGER(CarTilt, "tilt", _manager);
 
     int wheelID = _manager.addDataWriter("vel");

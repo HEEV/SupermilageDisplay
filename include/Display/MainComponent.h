@@ -5,6 +5,7 @@
 #include <CommunicationManager.h>
 
 #include "Speedometer.h"
+#include "WindDir.h"
 #include "ColorLight.h"
 #include "RaceTimer.h"
 #include "LapCounter.h"
@@ -47,7 +48,7 @@ public:
 
 private:
     Speedometer _speed;
-    Speedometer _wind;
+    WindDir _wind;
     MapComponent _map;
     Tiltmeter _tilt;
     RaceTimer _timer;

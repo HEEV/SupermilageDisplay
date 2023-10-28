@@ -29,12 +29,12 @@ void Speedometer::paint(juce::Graphics& g)
 	g.setColour(Colours::black);
 	PathStrokeType stroke(LINE_WEIGHT);
 	
-	//Find largest area with the correct proportians widget's draw space
+	//Find largest area with the correct proportions widget's draw space
 	if (7 * bounds.getWidth() / 8 < bounds.getHeight())
 	{
 		//Space is taller than is usable due to width constraints
 		int heightToRemove = (bounds.getHeight() - 7 * bounds.getWidth() / 8) / 2;
-		//center widget verticly
+		//center widget vertically
 		bounds.removeFromTop(heightToRemove);
 		auto label = bounds.removeFromBottom(heightToRemove);
 

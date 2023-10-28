@@ -11,12 +11,13 @@ class WindDir : public AnimatedAppComponent
 
         void paint(juce::Graphics& g) override;
 	    void resized() override { /*do nothing*/ }
-	    void update() override;
+	    void update() override { /* do nothing */}
 
         void setData(float data);
         void setName(std::string name);
     
     private:
+        float _rotation;
         float _data;
         float _arrowWidth;
         float _arrowLength;
